@@ -6,8 +6,6 @@
 
 #include "Sounds.hpp"
 
-#pragma comment(lib, "Winmm.lib")
-
 #include "Structures.hpp"
 
 #include "Console_Variables.hpp"
@@ -43,6 +41,8 @@
 #include "Run_Command.hpp"
 
 #include "Item_Post_Frame.hpp"
+
+#pragma comment(lib, "Winmm.lib")
 
 #include "Event_Listener.hpp"
 
