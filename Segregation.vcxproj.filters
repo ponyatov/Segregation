@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header++">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="C++">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Entry_Point.cpp">
+      <Filter>C++</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Draw_Crosshair.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Structures.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Console_Variables.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Is_Missing_Texture.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Copy_User_Command.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame_Stage_Notify.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Run_Prediction.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Send_Move.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon_Spread.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Run_Command.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Item_Post_Frame.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Angles_Y.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolate.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Priority.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Sounds.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Event_Listener.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
