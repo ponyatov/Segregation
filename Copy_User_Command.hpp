@@ -322,7 +322,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	float Incoming_Latency = Get_Latency_Type(537919008)(Network_Channel, 1);
 
-	float Total_Latency = Outgoing_Latency + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
+	float Incoming_Latency_Ticks = Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
+
+	float Total_Latency = Outgoing_Latency + Incoming_Latency_Ticks;
 
 	float Aim_Angles[2];
 
@@ -611,7 +613,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						
 						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f + Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 
-						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
+						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency_Ticks - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
 					
 					if (Delta_Time <= 0.2f)
