@@ -318,9 +318,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Network_Channel = *(void**)540608912;
 
-	float Total_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) + Get_Latency_Type(537919008)(Network_Channel, 1);
+	float Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
 
-	__int32 Total_Latency_Ticks = Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
+	float Incoming_Latency = Get_Latency_Type(537919008)(Network_Channel, 1);
+
+	float Total_Latency = Outgoing_Latency + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
 
 	float Aim_Angles[2];
 
@@ -475,11 +477,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						float* Velocity = (float*)((unsigned __int32)Optimal_Target + 224);
 
-						Optimal_Target_Origin[0] += Velocity[0] * Global_Variables->Interval_Per_Tick * Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
+						Optimal_Target_Origin[0] += Velocity[0] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 
-						Optimal_Target_Origin[1] += Velocity[1] * Global_Variables->Interval_Per_Tick * Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
+						Optimal_Target_Origin[1] += Velocity[1] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 
-						Optimal_Target_Origin[2] += Velocity[2] * Global_Variables->Interval_Per_Tick * Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
+						Optimal_Target_Origin[2] += Velocity[2] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 						
 						if (Trace_Ray(Optimal_Target_Origin) == 1)
 						{
@@ -605,11 +607,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 							Interpolation_Time = Interpolation;
 						}
 
-						float Corrected_Interpolation_Time = std::clamp(Total_Latency + Interpolation_Time, 0.f, 1.f);
+						float Corrected_Interpolation_Time = std::clamp(Incoming_Latency + Interpolation_Time, 0.f, 1.f);
 						
-						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f + Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
+						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f + Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 
-						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
+						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
 					
 					if (Delta_Time <= 0.2f)
