@@ -2,6 +2,13 @@
 
 void* Original_Frame_Stage_Notify_Caller_Location;
 
+float Absolute(float X)
+{
+	asm("fabs" : "+t"(X));
+
+	return X;
+}
+
 float Uncompressed_Recoil[90][2];
 
 void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 Stage)
@@ -98,9 +105,9 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
 
-		if (__builtin_fabsf(Recoil[0] - Uncompressed_Recoil[Tick_Base][0]) <= 0.125f)
+		if (Absolute(Recoil[0] - Uncompressed_Recoil[Tick_Base][0]) <= 0.125f)
 		{
-			if (__builtin_fabsf(Recoil[1] - Uncompressed_Recoil[Tick_Base][1]) <= 0.125f)
+			if (Absolute(Recoil[1] - Uncompressed_Recoil[Tick_Base][1]) <= 0.125f)
 			{
 				*(float*)((unsigned __int32)Local_Player + 2992) = Uncompressed_Recoil[Tick_Base][0];
 

@@ -2,13 +2,6 @@
 
 void* Original_Copy_User_Command_Caller_Location;
 
-float Absolute(float X)
-{
-	asm("fabs" : "+t"(X));
-
-	return X;
-}
-
 float Arc_Tangent_2(float X, float Y)
 {
 	asm("fpatan" : "+t"(X) : "u"(Y));
