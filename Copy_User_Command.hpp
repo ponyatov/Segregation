@@ -2,6 +2,27 @@
 
 void* Original_Copy_User_Command_Caller_Location;
 
+float Absolute(float X)
+{
+	asm("fabs" : "+t"(X));
+
+	return X;
+}
+
+float Arc_Tangent_2(float X, float Y)
+{
+	asm("fpatan" : "+t"(X) : "u"(Y));
+
+	return X;
+}
+
+float Square_Root(float X)
+{
+	asm("fsqrt" : "+t"(X));
+
+	return X;
+}
+
 __int32 Shot_Tick;
 
 void Sine_Cosine(float& Sine, float& Cosine, float Value)
@@ -76,9 +97,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
 
-		if (__builtin_fabsf(Difference) < __builtin_atan2f(30, __builtin_sqrtf(Velocity[0] * Velocity[0] + Velocity[1] * Velocity[1])) * 180 / 3.1415927f)
+		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(Velocity[0] * Velocity[0] + Velocity[1] * Velocity[1]), 30) * 180 / 3.1415927f)
 		{
-			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - __builtin_atan2f(Velocity[1], Velocity[0]) * 180 / 3.1415927f, 360);
+			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - Arc_Tangent_2(Velocity[0], Velocity[1]) * 180 / 3.1415927f, 360);
 
 			if (Strafe_Angle != 0)
 			{
@@ -262,7 +283,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 								Local_Player_Origin[2] - Entity_Origin[2]
 							};
 
-							Target.Distance = __builtin_sqrtf(Difference[0] * Difference[0] + Difference[1] * Difference[1] + Difference[2] * Difference[2]);
+							Target.Distance = Square_Root(Difference[0] * Difference[0] + Difference[1] * Difference[1] + Difference[2] * Difference[2]);
 
 							Target.Target = Entity;
 
@@ -306,7 +327,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	float Total_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) + Get_Latency_Type(537919008)(Network_Channel, 1);
 
-	__int32 Total_Latency_Ticks = __builtin_ceilf(Total_Latency / Global_Variables->Interval_Per_Tick);
+	__int32 Total_Latency_Ticks = Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
 
 	float Aim_Angles[2];
 
@@ -478,9 +499,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 								Optimal_Target_Origin[2] - Local_Player_Origin[2],
 							};
 
-							Aim_Angles[0] = __builtin_atan2f(-Origin_Difference[2], __builtin_sqrtf(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1])) * 180 / 3.1415927f;
+							Aim_Angles[0] = Arc_Tangent_2(Square_Root(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1]) , -Origin_Difference[2]) * 180 / 3.1415927f;
 
-							Aim_Angles[1] = __builtin_atan2f(Origin_Difference[1], Origin_Difference[0]) * 180 / 3.1415927f;
+							Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
 
 							User_Command->Buttons_State |= 1;
 						}
@@ -593,9 +614,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						float Corrected_Interpolation_Time = std::clamp(Total_Latency + Interpolation_Time, 0.f, 1.f);
 						
-						Target_Tick_Number = __builtin_ceilf((*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick) + Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
+						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f + Total_Latency_Ticks * Console_Variable_Extrapolation.Floating_Point;
 
-						Delta_Time = __builtin_fabsf(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + __builtin_ceilf(Total_Latency / Global_Variables->Interval_Per_Tick) - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
+						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
 					
 					if (Delta_Time <= 0.2f)
@@ -684,7 +705,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											Weapon_Spread = 0;
 
-											float Magnitude = 1 / (__builtin_sqrtf(Direction[0] * Direction[0] + Direction[1] * Direction[1] + Direction[2] * Direction[2]) + FLT_EPSILON);
+											float Magnitude = 1 / (Square_Root(Direction[0] * Direction[0] + Direction[1] * Direction[1] + Direction[2] * Direction[2]) + FLT_EPSILON);
 
 											Direction[0] *= Magnitude;
 
@@ -694,9 +715,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
 
-											User_Command->View_Angles[0] = __builtin_atan2f(-Direction[2], sqrtf(Direction[0] * Direction[0] + Direction[1] * Direction[1])) * 180 / 3.1415927f - Recoil[0] * 2;
+											User_Command->View_Angles[0] = Arc_Tangent_2(Square_Root(Direction[0] * Direction[0] + Direction[1] * Direction[1]), -Direction[2]) * 180 / 3.1415927f - Recoil[0] * 2;
 
-											User_Command->View_Angles[1] = __builtin_atan2f(Direction[1], Direction[0]) * 180 / 3.1415927f - Recoil[1] * 2;
+											User_Command->View_Angles[1] = Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - Recoil[1] * 2;
 										}
 										else
 										{
@@ -765,16 +786,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			{
 				if ((User_Command->Command_Number % 2) == 0)
 				{
-					User_Command->View_Angles[1] = __builtin_atan2f(Origin_Difference[1], Origin_Difference[0]) * 180 / 3.1415927f + Console_Variable_First_Choked_Angle_Y.Floating_Point;
+					User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_First_Choked_Angle_Y.Floating_Point;
 				}
 				else
 				{
-					User_Command->View_Angles[1] = __builtin_atan2f(Origin_Difference[1], Origin_Difference[0]) * 180 / 3.1415927f + Console_Variable_Second_Choked_Angle_Y.Floating_Point;
+					User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Second_Choked_Angle_Y.Floating_Point;
 				}
 			}
 			else
 			{
-				User_Command->View_Angles[1] = __builtin_atan2f(Origin_Difference[1], Origin_Difference[0]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;
+				User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;
 
 				*(float*)((unsigned __int32)Local_Player + 4124) = User_Command->View_Angles[0];
 
@@ -814,13 +835,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Angle_Vectors(Move_Angles, Desired_Move_Forward, Desired_Move_Right);
 
-	float Magnitude = 1 / (__builtin_sqrtf(Desired_Move_Forward[0] * Desired_Move_Forward[0] + Desired_Move_Forward[1] * Desired_Move_Forward[1]) + FLT_EPSILON);
+	float Magnitude = 1 / (Square_Root(Desired_Move_Forward[0] * Desired_Move_Forward[0] + Desired_Move_Forward[1] * Desired_Move_Forward[1]) + FLT_EPSILON);
 
 	Desired_Move_Forward[0] *= Magnitude;
 
 	Desired_Move_Forward[1] *= Magnitude;
 
-	Magnitude = 1 / (__builtin_sqrtf(Desired_Move_Right[0] * Desired_Move_Right[0] + Desired_Move_Right[1] * Desired_Move_Right[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(Desired_Move_Right[0] * Desired_Move_Right[0] + Desired_Move_Right[1] * Desired_Move_Right[1]) + FLT_EPSILON);
 
 	Desired_Move_Right[0] *= Magnitude;
 
@@ -839,13 +860,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Angle_Vectors(User_Command->View_Angles, Move_Forward, Move_Right);
 
-	Magnitude = 1 / (__builtin_sqrtf(Move_Forward[0] * Move_Forward[0] + Move_Forward[1] * Move_Forward[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(Move_Forward[0] * Move_Forward[0] + Move_Forward[1] * Move_Forward[1]) + FLT_EPSILON);
 
 	Move_Forward[0] *= Magnitude;
 
 	Move_Forward[1] *= Magnitude;
 
-	Magnitude = 1 / (__builtin_sqrtf(Move_Right[0] * Move_Right[0] + Move_Right[1] * Move_Right[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(Move_Right[0] * Move_Right[0] + Move_Right[1] * Move_Right[1]) + FLT_EPSILON);
 
 	Move_Right[0] *= Magnitude;
 
