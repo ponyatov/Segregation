@@ -43,11 +43,11 @@ void Redirected_Send_Move()
 				Is_New_Command = 1;
 			}
 
-			using Write_Command_Type = __int8(__thiscall**)(void* Client, void* Data, __int32 From, __int32 To, __int8 New);
+			using Write_Command_Type = __int8(__thiscall*)(void* Client, void* Data, __int32 From, __int32 To, __int8 New);
 
 			static void* Client_Location = *(void**)540494868;
 
-			__int8 Write_Command_Return_Value = (*Write_Command_Type(*(unsigned __int32*)Client_Location + 80))(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From, To, Is_New_Command);
+			__int8 Write_Command_Return_Value = Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From, To, Is_New_Command);
 
 			Should_Send_Packet = Write_Command_Return_Value;
 		}
@@ -71,8 +71,8 @@ void Redirected_Send_Move()
 			*(__int32*)((unsigned __int32)Network_Channel + 28) -= Extra_Commands_Queue;
 		}
 
-		using Send_Network_Message_Type = void(__thiscall**)(void* Network_Channel, void* Message, __int8 Unknown_Parameter);
+		using Send_Network_Message_Type = void(__thiscall*)(void* Network_Channel, void* Message, __int8 Unknown_Parameter);
 
-		(*Send_Network_Message_Type(*(unsigned __int32*)Network_Channel + 144))(Network_Channel, &Move_Message, 0);
+		Send_Network_Message_Type(537917776)(Network_Channel, &Move_Message, 0);
 	}
 }

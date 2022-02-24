@@ -46,11 +46,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Global_Variables->Frame_Time = Global_Variables->Interval_Per_Tick;
 
-	using Setup_Move_Type = void(__thiscall**)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Helper, void* Move_Data);
+	using Setup_Move_Type = void(__thiscall*)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Helper, void* Move_Data);
 
 	static void* Prediction = *(void**)540494880;
 
-	(*Setup_Move_Type(*(unsigned __int32*)Prediction + 80))(Prediction, Local_Player, User_Command, (void*)607735532, *(void**)607769840);
+	Setup_Move_Type(605885728)(Prediction, Local_Player, User_Command, (void*)607735532, *(void**)607769840);
 
 	float Local_Player_Previous_Origin[3] =
 	{
@@ -61,15 +61,15 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		*(float*)((unsigned __int32)Local_Player + 676),
 	};
 
-	using Process_Movement_Type = void(__thiscall**)(void* Game_Movement, void* Player, void* Move_Data);
+	using Process_Movement_Type = void(__thiscall*)(void* Game_Movement, void* Player, void* Move_Data);
 
 	static void* Game_Movement = *(void**)607769184;
 
-	(*Process_Movement_Type(*(unsigned __int32*)Game_Movement + 4))(Game_Movement, Local_Player, *(void**)607769840);
+	Process_Movement_Type(605830832)(Game_Movement, Local_Player, *(void**)607769840);
 
-	using Finish_Move_Type = void(__thiscall**)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Data);
+	using Finish_Move_Type = void(__thiscall*)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Data);
 
-	(*Finish_Move_Type(*(unsigned __int32*)Prediction + 84))(Prediction, Local_Player, User_Command, *(void**)607769840);
+	Finish_Move_Type(605207376)(Prediction, Local_Player, User_Command, *(void**)607769840);
 	
 	float Move_Angles[3] =
 	{ 
