@@ -2,10 +2,6 @@
 
 Player_History_Structure Players_History[64][90];
 
-__int32 Last_Tick_Base;
-
-float Last_Simulation_Time[64];
-
 void* Original_Frame_Stage_Notify_Caller_Location;
 
 float Absolute(float X)
@@ -94,9 +90,11 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 					if (Local_Player != nullptr)
 					{
-						__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
+						__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
-						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][Tick_Base];
+						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][Tick_Base % 90];
+
+						Player_History->Tick_Base = Tick_Base;
 
 						float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
 
@@ -109,10 +107,6 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 						Player_History->Origin[1] = Origin[1];
 
 						Player_History->Origin[2] = Origin[2];
-
-						Last_Tick_Base = Tick_Base;
-
-						Last_Simulation_Time[Normalized_Entity_Number] = Players_History[Normalized_Entity_Number][Tick_Base].Simulation_Time;
 					}
 				}
 			}

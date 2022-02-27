@@ -10,6 +10,8 @@ Console_Variable_Structure Console_Variable_Get_Priorities;
 
 Console_Variable_Structure Console_Variable_Bruteforce;
 
+Console_Variable_Structure Console_Variable_Extrapolate;
+
 Console_Variable_Structure Console_Variable_Aim_Height;
 
 Console_Variable_Structure Console_Variable_Angle_X;
