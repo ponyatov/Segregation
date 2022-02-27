@@ -112,7 +112,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			FillConsoleOutputAttribute(Standard_Output_Handle, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED, Console_Screen_Buffer_Information.dwSize.X * Console_Screen_Buffer_Information.dwSize.Y, Top_Left, &Characters_Written_Count);
 
 			wprintf(L"[ + ] Remote Thread Dispatch\n");
-			
+
 			unsigned __int8 Apply_View_Effects_Bytes[30] =
 			{
 				7,
@@ -248,10 +248,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.85", nullptr);
 
 			wprintf(L"[ + ] Aim_Height %p\n", &Console_Variable_Aim_Height);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolation, (char*)"Extrapolation", (char*)"0", nullptr);
-
-			wprintf(L"[ + ] Extrapolation %p\n", &Console_Variable_Extrapolation);
 
 			Create_Console_Variable_Type(539130656)(&Console_Variable_Angle_X, (char*)"Angle_X", (char*)"91", nullptr);
 

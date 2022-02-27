@@ -12,8 +12,6 @@ Console_Variable_Structure Console_Variable_Bruteforce;
 
 Console_Variable_Structure Console_Variable_Aim_Height;
 
-Console_Variable_Structure Console_Variable_Extrapolation;
-
 Console_Variable_Structure Console_Variable_Angle_X;
 
 Console_Variable_Structure Console_Variable_First_Choked_Angle_Y;

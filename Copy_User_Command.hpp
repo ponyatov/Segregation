@@ -63,13 +63,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	using Finish_Move_Type = void(__thiscall*)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Data);
 
 	Finish_Move_Type(605207376)(Prediction, Local_Player, User_Command, *(void**)607769840);
-	
+
 	float Move_Angles[3] =
-	{ 
+	{
 		User_Command->View_Angles[0],
-		
+
 		User_Command->View_Angles[1],
-		
+
 		User_Command->View_Angles[2]
 	};
 
@@ -88,7 +88,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Previous_Move_Angle_Y = User_Command->View_Angles[1];
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
+		float* Velocity = (float*)((unsigned __int32)Local_Player + 236);
 
 		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(Velocity[0] * Velocity[0] + Velocity[1] * Velocity[1]), 30) * 180 / 3.1415927f)
 		{
@@ -318,15 +318,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Network_Channel = *(void**)540608912;
 
-	float Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
+	float Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0);
 
 	float Incoming_Latency = Get_Latency_Type(537919008)(Network_Channel, 1);
 
-	float Incoming_Latency_Ticks = Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f;
-
-	float Total_Latency = Outgoing_Latency + Incoming_Latency_Ticks;
-
 	float Aim_Angles[2];
+	
+	float Extrapolation_Time;
 
 	Traverse_Distance_Sorted_Target_List_Label:
 	{
@@ -362,6 +360,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 					if (Studio_Model != nullptr)
 					{
+						__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+
 						auto Trace_Ray = [&](float* End_Point) -> __int8
 						{
 							struct Ray_Structure
@@ -456,8 +456,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						}
 						else
 						{
-							Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
-	
+							Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
+
 							if (Player_Data->Priority != -2)
 							{
 								if (Player_Data->Shots_Fired == 0)
@@ -476,15 +476,49 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						}
 
 						Optimal_Target_Origin[2] = Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1);
-
-						float* Velocity = (float*)((unsigned __int32)Optimal_Target + 224);
-
-						Optimal_Target_Origin[0] += Velocity[0] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
-
-						Optimal_Target_Origin[1] += Velocity[1] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
-
-						Optimal_Target_Origin[2] += Velocity[2] * Global_Variables->Interval_Per_Tick * Total_Latency * Console_Variable_Extrapolation.Floating_Point;
 						
+						Extrapolation_Time = FLT_MAX;
+						
+						__int32 Current_Player_History_Number = 0;
+
+						__int32 Previous_Player_History_Number;
+
+						Traverse_Player_History_Label:
+						{
+							float Current_Extrapolation_Time = Absolute(Last_Simulation_Time[Optimal_Target_Index] - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time);
+
+							if (Extrapolation_Time > Current_Extrapolation_Time)
+							{
+								Extrapolation_Time = Current_Extrapolation_Time;
+
+								Previous_Player_History_Number = Current_Player_History_Number;
+							}
+
+							Current_Player_History_Number += 1;
+
+							if (Current_Player_History_Number != 90)
+							{
+								goto Traverse_Player_History_Label;
+							}
+						}
+
+						if (Extrapolation_Time <= Outgoing_Latency)
+						{
+							Player_History_Structure* Last_Player_History = &Players_History[Optimal_Target_Index][Last_Tick_Base];
+
+							Player_History_Structure* Previous_Player_History = &Players_History[Optimal_Target_Index][Previous_Player_History_Number];
+
+							Optimal_Target_Origin[0] += Last_Player_History->Origin[0] - Previous_Player_History->Origin[0];
+
+							Optimal_Target_Origin[1] += Last_Player_History->Origin[1] - Previous_Player_History->Origin[1];
+
+							Optimal_Target_Origin[2] += Last_Player_History->Origin[2] - Previous_Player_History->Origin[2];
+						}
+						else
+						{
+							Extrapolation_Time = 0;
+						}
+
 						if (Trace_Ray(Optimal_Target_Origin) == 1)
 						{
 							float Origin_Difference[3] =
@@ -611,9 +645,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						float Corrected_Interpolation_Time = std::clamp(Incoming_Latency + Interpolation_Time, 0.f, 1.f);
 						
-						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f + Total_Latency * Console_Variable_Extrapolation.Floating_Point;
+						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Extrapolation_Time + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
-						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency_Ticks - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
+						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
 					
 					if (Delta_Time <= 0.2f)

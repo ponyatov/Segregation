@@ -41,6 +41,13 @@ struct Player_Data_Structure
 	__int8 Shots_Fired;
 };
 
+struct Player_History_Structure
+{
+	float Simulation_Time;
+
+	float Origin[3];
+};
+
 struct User_Command_Structure
 {
 	__int8 Additional_Bytes_1[4];

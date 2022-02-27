@@ -1,5 +1,11 @@
 #pragma once
 
+Player_History_Structure Players_History[64][90];
+
+__int32 Last_Tick_Base;
+
+float Last_Simulation_Time[64];
+
 void* Original_Frame_Stage_Notify_Caller_Location;
 
 float Absolute(float X)
@@ -15,25 +21,27 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 {
 	if (Stage == 2)
 	{
-		if (Console_Variable_Bruteforce.Integer == 1)
+		__int32 Entity_Number = 1;
+
+		static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+
+		__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
+
+		Traverse_Entity_List_Label:
 		{
-			__int32 Entity_Number = 1;
+			void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
 
-			static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
-
-			__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
-
-			Traverse_Entity_List_Label:
+			if (Entity != nullptr)
 			{
-				void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
+				void* Local_Player = *(void**)607867332;
 
-				if (Entity != nullptr)
+				if (Entity != Local_Player)
 				{
-					void* Local_Player = *(void**)607867332;
+					__int32 Normalized_Entity_Number = Entity_Number - 1;
 
-					if (Entity != Local_Player)
+					if (Console_Variable_Bruteforce.Integer == 1)
 					{
-						Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
+						Player_Data_Structure* Player_Data = &Players_Data[Normalized_Entity_Number];
 
 						if (Player_Data->Priority != -2)
 						{
@@ -83,14 +91,37 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 							}
 						}
 					}
-				}
 
-				if (Entity_Number != Maximum_Clients)
-				{
-					Entity_Number += 1;
+					if (Local_Player != nullptr)
+					{
+						__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
 
-					goto Traverse_Entity_List_Label;
+						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][Tick_Base];
+
+						float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
+
+						Player_History->Simulation_Time = Simulation_Time;
+
+						float* Origin = (float*)((unsigned __int32)Entity + 668);
+
+						Player_History->Origin[0] = Origin[0];
+
+						Player_History->Origin[1] = Origin[1];
+
+						Player_History->Origin[2] = Origin[2];
+
+						Last_Tick_Base = Tick_Base;
+
+						Last_Simulation_Time[Normalized_Entity_Number] = Players_History[Normalized_Entity_Number][Tick_Base].Simulation_Time;
+					}
 				}
+			}
+
+			if (Entity_Number != Maximum_Clients)
+			{
+				Entity_Number += 1;
+
+				goto Traverse_Entity_List_Label;
 			}
 		}
 	}
