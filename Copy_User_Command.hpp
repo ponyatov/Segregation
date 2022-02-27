@@ -458,7 +458,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						{
 							Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
 
-							if (Player_Data->Priority != -2)
+							if (Player_Data->Priority == -2)
+							{
+								Optimal_Target_Origin[0] = (Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2;
+
+								Optimal_Target_Origin[1] = (Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2;
+							}
+							else
 							{
 								if (Player_Data->Shots_Fired == 0)
 								{
