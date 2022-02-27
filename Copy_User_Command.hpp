@@ -487,11 +487,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						{
 							float Current_Extrapolation_Time = Absolute(Last_Simulation_Time[Optimal_Target_Index] - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time);
 
-							if (Extrapolation_Time > Current_Extrapolation_Time)
+							if (Current_Extrapolation_Time != 0)
 							{
-								Extrapolation_Time = Current_Extrapolation_Time;
+								if (Extrapolation_Time > Current_Extrapolation_Time)
+								{
+									Extrapolation_Time = Current_Extrapolation_Time;
 
-								Previous_Player_History_Number = Current_Player_History_Number;
+									Previous_Player_History_Number = Current_Player_History_Number;
+								}
 							}
 
 							Current_Player_History_Number += 1;
