@@ -1,0 +1,17 @@
+#pragma once
+
+float Update_Animation_Angle[2];
+
+void* Original_Update_Animation_Caller_Location;
+
+void __thiscall Redirected_Update_Animation(void* Player)
+{
+    if (Player == *(void**)607867332)
+    {
+        *(float*)((unsigned __int32)Player + 4124) = Update_Animation_Angle[0];
+
+        *(float*)((unsigned __int32)Player + 4128) = Update_Animation_Angle[1];
+    }
+
+    (decltype(&Redirected_Update_Animation)(Original_Update_Animation_Caller_Location))(Player);
+}

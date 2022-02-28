@@ -64,5 +64,11 @@
     <ClInclude Include="Event_Listener.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
+    <ClInclude Include="Update_Animation.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
+    <ClInclude Include="Converge_Angles.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

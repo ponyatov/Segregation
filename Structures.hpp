@@ -38,13 +38,13 @@ struct Player_Data_Structure
 
 	float Y;
 
+	void* Animation_State;
+
 	__int8 Shots_Fired;
 };
 
 struct Player_History_Structure
 {
-	__int32 Tick_Base;
-
 	float Simulation_Time;
 
 	float Origin[3];

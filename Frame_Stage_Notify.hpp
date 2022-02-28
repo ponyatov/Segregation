@@ -46,40 +46,30 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 							if (Player_Data->Shots_Fired == 0)
 							{
 								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y;
-
-								*(float*)((unsigned __int32)Animation_State - 116) = Player_Data->Y;
 							}
 							else
 							{
 								if (Player_Data->Shots_Fired == 1)
 								{
 									*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y - 45;
-
-									*(float*)((unsigned __int32)Animation_State - 116) = Player_Data->Y - 45;
 								}
 								else
 								{
 									if (Player_Data->Shots_Fired == 2)
 									{
 										*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + 45;
-
-										*(float*)((unsigned __int32)Animation_State - 116) = Player_Data->Y + 45;
 									}
 									else
 									{
 										if (Player_Data->Shots_Fired == 3)
 										{
 											*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y - 90;
-
-											*(float*)((unsigned __int32)Animation_State - 116) = Player_Data->Y - 90;
 										}
 										else
 										{
 											if (Player_Data->Shots_Fired == 4)
 											{
 												*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + 90;
-
-												*(float*)((unsigned __int32)Animation_State - 116) = Player_Data->Y + 90;
 											}
 										}
 									}
@@ -90,11 +80,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 					if (Local_Player != nullptr)
 					{
-						__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
-
-						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][Tick_Base % 90];
-
-						Player_History->Tick_Base = Tick_Base;
+						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
 
 						float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
 

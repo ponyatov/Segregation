@@ -72,6 +72,7 @@
   <ItemGroup>
     <ClInclude Include="Angles_Y.hpp" />
     <ClInclude Include="Console_Variables.hpp" />
+    <ClInclude Include="Converge_Angles.hpp" />
     <ClInclude Include="Draw_Crosshair.hpp" />
     <ClInclude Include="Event_Listener.hpp" />
     <ClInclude Include="Interpolate.hpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Frame_Stage_Notify.hpp" />
     <ClInclude Include="Item_Post_Frame.hpp" />
     <ClInclude Include="Priority.hpp" />
+    <ClInclude Include="Update_Animation.hpp" />
     <ClInclude Include="Run_Command.hpp" />
     <ClInclude Include="Run_Prediction.hpp" />
     <ClInclude Include="Send_Move.hpp" />

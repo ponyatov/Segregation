@@ -1,10 +1,10 @@
 #pragma once
 
-void* Original_Item_Post_Frame_Caller;
+void* Original_Item_Post_Frame_Caller_Location;
 
 void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 {
-	(decltype(&Redirected_Item_Post_Frame)(Original_Item_Post_Frame_Caller))(Weapon);
+	(decltype(&Redirected_Item_Post_Frame)(Original_Item_Post_Frame_Caller_Location))(Weapon);
 
 	using Get_Weapon_Data_Type = void*(__thiscall*)(void* Weapon);
 

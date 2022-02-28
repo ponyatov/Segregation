@@ -34,6 +34,10 @@
 
 #include "Weapon_Spread.hpp"
 
+#include "Update_Animation.hpp"
+
+#include "Converge_Angles.hpp"
+
 #include "Copy_User_Command.hpp"
 
 #include "Send_Move.hpp"
@@ -245,9 +249,9 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Prediction\n");
 
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolate, (char*)"Extrapolate", (char*)"0", nullptr);
+			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolation, (char*)"Extrapolation", (char*)"0", nullptr);
 
-			wprintf(L"[ + ] Extrapolate %p\n", &Console_Variable_Extrapolate);
+			wprintf(L"[ + ] Extrapolation %p\n", &Console_Variable_Extrapolation);
 
 			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.85", nullptr);
 
@@ -271,9 +275,13 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			Byte_Manager::Set_Bytes(1, (void*)605800287, 1, 235);
 
+			Redirection_Manager::Redirect_Function(Original_Update_Animation_Caller_Location, 4,  (void*)605800256, 1, (void*)Redirected_Update_Animation);
+
+			Redirection_Manager::Redirect_Function(Original_Converge_Angles_Caller_Location, 3, (void*)604019936, 1, (void*)Redirected_Converge_Angles);
+
 			wprintf(L"[ + ] Animations\n");
 
-			Redirection_Manager::Redirect_Function(Original_Weapon_Spread_Caller, 1, (void*)605949248, 1, (void*)Redirected_Weapon_Spread);
+			Redirection_Manager::Redirect_Function(Original_Weapon_Spread_Caller_Location, 1, (void*)605949248, 1, (void*)Redirected_Weapon_Spread);
 
 			wprintf(L"[ + ] Weapon Spread\n");
 
@@ -283,7 +291,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			Redirection_Manager::Redirect_Function(Original_Run_Command_Caller_Location, 0, (void*)605207600, 1, (void*)Redirected_Run_Command);
 
-			Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
+			Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
 
 			wprintf(L"[ + ] Command Processor\n");
 

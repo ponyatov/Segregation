@@ -318,11 +318,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Network_Channel = *(void**)540608912;
 
-	float Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0);
-
 	float Incoming_Latency = Get_Latency_Type(537919008)(Network_Channel, 1);
 
-	float Low_Extrapolation_Time;
+	float Extrapolation_Time;
 
 	float Aim_Angles[2];
 
@@ -482,117 +480,107 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						}
 
 						Optimal_Target_Origin[2] = Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1);
-						
-						if (Console_Variable_Extrapolate.Integer == 0)
+
+						if (Console_Variable_Extrapolation.Integer == 0)
 						{
-							Low_Extrapolation_Time = 0;
+							Extrapolation_Time = 0;
 						}
 						else
 						{
-							if (Player_Data->Priority == -2)
+							__int32 Current_Player_History_Number = 0;
+
+							float High_Simulation_Time = 0;
+
+							__int32 High_Player_History_Number;
+
+							Traverse_High_Player_History_Label:
 							{
-								Low_Extrapolation_Time = 0;
-							}
-							else
-							{
-								__int32 Current_Player_History_Number = 0;
+								float Current_Simulation_Time = Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
 
-								__int32 High_Tick_Base = 0;
-
-								__int32 High_Player_History_Number;
-
-								Traverse_High_Player_History_Label:
+								if (High_Simulation_Time < Current_Simulation_Time)
 								{
-									__int32 Current_Tick_Base = Players_History[Optimal_Target_Index][Current_Player_History_Number].Tick_Base;
+									High_Simulation_Time = Current_Simulation_Time;
 
-									if (High_Tick_Base < Current_Tick_Base)
+									High_Player_History_Number = Current_Player_History_Number;
+								}
+
+								Current_Player_History_Number += 1;
+
+								if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
+								{
+									goto Traverse_High_Player_History_Label;
+								}
+							}
+
+							float Low_Simulation_Time = FLT_MAX;
+
+							__int32 Low_Player_History_Number;
+
+							Traverse_Low_Player_History_Label:
+							{
+								float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+
+								if (Current_Simulation_Time != 0)
+								{
+									if (Low_Simulation_Time > Current_Simulation_Time)
 									{
-										High_Tick_Base = Current_Tick_Base;
+										Low_Simulation_Time = Current_Simulation_Time;
 
-										High_Player_History_Number = Current_Player_History_Number;
-									}
-
-									Current_Player_History_Number += 1;
-
-									if (Current_Player_History_Number != 90)
-									{
-										goto Traverse_High_Player_History_Label;
+										Low_Player_History_Number = Current_Player_History_Number;
 									}
 								}
 
-								Player_History_Structure* Last_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
-
-								__int32 Low_Tick_Base = INT_MAX;
-
-								__int32 Low_Player_History_Number;
-
-								Traverse_Low_Player_History_Label:
+								if (Current_Player_History_Number != 0)
 								{
-									Player_History_Structure* Current_Player_History = &Players_History[Optimal_Target_Index][Current_Player_History_Number];
-
-									__int32 Current_Tick_Base = High_Tick_Base - Current_Player_History->Tick_Base;
-
-									if (Current_Tick_Base != 0)
-									{
-										if (Last_Player_History->Simulation_Time != Current_Player_History->Simulation_Time)
-										{
-											if (Low_Tick_Base > Current_Tick_Base)
-											{
-												Low_Tick_Base = Current_Tick_Base;
-
-												Low_Player_History_Number = Current_Player_History_Number;
-											}
-										}
-									}
-
 									Current_Player_History_Number -= 1;
 
-									if (Current_Player_History_Number != 0)
-									{
-										goto Traverse_Low_Player_History_Label;
-									}
+									goto Traverse_Low_Player_History_Label;
 								}
+
+								Low_Simulation_Time = High_Simulation_Time - Low_Simulation_Time;
+							}
+
+							Extrapolation_Time = High_Simulation_Time - Low_Simulation_Time;
+
+							if ((__int32)(Extrapolation_Time / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Extrapolation.Integer)
+							{
+								Player_History_Structure* Last_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
 
 								Player_History_Structure* Previous_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
 
-								Low_Extrapolation_Time = Last_Player_History->Simulation_Time - Previous_Player_History->Simulation_Time;
-
-								if (Low_Extrapolation_Time <= Outgoing_Latency + Incoming_Latency)
+								float Extrapolation_Origin[3] =
 								{
-									float Extrapolation_Origin[3] =
-									{
-										Last_Player_History->Origin[0] - Previous_Player_History->Origin[0],
+									Last_Player_History->Origin[0] - Previous_Player_History->Origin[0],
 
-										Last_Player_History->Origin[1] - Previous_Player_History->Origin[1],
+									Last_Player_History->Origin[1] - Previous_Player_History->Origin[1],
 
-										Last_Player_History->Origin[2] - Previous_Player_History->Origin[2]
-									};
+									Last_Player_History->Origin[2] - Previous_Player_History->Origin[2]
+								};
 
-									Optimal_Target_Origin[0] += Extrapolation_Origin[0];
+								Optimal_Target_Origin[0] += Extrapolation_Origin[0];
 
-									Optimal_Target_Origin[1] += Extrapolation_Origin[1];
+								Optimal_Target_Origin[1] += Extrapolation_Origin[1];
 
-									Optimal_Target_Origin[2] += Extrapolation_Origin[2];
+								Optimal_Target_Origin[2] += Extrapolation_Origin[2];
 
-									if (Trace_Ray(Optimal_Target_Origin) == 0)
-									{
-										Low_Extrapolation_Time = 0;
-
-										Optimal_Target_Origin[0] -= Extrapolation_Origin[0];
-
-										Optimal_Target_Origin[1] -= Extrapolation_Origin[1];
-
-										Optimal_Target_Origin[2] -= Extrapolation_Origin[2];
-									}
-								}
-								else
+								if (Trace_Ray(Optimal_Target_Origin) == 0)
 								{
-									Low_Extrapolation_Time = 0;
+									Extrapolation_Time = 0;
+
+									Optimal_Target_Origin[0] -= Extrapolation_Origin[0];
+
+									Optimal_Target_Origin[1] -= Extrapolation_Origin[1];
+
+									Optimal_Target_Origin[2] -= Extrapolation_Origin[2];
 								}
+							}
+							else
+							{
+								Extrapolation_Time = 0;
 							}
 						}
 						
-						if (Trace_Ray(Optimal_Target_Origin) == 1)
+						if (Trace_Ray(Optimal_Target_Origin) == 1 && Extrapolation_Time != 0)
 						{
 							float Origin_Difference[3] =
 							{
@@ -718,7 +706,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						float Corrected_Interpolation_Time = std::clamp(Incoming_Latency + Interpolation_Time, 0.f, 1.f);
 
-						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Low_Extrapolation_Time + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
+						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Extrapolation_Time + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
 						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
@@ -877,6 +865,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		{
 			User_Command->View_Angles[0] = Console_Variable_Angle_X.Floating_Point;
 
+			Update_Animation_Angle[0] = User_Command->View_Angles[0];
+
 			float* Optimal_Target_Origin = (float*)((unsigned __int32)Distance_Sorted_Target_List.at(0).Target + 668);
 
 			float Origin_Difference[2] =
@@ -899,12 +889,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			}
 			else
 			{
-				User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;
+				User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;		
 
-				*(float*)((unsigned __int32)Local_Player + 4124) = User_Command->View_Angles[0];
-
-				*(float*)((unsigned __int32)Local_Player + 4128) = __builtin_remainderf(User_Command->View_Angles[1], 360);
+				Update_Animation_Angle[1] = User_Command->View_Angles[1];
 			}
+		}
+		else
+		{
+			Update_Animation_Angle[0] = User_Command->View_Angles[0];
+
+			Update_Animation_Angle[1] = User_Command->View_Angles[1];
 		}
 	}
 
