@@ -54,6 +54,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		*(float*)((unsigned __int32)Local_Player + 676),
 	};
 
+	//TODO: DEBUG
+
 	using Process_Movement_Type = void(__thiscall*)(void* Game_Movement, void* Player, void* Move_Data);
 
 	static void* Game_Movement = *(void**)607769184;
@@ -511,6 +513,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									goto Traverse_High_Player_History_Label;
 								}
 							}
+
+							//TODO: TAKE AVERAGE FOR DYNAMIC EXTRAPOLATION
 
 							float Low_Simulation_Time = FLT_MAX;
 
