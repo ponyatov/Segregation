@@ -29,22 +29,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Local_Player = *(void**)607867332;
 
-	*(User_Command_Structure**)((unsigned __int32)Local_Player + 3424) = User_Command;
-
-	*(void**)607858424 = Local_Player;
-
-	static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
-
-	Global_Variables->Current_Time = *(__int32*)((unsigned __int32)Local_Player + 3592) * Global_Variables->Interval_Per_Tick;
-
-	Global_Variables->Frame_Time = Global_Variables->Interval_Per_Tick;
-
-	using Setup_Move_Type = void(__thiscall*)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Helper, void* Move_Data);
-
-	static void* Prediction = *(void**)540494880;
-
-	Setup_Move_Type(605885728)(Prediction, Local_Player, User_Command, (void*)607735532, *(void**)607769840);
-
 	float Local_Player_Previous_Origin[3] =
 	{
 		*(float*)((unsigned __int32)Local_Player + 668),
@@ -54,17 +38,15 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		*(float*)((unsigned __int32)Local_Player + 676),
 	};
 
-	//TODO: DEBUG
+	using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
 
-	using Process_Movement_Type = void(__thiscall*)(void* Game_Movement, void* Player, void* Move_Data);
+	static void* Prediction = *(void**)540494880;
 
-	static void* Game_Movement = *(void**)607769184;
+	Shot_Tick = -1;
 
-	Process_Movement_Type(605830832)(Game_Movement, Local_Player, *(void**)607769840);
+	Run_Command_Type(605207600)(Prediction, Local_Player, User_Command, (void*)607735532);
 
-	using Finish_Move_Type = void(__thiscall*)(void* Prediction, void* Player, User_Command_Structure* User_Command, void* Move_Data);
-
-	Finish_Move_Type(605207376)(Prediction, Local_Player, User_Command, *(void**)607769840);
+	*(__int32*)((unsigned __int32)Local_Player + 3592) -= 1;
 
 	float Move_Angles[3] =
 	{
@@ -245,6 +227,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Distance_Sorted_Target_List.clear();
 
+	static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+
 	__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
 
 	Traverse_Entity_List_Label:
@@ -334,7 +318,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 			float Local_Player_Origin[3];
 
-			Eye_Position(604081792)(Local_Player, Local_Player_Origin);
+			Eye_Position(604058320)(Local_Player, Local_Player_Origin);
 
 			using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
@@ -796,7 +780,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Cosine_X * Sine_Y + Random_X * Weapon_Spread * -Cosine_Y + Random_Y * Weapon_Spread * (Sine_X * Sine_Y),
 
-												-Sine_X + Weapon_Spread * Random_Y * Cosine_X
+												-Sine_X + Random_Y * Weapon_Spread * Cosine_X
 											};
 
 											Weapon_Spread = 0;

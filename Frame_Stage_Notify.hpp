@@ -11,7 +11,15 @@ float Absolute(float X)
 	return X;
 }
 
+float Uncompressed_Velocity[90][3];
+
+float Uncompressed_Base_Velocity[90][3];
+
 float Uncompressed_Recoil[90][2];
+
+float Uncompressed_Fall_Velocity[90];
+
+float Uncompressed_Stamina[90];
 
 void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 Stage)
 {
@@ -112,9 +120,45 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 	{
 		void* Local_Player = *(void**)607867332;
 
-		float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
+		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
 
 		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
+
+		constexpr float Proportional_Maximum_Velocity = 3500 / 3;
+
+		if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= Proportional_Maximum_Velocity)
+		{
+			if (Absolute(Velocity[1] - Uncompressed_Velocity[Tick_Base][1]) <= Proportional_Maximum_Velocity)
+			{
+				if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= Proportional_Maximum_Velocity)
+				{
+					*(float*)((unsigned __int32)Local_Player + 224) = Uncompressed_Velocity[Tick_Base][0];
+
+					*(float*)((unsigned __int32)Local_Player + 228) = Uncompressed_Velocity[Tick_Base][1];
+
+					*(float*)((unsigned __int32)Local_Player + 232) = Uncompressed_Velocity[Tick_Base][2];
+				}
+			}
+		}
+
+		float* Base_Velocity = (float*)((unsigned __int32)Local_Player + 276);
+
+		if (Absolute(Base_Velocity[0] - Uncompressed_Base_Velocity[Tick_Base][0]) <= 0.1f)
+		{
+			if (Absolute(Base_Velocity[1] - Uncompressed_Base_Velocity[Tick_Base][1]) <= 0.1f)
+			{
+				if (Absolute(Base_Velocity[2] - Uncompressed_Base_Velocity[Tick_Base][2]) <= 0.1f)
+				{
+					*(float*)((unsigned __int32)Local_Player + 276) = Uncompressed_Base_Velocity[Tick_Base][0];
+
+					*(float*)((unsigned __int32)Local_Player + 280) = Uncompressed_Base_Velocity[Tick_Base][1];
+
+					*(float*)((unsigned __int32)Local_Player + 284) = Uncompressed_Base_Velocity[Tick_Base][2];
+				}
+			}
+		}
+
+		float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
 
 		if (Absolute(Recoil[0] - Uncompressed_Recoil[Tick_Base][0]) <= 0.125f)
 		{
@@ -124,6 +168,16 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 				*(float*)((unsigned __int32)Local_Player + 2996) = Uncompressed_Recoil[Tick_Base][1];
 			}
+		}
+
+		if (Absolute(*(float*)((unsigned __int32)Local_Player + 2972) - Uncompressed_Fall_Velocity[Tick_Base]) <= 0.5f)
+		{
+			*(float*)((unsigned __int32)Local_Player + 2972) = Uncompressed_Fall_Velocity[Tick_Base];
+		}
+
+		if (Absolute(*(float*)((unsigned __int32)Local_Player + 4016) - Uncompressed_Stamina[Tick_Base]) <= 0.1f)
+		{
+			*(float*)((unsigned __int32)Local_Player + 4016) = Uncompressed_Stamina[Tick_Base];
 		}
 	}
 }
