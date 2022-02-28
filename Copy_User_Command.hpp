@@ -580,7 +580,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 							}
 						}
 						
-						if (Trace_Ray(Optimal_Target_Origin) == 1 && Extrapolation_Time != 0)
+						if (Trace_Ray(Optimal_Target_Origin) == 1)
 						{
 							float Origin_Difference[3] =
 							{
