@@ -88,24 +88,19 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 					if (Local_Player != nullptr)
 					{
-						__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
+						Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
 
-						if (Tick_Base == Global_Variables->Tick_Number)
-						{
-							Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][Tick_Base % 90];
+						float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
 
-							float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
+						Player_History->Simulation_Time = Simulation_Time;
 
-							Player_History->Simulation_Time = Simulation_Time;
+						float* Origin = (float*)((unsigned __int32)Entity + 668);
 
-							float* Origin = (float*)((unsigned __int32)Entity + 668);
+						Player_History->Origin[0] = Origin[0];
 
-							Player_History->Origin[0] = Origin[0];
+						Player_History->Origin[1] = Origin[1];
 
-							Player_History->Origin[1] = Origin[1];
-
-							Player_History->Origin[2] = Origin[2];
-						}
+						Player_History->Origin[2] = Origin[2];
 					}
 				}
 			}
