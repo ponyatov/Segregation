@@ -605,23 +605,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										{
 											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
 
-											if (Acceleration[Accelerated_High_Mid_Origin_Difference_Number] == 0)
-											{
-												Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 1;
-											}
-											else
-											{
-												Accelerated_High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number] *= Acceleration[Accelerated_High_Mid_Origin_Difference_Number];
-											}
+											Accelerated_High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number] *= Acceleration[Accelerated_High_Mid_Origin_Difference_Number];
 										}
 										else
 										{
-											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 1;
+											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 0;
 										}
 									}
 									else
 									{
-										Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 1;
+										Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 0;
 									}
 
 									Accelerated_High_Mid_Origin_Difference_Number += 1;
@@ -632,11 +625,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									}
 								}
 
-								if (Absolute(1 - Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+								if (Absolute(__builtin_ceilf(Acceleration[0]) - Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 								{
-									if (Absolute(1 - Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+									if (Absolute(__builtin_ceilf(Acceleration[1]) - Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 									{
-										if (Absolute(1 - Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+										if (Absolute(__builtin_ceilf(Acceleration[2]) - Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 										{
 											Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
 
