@@ -629,6 +629,10 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 									Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
 								}
+								else
+								{
+									goto Set_Aim_Angles_Label;
+								}
 							}
 							else
 							{
@@ -638,20 +642,23 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						
 						if (Trace_Ray(Optimal_Target_Origin) == 1)
 						{
-							float Origin_Difference[3] =
+							Set_Aim_Angles_Label:
 							{
-								Optimal_Target_Origin[0] - Local_Player_Origin[0],
+								float Origin_Difference[3] =
+								{
+									Optimal_Target_Origin[0] - Local_Player_Origin[0],
 
-								Optimal_Target_Origin[1] - Local_Player_Origin[1],
+									Optimal_Target_Origin[1] - Local_Player_Origin[1],
 
-								Optimal_Target_Origin[2] - Local_Player_Origin[2],
-							};
+									Optimal_Target_Origin[2] - Local_Player_Origin[2],
+								};
 
-							Aim_Angles[0] = Arc_Tangent_2(Square_Root(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1]), -Origin_Difference[2]) * 180 / 3.1415927f;
+								Aim_Angles[0] = Arc_Tangent_2(Square_Root(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1]), -Origin_Difference[2]) * 180 / 3.1415927f;
 
-							Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
+								Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
 
-							User_Command->Buttons_State |= 1;
+								User_Command->Buttons_State |= 1;
+							}
 						}
 						else
 						{
