@@ -629,7 +629,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 								{
 									if (Absolute(1 - Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 									{
-										if (Absolute(1 - Acceleration[2]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+										if (Absolute(1 - Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 										{
 											Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
 
