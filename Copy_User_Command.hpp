@@ -605,7 +605,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										{
 											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
 
-											Accelerated_High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number] *= Acceleration[Accelerated_High_Mid_Origin_Difference_Number];
+											if (Acceleration[Accelerated_High_Mid_Origin_Difference_Number] == 0)
+											{
+												Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 1;
+											}
+											else
+											{
+												Accelerated_High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number] *= Acceleration[Accelerated_High_Mid_Origin_Difference_Number];
+											}
 										}
 										else
 										{
