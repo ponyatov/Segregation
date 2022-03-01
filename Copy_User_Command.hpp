@@ -591,6 +591,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 								__int32 Origin_Difference_Offset = 0;
 
+								float Acceleration = FLT_MAX;
+
 								Accelerate_High_Mid_Origin_Difference_Label:
 								{
 									float High_Mid_Difference = High_Mid_Origin_Difference[Origin_Difference_Offset];
@@ -601,7 +603,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 										if (Mid_Low_Difference != 0)
 										{
-											Accelerated_High_Mid_Origin_Difference[Origin_Difference_Offset] *= High_Mid_Difference / Mid_Low_Difference;
+											Acceleration = High_Mid_Difference / Mid_Low_Difference;
+
+											Accelerated_High_Mid_Origin_Difference[Origin_Difference_Offset] *= Acceleration;
 										}
 									}
 
@@ -613,25 +617,32 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									}
 								}
 
-								Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
-
-								Optimal_Target_Origin[1] += Accelerated_High_Mid_Origin_Difference[1];
-
-								Optimal_Target_Origin[2] += Accelerated_High_Mid_Origin_Difference[2];
-
-								if (Trace_Ray(Optimal_Target_Origin) == 0)
+								if (Absolute(1 - Acceleration) <= Console_Variable_Extrapolation_Allowed_Deviation.Floating_Point)
 								{
-									Extrapolation_Time = 0;
+									Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
 
-									Optimal_Target_Origin[0] -= Accelerated_High_Mid_Origin_Difference[0];
+									Optimal_Target_Origin[1] += Accelerated_High_Mid_Origin_Difference[1];
 
-									Optimal_Target_Origin[1] -= Accelerated_High_Mid_Origin_Difference[1];
+									Optimal_Target_Origin[2] += Accelerated_High_Mid_Origin_Difference[2];
 
-									Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
+									if (Trace_Ray(Optimal_Target_Origin) == 0)
+									{
+										Extrapolation_Time = 0;
+
+										Optimal_Target_Origin[0] -= Accelerated_High_Mid_Origin_Difference[0];
+
+										Optimal_Target_Origin[1] -= Accelerated_High_Mid_Origin_Difference[1];
+
+										Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
+									}
+									else
+									{
+										goto Set_Aim_Angles_Label;
+									}
 								}
 								else
 								{
-									goto Set_Aim_Angles_Label;
+									Extrapolation_Time = 0;
 								}
 							}
 							else

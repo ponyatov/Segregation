@@ -253,6 +253,10 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Extrapolation %p\n", &Console_Variable_Extrapolation);
 
+			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolation_Allowed_Deviation, (char*)"Extrapolation_Allowed_Deviation", (char*)"0", nullptr);
+
+			wprintf(L"[ + ] Extrapolation_Allowed_Deviation %p\n", &Console_Variable_Extrapolation_Allowed_Deviation);
+
 			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.85", nullptr);
 
 			wprintf(L"[ + ] Aim_Height %p\n", &Console_Variable_Aim_Height);
