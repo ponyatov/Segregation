@@ -352,7 +352,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						{
 							struct Ray_Structure
 							{
-								__int8 Additional_Bytes[52];
+								__int8 Additional_Bytes[50];
 							};
 
 							struct Trace_Filter_Structure
