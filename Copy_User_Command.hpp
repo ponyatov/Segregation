@@ -796,7 +796,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						float Corrected_Interpolation_Time = std::clamp(Incoming_Latency + Interpolation_Time, 0.f, 1.f);
 
-						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Extrapolation_Time + Corrected_Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
+						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Extrapolation_Time + Incoming_Latency + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
 						Delta_Time = Absolute(Corrected_Interpolation_Time - (Global_Variables->Tick_Number + Incoming_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number) * Global_Variables->Interval_Per_Tick);
 					}
