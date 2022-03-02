@@ -31,12 +31,6 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 		
 		__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
 
-		using Get_Latency_Type = float(__thiscall*)(void* Network_Channel, __int32 Flow_Type);
-
-		void* Network_Channel = *(void**)540608912;
-
-		__int32 Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
-
 		Traverse_Entity_List_Label:
 		{
 			void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
@@ -96,22 +90,19 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 					{
 						if (*(__int8*)((unsigned __int32)Entity + 135) == 0)
 						{
-							if (Global_Variables->Tick_Number % (Outgoing_Latency + 1) == 0)
-							{
-								Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
+							Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
 
-								float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
+							float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
 
-								Player_History->Simulation_Time = Simulation_Time;
+							Player_History->Simulation_Time = Simulation_Time;
 
-								float* Origin = (float*)((unsigned __int32)Entity + 668);
+							float* Origin = (float*)((unsigned __int32)Entity + 668);
 
-								Player_History->Origin[0] = Origin[0];
+							Player_History->Origin[0] = Origin[0];
 
-								Player_History->Origin[1] = Origin[1];
+							Player_History->Origin[1] = Origin[1];
 
-								Player_History->Origin[2] = Origin[2];
-							}
+							Player_History->Origin[2] = Origin[2];
 						}
 						else
 						{
