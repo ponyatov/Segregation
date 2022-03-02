@@ -532,19 +532,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 							{
 								if ((__int32)(Extrapolation_Time / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Extrapolation.Integer)
 								{
-									Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
-
-									Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
-
-									float High_Mid_Origin_Difference[3] =
-									{
-										High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
-
-										High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
-
-										High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
-									};
-
 									float Low_Simulation_Time = Mid_Simulation_Time;
 
 									__int32 Low_Player_History_Number;
@@ -577,7 +564,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									}
 									else
 									{
-										__int32 Origin_Difference_Number = 0;
+										Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
 
 										Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
 
@@ -590,40 +577,37 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
 										};
 
-										float Origin_Difference_Acceleration[3];
+										__int32 Origin_Difference_Number = 0;
 
-										float Accelerated_High_Mid_Origin_Difference[3] =
+										float High_Mid_Origin_Difference_Acceleration[3];
+
+										Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
+
+										float High_Mid_Origin_Difference[3] =
 										{
-											High_Mid_Origin_Difference[0],
+											High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
 
-											High_Mid_Origin_Difference[1],
+											High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
 
-											High_Mid_Origin_Difference[2],
+											High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
 										};
+
+										float Accelerated_High_Mid_Origin_Difference[3];
 
 										Accelerate_High_Mid_Origin_Difference_Label:
 										{
-											float High_Mid_Difference = High_Mid_Origin_Difference[Origin_Difference_Number];
+											float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
 
-											if (High_Mid_Difference != 0)
+											if (Mid_Low_Difference != 0)
 											{
-												float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
-
-												if (Mid_Low_Difference != 0)
-												{
-													Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
-
-													Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] *= Origin_Difference_Acceleration[Origin_Difference_Number];
-												}
-												else
-												{
-													Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
-												}
+												High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] / Mid_Low_Difference;
 											}
 											else
 											{
-												Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
+												High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 											}
+
+											Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] * High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
 
 											Origin_Difference_Number += 1;
 
@@ -633,11 +617,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											}
 										}
 
-										if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[0]) - Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+										if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 										{
-											if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[1]) - Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+											if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[1]) - High_Mid_Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 											{
-												if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[2]) - Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+												if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 												{
 													Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
 
