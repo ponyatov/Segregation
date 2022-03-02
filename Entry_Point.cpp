@@ -349,8 +349,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Event_Listener->Table = Event_Listener_Table;
 
 			using Add_Listener_Type = __int8(__thiscall*)(void* Game_Event_Manager, void* Listener, char* Event, __int8 Unknown_Parameter);
-			
-			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"round_start", 0);
 
 			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
 

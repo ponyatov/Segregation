@@ -88,27 +88,34 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 					if (Local_Player != nullptr)
 					{
-						using Get_Latency_Type = float(__thiscall*)(void* Network_Channel, __int32 Flow_Type);
-
-						void* Network_Channel = *(void**)540608912;
-
-						__int32 Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
-						
-						if (Global_Variables->Tick_Number % (Outgoing_Latency + 1) == 0)
+						if (*(__int8*)((unsigned __int32)Entity + 135) == 0)
 						{
-							Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
+							using Get_Latency_Type = float(__thiscall*)(void* Network_Channel, __int32 Flow_Type);
 
-							float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
+							void* Network_Channel = *(void**)540608912;
 
-							Player_History->Simulation_Time = Simulation_Time;
+							__int32 Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
 
-							float* Origin = (float*)((unsigned __int32)Entity + 668);
+							if (Global_Variables->Tick_Number % (Outgoing_Latency + 1) == 0)
+							{
+								Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
 
-							Player_History->Origin[0] = Origin[0];
+								float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
 
-							Player_History->Origin[1] = Origin[1];
+								Player_History->Simulation_Time = Simulation_Time;
 
-							Player_History->Origin[2] = Origin[2];
+								float* Origin = (float*)((unsigned __int32)Entity + 668);
+
+								Player_History->Origin[0] = Origin[0];
+
+								Player_History->Origin[1] = Origin[1];
+
+								Player_History->Origin[2] = Origin[2];
+							}
+						}
+						else
+						{
+							__builtin_memset(Players_History[Normalized_Entity_Number], 0, sizeof(Players_History[Normalized_Entity_Number]));
 						}
 					}
 				}
