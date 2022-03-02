@@ -530,6 +530,21 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 							if ((__int32)(Extrapolation_Time / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Extrapolation.Integer)
 							{
+								Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
+
+								Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
+
+								float High_Mid_Origin_Difference[3] =
+								{
+									High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
+
+									High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
+
+									High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
+								};
+
+								__int32 Origin_Difference_Number = 0;
+
 								float Low_Simulation_Time = Mid_Simulation_Time;
 
 								__int32 Low_Player_History_Number;
@@ -556,20 +571,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									}
 								}
 
-								Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
-
-								Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
-
 								Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
-
-								float High_Mid_Origin_Difference[3] =
-								{
-									High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
-
-									High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
-
-									High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
-								};
 
 								float Mid_Low_Origin_Difference[3] =
 								{
@@ -580,6 +582,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
 								};
 
+								float Origin_Difference_Acceleration[3];
+
 								float Accelerated_High_Mid_Origin_Difference[3] =
 								{
 									High_Mid_Origin_Difference[0],
@@ -588,10 +592,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 									High_Mid_Origin_Difference[2],
 								};
-
-								__int32 Origin_Difference_Number = 0;
-
-								float Origin_Difference_Acceleration[3];
 
 								Accelerate_High_Mid_Origin_Difference_Label:
 								{
