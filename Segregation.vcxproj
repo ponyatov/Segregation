@@ -76,7 +76,7 @@
     <ClInclude Include="Draw_Crosshair.hpp" />
     <ClInclude Include="Event_Listener.hpp" />
     <ClInclude Include="Interpolate.hpp" />
-    <ClInclude Include="Is_Missing_Texture.hpp" />
+    <ClInclude Include="Is_Error_Material.hpp" />
     <ClInclude Include="Copy_User_Command.hpp" />
     <ClInclude Include="Frame_Stage_Notify.hpp" />
     <ClInclude Include="Item_Post_Frame.hpp" />

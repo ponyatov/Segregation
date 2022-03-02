@@ -16,7 +16,7 @@
 
 #include "Redirection_Manager/Redirection_Manager.hpp"
 
-#include "Is_Missing_Texture.hpp"
+#include "Is_Error_Material.hpp"
 
 #include "Interpolate.hpp"
 
@@ -198,7 +198,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Crosshair\n");
 
-			Redirection_Manager::Redirect_Function(Original_Is_Missing_Texture_Caller_Location, 2, (void*)((unsigned __int32)GetModuleHandleW(L"MaterialSystem.dll") + 20432), 1, (void*)Redirected_Is_Missing_Texture);
+			Redirection_Manager::Redirect_Function(Original_Is_Error_Material_Caller_Location, 2, (void*)((unsigned __int32)GetModuleHandleW(L"MaterialSystem.dll") + 20432), 1, (void*)Redirected_Is_Error_Material);
 
 			Byte_Manager::Set_Bytes(1, (void*)605809168, 1, 195);
 
@@ -213,7 +213,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			Byte_Manager::Copy_Bytes(1, (void*)605610608, sizeof(Smoke_Bytes), Smoke_Bytes);
 
-			wprintf(L"[ + ] Textures\n");
+			wprintf(L"[ + ] Materials\n");
 
 			Redirection_Manager::Redirect_Function(Original_Interpolate_Caller_Location, 0, (void*)604201536, 1, (void*)Redirected_Interpolate);
 

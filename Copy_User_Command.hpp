@@ -27,6 +27,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 {
 	Redirected_Run_Prediction();
 
+	Shot_Tick = -1;
+
 	void* Local_Player = *(void**)607867332;
 
 	float Local_Player_Previous_Origin[3] =
@@ -41,8 +43,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
 
 	static void* Prediction = *(void**)540494880;
-
-	Shot_Tick = -1;
 
 	Run_Command_Type(605207600)(Prediction, Local_Player, User_Command, (void*)607735532);
 
@@ -352,7 +352,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						{
 							struct Ray_Structure
 							{
-								__int8 Additional_Bytes[666];
+								__int8 Additional_Bytes[52];
 							};
 
 							struct Trace_Filter_Structure
@@ -589,47 +589,47 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									High_Mid_Origin_Difference[2],
 								};
 
-								__int32 Accelerated_High_Mid_Origin_Difference_Number = 0;
+								__int32 Origin_Difference_Number = 0;
 
-								float Acceleration[3];
+								float Origin_Difference_Acceleration[3];
 
 								Accelerate_High_Mid_Origin_Difference_Label:
 								{
-									float High_Mid_Difference = High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number];
+									float High_Mid_Difference = High_Mid_Origin_Difference[Origin_Difference_Number];
 
 									if (High_Mid_Difference != 0)
 									{
-										float Mid_Low_Difference = Mid_Low_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number];
+										float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
 
 										if (Mid_Low_Difference != 0)
 										{
-											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
+											Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
 
-											Accelerated_High_Mid_Origin_Difference[Accelerated_High_Mid_Origin_Difference_Number] *= Acceleration[Accelerated_High_Mid_Origin_Difference_Number];
+											Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] *= Origin_Difference_Acceleration[Origin_Difference_Number];
 										}
 										else
 										{
-											Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 0;
+											Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 										}
 									}
 									else
 									{
-										Acceleration[Accelerated_High_Mid_Origin_Difference_Number] = 0;
+										Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 									}
 
-									Accelerated_High_Mid_Origin_Difference_Number += 1;
+									Origin_Difference_Number += 1;
 
-									if (Accelerated_High_Mid_Origin_Difference_Number != 3)
+									if (Origin_Difference_Number != 3)
 									{
 										goto Accelerate_High_Mid_Origin_Difference_Label;
 									}
 								}
 
-								if (Absolute(__builtin_ceilf(Acceleration[0]) - Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+								if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[0]) - Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 								{
-									if (Absolute(__builtin_ceilf(Acceleration[1]) - Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+									if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[1]) - Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 									{
-										if (Absolute(__builtin_ceilf(Acceleration[2]) - Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+										if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[2]) - Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 										{
 											Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
 

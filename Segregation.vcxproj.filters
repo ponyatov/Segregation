@@ -25,7 +25,7 @@
     <ClInclude Include="Console_Variables.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
-    <ClInclude Include="Is_Missing_Texture.hpp">
+    <ClInclude Include="Is_Error_Material.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
     <ClInclude Include="Copy_User_Command.hpp">
