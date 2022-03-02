@@ -93,8 +93,8 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 						void* Network_Channel = *(void**)540608912;
 
 						__int32 Outgoing_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) / Global_Variables->Interval_Per_Tick + 0.5f;
-
-						if (Global_Variables->Tick_Number % (Outgoing_Latency + 1) == Outgoing_Latency)
+						
+						if (Global_Variables->Tick_Number % (Outgoing_Latency + 1) == 0)
 						{
 							Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
 
