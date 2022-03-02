@@ -50,6 +50,8 @@
 
 #include "Event_Listener.hpp"
 
+#include "Shutdown.hpp"
+
 __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reason, void* Reserved)
 {
 	if (Call_Reason == DLL_PROCESS_DETACH)
@@ -348,9 +350,15 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			using Add_Listener_Type = __int8(__thiscall*)(void* Game_Event_Manager, void* Listener, char* Event, __int8 Unknown_Parameter);
 			
+			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"round_start", 0);
+
 			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
 
 			wprintf(L"[ + ] Events\n");
+
+			Redirection_Manager::Redirect_Function(Original_Shutdown_Caller_Location, 0, (void*)537926128, 1, (void*)Redirected_Shutdown);
+
+			wprintf(L"[ + ] Shutdown\n");
 		}
 	}
 

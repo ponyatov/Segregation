@@ -498,7 +498,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 								}
 							}
 
-							float Mid_Simulation_Time = FLT_MAX;
+							float Mid_Simulation_Time = High_Simulation_Time;
 
 							__int32 Mid_Player_History_Number;
 
@@ -528,128 +528,146 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 							Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
 
-							if ((__int32)(Extrapolation_Time / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Extrapolation.Integer)
+							if (Extrapolation_Time != 0)
 							{
-								Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
-
-								Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
-
-								float High_Mid_Origin_Difference[3] =
+								if ((__int32)(Extrapolation_Time / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Extrapolation.Integer)
 								{
-									High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
+									Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
 
-									High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
+									Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
 
-									High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
-								};
-
-								__int32 Origin_Difference_Number = 0;
-
-								float Low_Simulation_Time = Mid_Simulation_Time;
-
-								__int32 Low_Player_History_Number;
-
-								Traverse_Player_History_Find_Low_Label:
-								{
-									float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
-
-									if (Current_Simulation_Time > 0)
+									float High_Mid_Origin_Difference[3] =
 									{
-										if (Low_Simulation_Time > Current_Simulation_Time)
-										{
-											Low_Simulation_Time = Current_Simulation_Time;
+										High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
 
-											Low_Player_History_Number = Current_Player_History_Number;
+										High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
+
+										High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
+									};
+
+									__int32 Origin_Difference_Number = 0;
+
+									float Low_Simulation_Time = Mid_Simulation_Time;
+
+									__int32 Low_Player_History_Number;
+
+									Traverse_Player_History_Find_Low_Label:
+									{
+										float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+
+										if (Current_Simulation_Time > 0)
+										{
+											if (Low_Simulation_Time > Current_Simulation_Time)
+											{
+												Low_Simulation_Time = Current_Simulation_Time;
+
+												Low_Player_History_Number = Current_Player_History_Number;
+											}
+										}
+
+										Current_Player_History_Number += 1;
+
+										if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
+										{
+											goto Traverse_Player_History_Find_Low_Label;
 										}
 									}
 
-									Current_Player_History_Number += 1;
-
-									if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
+									if (Mid_Simulation_Time - Low_Simulation_Time == 0)
 									{
-										goto Traverse_Player_History_Find_Low_Label;
-									}
-								}
-
-								Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
-
-								float Mid_Low_Origin_Difference[3] =
-								{
-									Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
-
-									Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
-
-									Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
-								};
-
-								float Origin_Difference_Acceleration[3];
-
-								float Accelerated_High_Mid_Origin_Difference[3] =
-								{
-									High_Mid_Origin_Difference[0],
-
-									High_Mid_Origin_Difference[1],
-
-									High_Mid_Origin_Difference[2],
-								};
-
-								Accelerate_High_Mid_Origin_Difference_Label:
-								{
-									float High_Mid_Difference = High_Mid_Origin_Difference[Origin_Difference_Number];
-
-									if (High_Mid_Difference != 0)
-									{
-										float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
-
-										if (Mid_Low_Difference != 0)
-										{
-											Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
-
-											Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] *= Origin_Difference_Acceleration[Origin_Difference_Number];
-										}
-										else
-										{
-											Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
-										}
+										Extrapolation_Time = 0;
 									}
 									else
 									{
-										Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
-									}
+										Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
 
-									Origin_Difference_Number += 1;
-
-									if (Origin_Difference_Number != 3)
-									{
-										goto Accelerate_High_Mid_Origin_Difference_Label;
-									}
-								}
-
-								if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[0]) - Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
-								{
-									if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[1]) - Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
-									{
-										if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[2]) - Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+										float Mid_Low_Origin_Difference[3] =
 										{
-											Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
+											Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
 
-											Optimal_Target_Origin[1] += Accelerated_High_Mid_Origin_Difference[1];
+											Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
 
-											Optimal_Target_Origin[2] += Accelerated_High_Mid_Origin_Difference[2];
+											Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
+										};
 
-											if (Trace_Ray(Optimal_Target_Origin) == 0)
+										float Origin_Difference_Acceleration[3];
+
+										float Accelerated_High_Mid_Origin_Difference[3] =
+										{
+											High_Mid_Origin_Difference[0],
+
+											High_Mid_Origin_Difference[1],
+
+											High_Mid_Origin_Difference[2],
+										};
+
+										Accelerate_High_Mid_Origin_Difference_Label:
+										{
+											float High_Mid_Difference = High_Mid_Origin_Difference[Origin_Difference_Number];
+
+											if (High_Mid_Difference != 0)
 											{
-												Extrapolation_Time = 0;
+												float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
 
-												Optimal_Target_Origin[0] -= Accelerated_High_Mid_Origin_Difference[0];
+												if (Mid_Low_Difference != 0)
+												{
+													Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Difference / Mid_Low_Difference;
 
-												Optimal_Target_Origin[1] -= Accelerated_High_Mid_Origin_Difference[1];
-
-												Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
+													Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] *= Origin_Difference_Acceleration[Origin_Difference_Number];
+												}
+												else
+												{
+													Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
+												}
 											}
 											else
 											{
-												goto Set_Aim_Angles_Label;
+												Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
+											}
+
+											Origin_Difference_Number += 1;
+
+											if (Origin_Difference_Number != 3)
+											{
+												goto Accelerate_High_Mid_Origin_Difference_Label;
+											}
+										}
+
+										if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[0]) - Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+										{
+											if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[1]) - Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+											{
+												if (Absolute(__builtin_ceilf(Origin_Difference_Acceleration[2]) - Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+												{
+													Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
+
+													Optimal_Target_Origin[1] += Accelerated_High_Mid_Origin_Difference[1];
+
+													Optimal_Target_Origin[2] += Accelerated_High_Mid_Origin_Difference[2];
+
+													if (Trace_Ray(Optimal_Target_Origin) == 0)
+													{
+														Extrapolation_Time = 0;
+
+														Optimal_Target_Origin[0] -= Accelerated_High_Mid_Origin_Difference[0];
+
+														Optimal_Target_Origin[1] -= Accelerated_High_Mid_Origin_Difference[1];
+
+														Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
+													}
+													else
+													{
+														goto Set_Aim_Angles_Label;
+													}
+												}
+												else
+												{
+													Extrapolation_Time = 0;
+												}
+											}
+											else
+											{
+												Extrapolation_Time = 0;
 											}
 										}
 										else
@@ -657,19 +675,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											Extrapolation_Time = 0;
 										}
 									}
-									else
-									{
-										Extrapolation_Time = 0;
-									}
 								}
 								else
 								{
 									Extrapolation_Time = 0;
 								}
-							}
-							else
-							{
-								Extrapolation_Time = 0;
 							}
 						}
 						

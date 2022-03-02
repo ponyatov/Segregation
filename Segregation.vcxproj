@@ -81,6 +81,7 @@
     <ClInclude Include="Frame_Stage_Notify.hpp" />
     <ClInclude Include="Item_Post_Frame.hpp" />
     <ClInclude Include="Priority.hpp" />
+    <ClInclude Include="Shutdown.hpp" />
     <ClInclude Include="Update_Animation.hpp" />
     <ClInclude Include="Run_Command.hpp" />
     <ClInclude Include="Run_Prediction.hpp" />
