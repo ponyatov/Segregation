@@ -545,8 +545,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
 									};
 
-									__int32 Origin_Difference_Number = 0;
-
 									float Low_Simulation_Time = Mid_Simulation_Time;
 
 									__int32 Low_Player_History_Number;
@@ -573,12 +571,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										}
 									}
 
-									if (Mid_Simulation_Time - Low_Simulation_Time == 0)
+									if (Mid_Simulation_Time == Low_Simulation_Time)
 									{
 										Extrapolation_Time = 0;
 									}
 									else
 									{
+										__int32 Origin_Difference_Number = 0;
+
 										Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
 
 										float Mid_Low_Origin_Difference[3] =
