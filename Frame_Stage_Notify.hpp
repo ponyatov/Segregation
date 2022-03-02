@@ -39,7 +39,14 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 			{
 				void* Local_Player = *(void**)607867332;
 
-				if (Entity != Local_Player)
+				if (Entity == Local_Player)
+				{
+					if (*(__int8*)((unsigned __int32)Entity + 135) != 0)
+					{
+						__builtin_memset(Players_History, 0, sizeof(Players_History));
+					}
+				}
+				else
 				{
 					__int32 Normalized_Entity_Number = Entity_Number - 1;
 
