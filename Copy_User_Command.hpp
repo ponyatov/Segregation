@@ -117,6 +117,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	__int8 Predicted_Send_Packet;
 
+	float* Local_Player_Origin = (float*)((unsigned __int32)Local_Player + 668);
+
 	if (Choked_Commands_Count < Console_Variable_Minimum_Choked_Commands.Integer)
 	{
 		Send_Packet = 0;
@@ -152,7 +154,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				Previous_Networked_Origin[2] - Local_Player_Previous_Origin[2]
 			};
 
-			if (Difference[0] * Difference[0] + Difference[1] * Difference[1] + Difference[2] * Difference[2] <= 4096)
+			if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
 			{
 				Send_Packet = 0;
 			}
@@ -175,15 +177,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				}
 				else
 				{
-					float* Origin = (float*)((unsigned __int32)Local_Player + 668);
+					Difference[0] = Previous_Networked_Origin[0] - Local_Player_Origin[0];
 
-					Difference[0] = Previous_Networked_Origin[0] - Origin[0];
+					Difference[1] = Previous_Networked_Origin[1] - Local_Player_Origin[1];
 
-					Difference[1] = Previous_Networked_Origin[1] - Origin[1];
+					Difference[2] = Previous_Networked_Origin[2] - Local_Player_Origin[2];
 
-					Difference[2] = Previous_Networked_Origin[2] - Origin[2];
-
-					if (Difference[0] * Difference[0] + Difference[1] * Difference[1] + Difference[2] * Difference[2] <= 4096)
+					if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
 					{
 						Predicted_Send_Packet = -1;
 					}
@@ -211,8 +211,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	__int32 Entity_Number = 1;
 
 	__int32 Team_Number = *(__int32*)((unsigned __int32)Local_Player + 144);
-
-	float* Local_Player_Origin = (float*)((unsigned __int32)Local_Player + 668);
 
 	struct Target_Structure
 	{
@@ -253,16 +251,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 							float* Entity_Origin = (float*)((unsigned __int32)Entity + 668);
 
-							float Difference[3] =
-							{
-								Local_Player_Origin[0] - Entity_Origin[0],
-
-								Local_Player_Origin[1] - Entity_Origin[1],
-
-								Local_Player_Origin[2] - Entity_Origin[2]
-							};
-
-							Target.Distance = Square_Root(Difference[0] * Difference[0] + Difference[1] * Difference[1] + Difference[2] * Difference[2]);
+							Target.Distance = Square_Root(__builtin_powf(Local_Player_Origin[0] - Entity_Origin[0], 2) + __builtin_powf(Local_Player_Origin[1] - Entity_Origin[1], 2) + __builtin_powf(Local_Player_Origin[2] - Entity_Origin[2], 2));
 
 							Target.Target = Entity;
 
@@ -302,18 +291,18 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	float Extrapolation_Time;
 
+	using Eye_Position = void(__thiscall*)(void* Player, float* Eye_Position);
+
+	float Local_Player_Eye_Position[3];
+
+	Eye_Position(604058320)(Local_Player, Local_Player_Eye_Position);
+
 	float Aim_Angles[2];
 
 	Traverse_Distance_Sorted_Target_List_Label:
 	{
 		if (Target_Number != Distance_Sorted_Target_List.size())
 		{
-			using Eye_Position = void(__thiscall*)(void* Player, float* Eye_Position);
-
-			float Local_Player_Origin[3];
-
-			Eye_Position(604058320)(Local_Player, Local_Player_Origin);
-
 			using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
 			Optimal_Target = Distance_Sorted_Target_List.at(Target_Number).Target;
@@ -342,7 +331,22 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
 
-						auto Trace_Ray = [&](float* End_Point) -> __int8
+						struct Trace_Structure
+						{
+							__int8 Additional_Bytes_1[12];
+
+							float End[3];
+
+							__int8 Additional_Bytes_2[52];
+
+							void* Entity;
+
+							__int8 Additional_Bytes_3[4];
+						};
+
+						Trace_Structure Trace;
+
+						auto Trace_Ray = [&](float* Start, float* End, Trace_Structure* Trace, __int8 Investigation) -> __int8
 						{
 							struct Ray_Structure
 							{
@@ -360,22 +364,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 								__int32 Collision_Group;
 							};
 
-							struct Trace_Structure
-							{
-								__int8 Additional_Bytes_1[76];
-
-								void* Entity;
-
-								__int8 Additional_Bytes_2[4];
-							};
-
 							using Trace_Ray_Type = void(__thiscall*)(void* Engine_Trace, Ray_Structure* Ray, __int32 Mask, Trace_Filter_Structure* Trace_Filter, Trace_Structure* Trace);
 
 							Ray_Structure Ray;
 
-							using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Starting_Point, float* Ending_Point);
+							using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);
 
-							Initialize_Ray_Type(537380224)(&Ray, Local_Player_Origin, End_Point);
+							Initialize_Ray_Type(537380224)(&Ray, Start, End);
 
 							Trace_Filter_Structure Trace_Filter;
 
@@ -385,18 +380,19 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 							Trace_Filter.Collision_Group = 0;
 
-							Trace_Structure Trace;
+							Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, Trace);
 
-							Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, &Trace);
-
-							if (Trace.Entity == nullptr)
+							if (Investigation == 0)
 							{
-								return 1;
-							}
+								if (Trace->Entity == nullptr)
+								{
+									return 1;
+								}
 
-							if (Trace.Entity == Optimal_Target)
-							{
-								return 1;
+								if (Trace->Entity == Optimal_Target)
+								{
+									return 1;
+								}
 							}
 
 							return 0;
@@ -615,21 +611,24 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										{
 											if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 											{
-												Optimal_Target_Origin[0] += Accelerated_High_Mid_Origin_Difference[0];
+												float Velocity_Angle_Y_Sine_Cosine[2];
 
-												Optimal_Target_Origin[1] += Accelerated_High_Mid_Origin_Difference[1];
+												Sine_Cosine(Velocity_Angle_Y_Sine_Cosine[0], Velocity_Angle_Y_Sine_Cosine[1], Arc_Tangent_2(High_Mid_Origin_Difference[0], High_Mid_Origin_Difference[1]) * 180 / 3.1415927f);
 
-												Optimal_Target_Origin[2] += Accelerated_High_Mid_Origin_Difference[2];
+												float Extrapolated_Optimal_Target_Origin[3]
+												{
+													Optimal_Target_Origin[0] + Velocity_Angle_Y_Sine_Cosine[1] * Accelerated_High_Mid_Origin_Difference[0],
 
-												if (Trace_Ray(Optimal_Target_Origin) == 0)
+													Optimal_Target_Origin[1] + Velocity_Angle_Y_Sine_Cosine[0] * Accelerated_High_Mid_Origin_Difference[1],
+
+													Optimal_Target_Origin[2] + Accelerated_High_Mid_Origin_Difference[2],
+												};
+
+												Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, &Trace, 1);
+
+												if (Trace_Ray(Local_Player_Eye_Position, Trace.End, &Trace, 0) == 0)
 												{
 													Extrapolation_Time = 0;
-
-													Optimal_Target_Origin[0] -= Accelerated_High_Mid_Origin_Difference[0];
-
-													Optimal_Target_Origin[1] -= Accelerated_High_Mid_Origin_Difference[1];
-
-													Optimal_Target_Origin[2] -= Accelerated_High_Mid_Origin_Difference[2];
 												}
 												else
 												{
@@ -656,17 +655,17 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						
 						if (Console_Variable_Extrapolation.Integer * Console_Variable_Extrapolation_Force.Integer == 0)
 						{
-							if (Trace_Ray(Optimal_Target_Origin) == 1)
+							if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
 							{
 								Set_Aim_Angles_Label:
 								{
 									float Origin_Difference[3] =
 									{
-										Optimal_Target_Origin[0] - Local_Player_Origin[0],
+										Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
 
-										Optimal_Target_Origin[1] - Local_Player_Origin[1],
+										Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
 
-										Optimal_Target_Origin[2] - Local_Player_Origin[2],
+										Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
 									};
 
 									Aim_Angles[0] = Arc_Tangent_2(Square_Root(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1]), -Origin_Difference[2]) * 180 / 3.1415927f;
