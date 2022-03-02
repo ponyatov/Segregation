@@ -140,41 +140,17 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
 
-		constexpr __int8 Clean_Server = 0;
-
-		if (Clean_Server == 0)
+		if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= 0.5f)
 		{
-			if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= 0.5f)
+			if (Absolute(Velocity[1] - Uncompressed_Velocity[Tick_Base][1]) <= 0.5f)
 			{
-				if (Absolute(Velocity[1] - Uncompressed_Velocity[Tick_Base][1]) <= 0.5f)
+				if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= 0.5f)
 				{
-					if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= 0.5f)
-					{
-						*(float*)((unsigned __int32)Local_Player + 224) = Uncompressed_Velocity[Tick_Base][0];
+					*(float*)((unsigned __int32)Local_Player + 224) = Uncompressed_Velocity[Tick_Base][0];
 
-						*(float*)((unsigned __int32)Local_Player + 228) = Uncompressed_Velocity[Tick_Base][1];
+					*(float*)((unsigned __int32)Local_Player + 228) = Uncompressed_Velocity[Tick_Base][1];
 
-						*(float*)((unsigned __int32)Local_Player + 232) = Uncompressed_Velocity[Tick_Base][2];
-					}
-				}
-			}
-		}
-		else
-		{
-			constexpr float Proportional_Maximum_Velocity = 3500 / 3;
-
-			if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= Proportional_Maximum_Velocity)
-			{
-				if (Absolute(Velocity[1] - Uncompressed_Velocity[Tick_Base][1]) <= Proportional_Maximum_Velocity)
-				{
-					if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= Proportional_Maximum_Velocity)
-					{
-						*(float*)((unsigned __int32)Local_Player + 224) = Uncompressed_Velocity[Tick_Base][0];
-
-						*(float*)((unsigned __int32)Local_Player + 228) = Uncompressed_Velocity[Tick_Base][1];
-
-						*(float*)((unsigned __int32)Local_Player + 232) = Uncompressed_Velocity[Tick_Base][2];
-					}
+					*(float*)((unsigned __int32)Local_Player + 232) = Uncompressed_Velocity[Tick_Base][2];
 				}
 			}
 		}
