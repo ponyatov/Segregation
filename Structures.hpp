@@ -40,9 +40,7 @@ struct Player_Data_Structure
 
 	void* Animation_State;
 
-	__int8 Memorized;
-
-	__int32 Memorized_Shots;
+	__int32 Memorized;
 
 	float Memorized_Y;
 

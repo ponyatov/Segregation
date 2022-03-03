@@ -1,5 +1,7 @@
 #pragma once
 
+//TODO: monitor bullet_impact to know how much bullets are delayed due to ping
+
 void __stdcall Event_Processor(void* Event)
 {
 	void* Local_Player = *(void**)607867332;
@@ -39,11 +41,9 @@ void __stdcall Event_Processor(void* Event)
 				{
 					Player_Data_Structure* Player_Data = &Players_Data[Victim_Identifier - 1];
 
-					Player_Data->Memorized = 1;
-
 					using Get_Primary_Ammo_Capacity_Type = __int32(__thiscall**)(void* Weapon);
 
-					Player_Data->Memorized_Shots = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
+					Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
 
 					constexpr float Angles[5] =
 					{

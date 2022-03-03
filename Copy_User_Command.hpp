@@ -850,9 +850,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												}
 												else
 												{
-													Player_Data->Memorized_Shots -= 1;
-
-													Player_Data->Memorized = Player_Data->Memorized_Shots > 0;
+													Player_Data->Memorized -= 1;
 												}
 											}
 
