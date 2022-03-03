@@ -72,9 +72,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Previous_Move_Angle_Y = User_Command->View_Angles[1];
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 236);
+		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
 
-		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(Velocity[0] * Velocity[0] + Velocity[1] * Velocity[1]), 30) * 180 / 3.1415927f)
+		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(__builtin_powf(Velocity[0], 2) + __builtin_powf(Velocity[1], 2)), 30) * 180 / 3.1415927f)
 		{
 			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - Arc_Tangent_2(Velocity[0], Velocity[1]) * 180 / 3.1415927f, 360);
 
@@ -668,7 +668,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
 									};
 
-									Aim_Angles[0] = Arc_Tangent_2(Square_Root(Origin_Difference[0] * Origin_Difference[0] + Origin_Difference[1] * Origin_Difference[1]), -Origin_Difference[2]) * 180 / 3.1415927f;
+									Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
 
 									Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
 
@@ -899,7 +899,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											Weapon_Spread = 0;
 
-											float Magnitude = 1 / (Square_Root(Direction[0] * Direction[0] + Direction[1] * Direction[1] + Direction[2] * Direction[2]) + FLT_EPSILON);
+											float Magnitude = 1 / (Square_Root(__builtin_powf(Direction[0], 2) + __builtin_powf(Direction[1], 2) + __builtin_powf(Direction[2], 2)) + FLT_EPSILON);
 
 											Direction[0] *= Magnitude;
 
@@ -909,7 +909,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
 
-											User_Command->View_Angles[0] = Arc_Tangent_2(Square_Root(Direction[0] * Direction[0] + Direction[1] * Direction[1]), -Direction[2]) * 180 / 3.1415927f - Recoil[0] * 2;
+											User_Command->View_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Direction[0], 2) + __builtin_powf(Direction[1], 2)), -Direction[2]) * 180 / 3.1415927f - Recoil[0] * 2;
 
 											User_Command->View_Angles[1] = Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - Recoil[1] * 2;
 										}
@@ -1035,13 +1035,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Angle_Vectors(Move_Angles, Desired_Move_Forward, Desired_Move_Right);
 
-	float Magnitude = 1 / (Square_Root(Desired_Move_Forward[0] * Desired_Move_Forward[0] + Desired_Move_Forward[1] * Desired_Move_Forward[1]) + FLT_EPSILON);
+	float Magnitude = 1 / (Square_Root(__builtin_powf(Desired_Move_Forward[0], 2) + __builtin_powf(Desired_Move_Forward[1], 2)) + FLT_EPSILON);
 
 	Desired_Move_Forward[0] *= Magnitude;
 
 	Desired_Move_Forward[1] *= Magnitude;
 
-	Magnitude = 1 / (Square_Root(Desired_Move_Right[0] * Desired_Move_Right[0] + Desired_Move_Right[1] * Desired_Move_Right[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(__builtin_powf(Desired_Move_Right[0], 2) + __builtin_powf(Desired_Move_Right[1], 2)) + FLT_EPSILON);
 
 	Desired_Move_Right[0] *= Magnitude;
 
@@ -1060,13 +1060,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	Angle_Vectors(User_Command->View_Angles, Move_Forward, Move_Right);
 
-	Magnitude = 1 / (Square_Root(Move_Forward[0] * Move_Forward[0] + Move_Forward[1] * Move_Forward[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(__builtin_powf(Move_Forward[0], 2) + __builtin_powf(Move_Forward[1], 2)) + FLT_EPSILON);
 
 	Move_Forward[0] *= Magnitude;
 
 	Move_Forward[1] *= Magnitude;
 
-	Magnitude = 1 / (Square_Root(Move_Right[0] * Move_Right[0] + Move_Right[1] * Move_Right[1]) + FLT_EPSILON);
+	Magnitude = 1 / (Square_Root(__builtin_powf(Move_Right[0], 2) + __builtin_powf(Move_Right[1], 2)) + FLT_EPSILON);
 
 	Move_Right[0] *= Magnitude;
 
