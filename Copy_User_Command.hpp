@@ -812,21 +812,21 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 					{
 						if (*(float*)((unsigned __int32)Local_Player + 2544) <= Global_Variables->Current_Time)
 						{
-							unsigned __int32 Active_Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
+							unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
 
-							void* Active_Weapon = *(void**)((unsigned __int32)607973860 + (((Active_Weapon_Index & 4095) - 4097) << 4));
+							void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
 
-							if (Active_Weapon != nullptr)
+							if (Weapon != nullptr)
 							{
-								if (*(__int8*)((unsigned __int32)Active_Weapon + 1732) == 0)
+								if (*(__int8*)((unsigned __int32)Weapon + 1732) == 0)
 								{
-									if (*(__int32*)((unsigned __int32)Active_Weapon + 1788) <= 0)
+									if (*(__int32*)((unsigned __int32)Weapon + 1788) <= 0)
 									{
 										In_Attack = 0;
 									}
 									else
 									{
-										if (*(float*)((unsigned __int32)Active_Weapon + 1720) <= Global_Variables->Current_Time)
+										if (*(float*)((unsigned __int32)Weapon + 1720) <= Global_Variables->Current_Time)
 										{
 											Shot_Tick = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
@@ -844,7 +844,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
 
-												Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
+												if (Player_Data->Memorized == 0)
+												{
+													Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
+												}
+												else
+												{
+													Player_Data->Memorized_Shots -= 1;
+
+													Player_Data->Memorized = Player_Data->Memorized_Shots > 0;
+												}
 											}
 
 											float Sine_X;
@@ -883,7 +892,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											Weapon_Spread = -1;
 
-											(*Primary_Attack_Type(*(unsigned __int32*)Active_Weapon + 856))(Active_Weapon);
+											(*Primary_Attack_Type(*(unsigned __int32*)Weapon + 856))(Weapon);
 
 											float Direction[3] =
 											{

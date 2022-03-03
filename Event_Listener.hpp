@@ -31,24 +31,35 @@ void __stdcall Event_Processor(void* Event)
 		{
 			if (Local_Player_Number == Killer_Identifier)
 			{
-				Player_Data_Structure* Player_Data = &Players_Data[Victim_Identifier - 1];
+				unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
 
-				Player_Data->Memorized = 1;
+				void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
 
-				constexpr float Angles[5] =
+				if (Weapon != nullptr)
 				{
-					0,
+					Player_Data_Structure* Player_Data = &Players_Data[Victim_Identifier - 1];
 
-					-45,
+					Player_Data->Memorized = 1;
 
-					45,
+					using Get_Primary_Ammo_Capacity_Type = __int32(__thiscall**)(void* Weapon);
 
-					-90,
+					Player_Data->Memorized_Shots = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
 
-					90
-				};
+					constexpr float Angles[5] =
+					{
+						0,
 
-				Player_Data->Memorized_Y = Angles[(Player_Data->Shots_Fired - 1) % 5];
+						-45,
+
+						45,
+
+						-90,
+
+						90
+					};
+
+					Player_Data->Memorized_Y = Angles[(Player_Data->Shots_Fired - 1) % 5];
+				}
 
 				if (Console_Variable_Commentator.Integer == 1)
 				{

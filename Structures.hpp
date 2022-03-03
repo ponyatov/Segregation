@@ -38,11 +38,13 @@ struct Player_Data_Structure
 
 	float Y;
 
+	void* Animation_State;
+
 	__int8 Memorized;
 
-	float Memorized_Y;
+	__int32 Memorized_Shots;
 
-	void* Animation_State;
+	float Memorized_Y;
 
 	__int32 Shots_Fired;
 };
