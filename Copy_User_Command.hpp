@@ -605,6 +605,15 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										{
 											if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
 											{
+												float Previous_Optimal_Target_Origin[3] =
+												{
+													Optimal_Target_Origin[0],
+
+													Optimal_Target_Origin[1],
+
+													Optimal_Target_Origin[2]
+												};
+
 												float Velocity_Angle_Y_Sine_Cosine[2];
 
 												Sine_Cosine(Velocity_Angle_Y_Sine_Cosine[0], Velocity_Angle_Y_Sine_Cosine[1], Arc_Tangent_2(High_Mid_Origin_Difference[0], High_Mid_Origin_Difference[1]) * 180 / 3.1415927f);
@@ -620,9 +629,21 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, &Trace, 1);
 
-												if (Trace_Ray(Local_Player_Eye_Position, Trace.End, &Trace, 0) == 0)
+												Optimal_Target_Origin[0] = Trace.End[0];
+
+												Optimal_Target_Origin[1] = Trace.End[1];
+
+												Optimal_Target_Origin[2] = Trace.End[2];
+
+												if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 0)
 												{
 													Extrapolation_Time = 0;
+
+													Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
+
+													Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
+
+													Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
 												}
 												else
 												{
