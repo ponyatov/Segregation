@@ -72,25 +72,22 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Previous_Move_Angle_Y = User_Command->View_Angles[1];
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
+		float* Velocity = (float*)((unsigned __int32)Local_Player + 236);
 
 		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(__builtin_powf(Velocity[0], 2) + __builtin_powf(Velocity[1], 2)), 30) * 180 / 3.1415927f)
 		{
 			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - Arc_Tangent_2(Velocity[0], Velocity[1]) * 180 / 3.1415927f, 360);
 
-			if (Strafe_Angle != 0)
+			if (__builtin_signbitf(Strafe_Angle) == 0)
 			{
-				if (__builtin_signbitf(Strafe_Angle) == 0)
-				{
-					User_Command->Move[1] = -400;
-				}
-				else
-				{
-					User_Command->Move[1] = 400;
-				}
-
-				Move_Angles[1] -= Strafe_Angle;
+				User_Command->Move[1] = -400;
 			}
+			else
+			{
+				User_Command->Move[1] = 400;
+			}
+
+			Move_Angles[1] -= Strafe_Angle;
 		}
 		else
 		{
