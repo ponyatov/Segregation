@@ -58,37 +58,34 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 						{
 							void* Animation_State = *(void**)((unsigned __int32)Entity + 3968);
 
-							if (Player_Data->Shots_Fired == 0)
+							if (Console_Variable_Bruteforce_Memory.Integer == 0)
 							{
-								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y;
+								Bruteforce_Label:
+								{
+									constexpr float Bruteforce_Angles[5] =
+									{
+										0,
+
+										-45,
+
+										45,
+
+										-90,
+
+										90
+									};
+
+									*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + Bruteforce_Angles[Player_Data->Shots_Fired];
+								}
 							}
 							else
 							{
-								if (Player_Data->Shots_Fired == 1)
+								if (Player_Data->Memorized == 0)
 								{
-									*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y - 45;
+									goto Bruteforce_Label;
 								}
-								else
-								{
-									if (Player_Data->Shots_Fired == 2)
-									{
-										*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + 45;
-									}
-									else
-									{
-										if (Player_Data->Shots_Fired == 3)
-										{
-											*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y - 90;
-										}
-										else
-										{
-											if (Player_Data->Shots_Fired == 4)
-											{
-												*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + 90;
-											}
-										}
-									}
-								}
+
+								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Memorized_Y;
 							}
 						}
 					}

@@ -237,6 +237,10 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Bruteforce %p\n", &Console_Variable_Bruteforce);
 
+			Create_Console_Variable_Type(539130656)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr);
+
+			wprintf(L"[ + ] Bruteforce_Memory %p\n", &Console_Variable_Bruteforce_Memory);
+
 			*(void**)608149676 = (void*)Redirected_Angles_Y;
 
 			Redirection_Manager::Redirect_Function(Original_Frame_Stage_Notify_Caller_Location, 1, (void*)604538592, 1, (void*)Redirected_Frame_Stage_Notify);

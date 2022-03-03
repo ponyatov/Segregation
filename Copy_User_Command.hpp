@@ -321,10 +321,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 					if (Studio_Model != nullptr)
 					{
-						__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
-
-						Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
-
 						struct Trace_Structure
 						{
 							__int8 Additional_Bytes_1[12];
@@ -416,40 +412,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 							Bounding_Box_Maximum[0] * Bones[14][2][0] + Bounding_Box_Maximum[1] * Bones[14][2][1] + Bounding_Box_Maximum[2] * Bones[14][2][2] + Bones[14][2][3]
 						};
 
-						float Optimal_Target_Origin[3];
-
-						if (Console_Variable_Bruteforce.Integer == 0)
+						float Optimal_Target_Origin[3] =
 						{
-							Optimal_Target_Origin[0] = (Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2;
+							(Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2,
 
-							Optimal_Target_Origin[1] = (Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2;
-						}
-						else
-						{
-							if (Player_Data->Priority == -2)
-							{
-								Optimal_Target_Origin[0] = (Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2;
+							(Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2,
 
-								Optimal_Target_Origin[1] = (Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2;
-							}
-							else
-							{
-								if (Player_Data->Shots_Fired == 0)
-								{
-									Optimal_Target_Origin[0] = (Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2;
-
-									Optimal_Target_Origin[1] = (Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2;
-								}
-								else
-								{
-									Optimal_Target_Origin[0] = Hitbox_Maximum[0];
-
-									Optimal_Target_Origin[1] = Hitbox_Maximum[1];
-								}
-							}
-						}
-
-						Optimal_Target_Origin[2] = Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1);
+							Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
+						};
 
 						if (Console_Variable_Extrapolation.Integer == 0)
 						{
@@ -457,6 +427,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						}
 						else
 						{
+							__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+
 							__int32 Current_Player_History_Number = 0;
 
 							float High_Simulation_Time = 0;
@@ -870,7 +842,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												
 												__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
-												Players_Data[Optimal_Target_Index].Shots_Fired = (Players_Data[Optimal_Target_Index].Shots_Fired + 1) % 5;
+												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
+
+												Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
 											}
 
 											float Sine_X;

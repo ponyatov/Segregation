@@ -10,6 +10,8 @@ Console_Variable_Structure Console_Variable_Get_Priorities;
 
 Console_Variable_Structure Console_Variable_Bruteforce;
 
+Console_Variable_Structure Console_Variable_Bruteforce_Memory;
+
 Console_Variable_Structure Console_Variable_Extrapolation;
 
 Console_Variable_Structure Console_Variable_Extrapolation_Tolerance;
