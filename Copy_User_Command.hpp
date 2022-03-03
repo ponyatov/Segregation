@@ -481,8 +481,12 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									goto Traverse_Player_History_Find_High_Label;
 								}
 							}
-
-							if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) != 1)
+							
+							if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) == 1)
+							{
+								goto Bypass_Extrapolation_Force_Label;
+							}
+							else
 							{
 								float Mid_Simulation_Time = High_Simulation_Time;
 
@@ -673,33 +677,36 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 						
 						if (Console_Variable_Extrapolation.Integer * Console_Variable_Extrapolation_Force.Integer == 0)
 						{
-							if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
+							Bypass_Extrapolation_Force_Label:
 							{
-								Set_Aim_Angles_Label:
+								if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
 								{
-									float Origin_Difference[3] =
+									Set_Aim_Angles_Label:
 									{
-										Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
+										float Origin_Difference[3] =
+										{
+											Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
 
-										Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
+											Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
 
-										Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
-									};
+											Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
+										};
 
-									Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
+										Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
 
-									Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
+										Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
 
-									User_Command->Buttons_State |= 1;
+										User_Command->Buttons_State |= 1;
+									}
 								}
-							}
-							else
-							{
-								Optimal_Target = nullptr;
+								else
+								{
+									Optimal_Target = nullptr;
 
-								Target_Number += 1;
+									Target_Number += 1;
 
-								goto Traverse_Distance_Sorted_Target_List_Label;
+									goto Traverse_Distance_Sorted_Target_List_Label;
+								}
 							}
 						}
 						else
