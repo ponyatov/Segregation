@@ -267,20 +267,17 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		}
 	}
 
-	struct Distance_Compare_Operator_Structure
+	auto Compare = [](Target_Structure X, Target_Structure Y) -> __int8
 	{
-		__int8 operator()(Target_Structure X, Target_Structure Y)
+		if (X.Priority > Y.Priority)
 		{
-			if (X.Priority > Y.Priority)
-			{
-				return 1;
-			}
-
-			return X.Distance < Y.Distance;
+			return 1;
 		}
+
+		return X.Distance < Y.Distance;
 	};
 
-	std::sort(Distance_Sorted_Target_List.begin(), Distance_Sorted_Target_List.end(), Distance_Compare_Operator_Structure());
+	std::sort(Distance_Sorted_Target_List.begin(), Distance_Sorted_Target_List.end(), Compare);
 
 	size_t Target_Number = 0;
 
