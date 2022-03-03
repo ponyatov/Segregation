@@ -798,11 +798,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 						Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 						
-						__int32 Tick_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
+						__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
 
-						if (Tick_Difference * -1 <= 7)
+						if (Tick_Number_Difference * -1 <= 7)
 						{
-							Delta_Time = Absolute(Corrected_Interpolation_Time - Tick_Difference * Global_Variables->Interval_Per_Tick);
+							Delta_Time = Absolute(Corrected_Interpolation_Time - Tick_Number_Difference * Global_Variables->Interval_Per_Tick);
 						}
 						else
 						{
