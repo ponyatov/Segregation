@@ -622,15 +622,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 														Optimal_Target_Origin[2]
 													};
 
-													float Velocity_Angle_Y_Sine_Cosine[2];
-
-													Sine_Cosine(Velocity_Angle_Y_Sine_Cosine[0], Velocity_Angle_Y_Sine_Cosine[1], Arc_Tangent_2(High_Mid_Origin_Difference[0], High_Mid_Origin_Difference[1]) * 180 / 3.1415927f);
-
 													float Extrapolated_Optimal_Target_Origin[3]
 													{
-														Optimal_Target_Origin[0] + Velocity_Angle_Y_Sine_Cosine[1] * Accelerated_High_Mid_Origin_Difference[0],
+														Optimal_Target_Origin[0] + Accelerated_High_Mid_Origin_Difference[0],
 
-														Optimal_Target_Origin[1] + Velocity_Angle_Y_Sine_Cosine[0] * Accelerated_High_Mid_Origin_Difference[1],
+														Optimal_Target_Origin[1] + Accelerated_High_Mid_Origin_Difference[1],
 
 														Optimal_Target_Origin[2] + Accelerated_High_Mid_Origin_Difference[2],
 													};
