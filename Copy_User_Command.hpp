@@ -484,6 +484,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 							
 							if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) == 1)
 							{
+								Extrapolation_Time = 0;
+
 								goto Bypass_Extrapolation_Force_Label;
 							}
 							else
