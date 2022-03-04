@@ -755,7 +755,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 									{
 										if (*(float*)((unsigned __int32)Weapon + 1720) <= Global_Variables->Current_Time)
 										{
-											Queued_Bullets += 1;
+											Queued_Bullets = 1;
 
 											Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 

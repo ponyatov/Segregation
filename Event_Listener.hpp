@@ -65,12 +65,7 @@ void __stdcall Event_Processor(void* Event)
 
 			if (Shooter_Identifier == Local_Player_Number)
 			{
-				Queued_Bullets -= 1;
-
-				if (Queued_Bullets < 0)
-				{
-					Queued_Bullets = 0;
-				}
+				Queued_Bullets = 0;
 			}
 		}
 	}
