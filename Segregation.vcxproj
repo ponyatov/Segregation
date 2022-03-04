@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Angles_Y.hpp" />
+    <ClInclude Include="Bruteforce_Memory.hpp" />
     <ClInclude Include="Console_Variables.hpp" />
     <ClInclude Include="Converge_Angles.hpp" />
     <ClInclude Include="Draw_Crosshair.hpp" />

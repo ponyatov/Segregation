@@ -22,6 +22,8 @@
 
 #include "Priority.hpp"
 
+#include "Bruteforce_Memory.hpp"
+
 #include "Angles_Y.hpp"
 
 #include "Frame_Stage_Notify.hpp"
@@ -237,7 +239,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Bruteforce %p\n", &Console_Variable_Bruteforce);
 
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr);
+			Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr, nullptr, (void*)Bruteforce_Memory_Reset);
 
 			wprintf(L"[ + ] Bruteforce_Memory %p\n", &Console_Variable_Bruteforce_Memory);
 

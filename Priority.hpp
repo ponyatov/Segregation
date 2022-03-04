@@ -1,6 +1,6 @@
 #pragma once
 
-static Player_Data_Structure Players_Data[64];
+Player_Data_Structure Players_Data[64];
 
 void Get_Priorities()
 {

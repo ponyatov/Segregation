@@ -773,13 +773,20 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
 
-												if (Player_Data->Memorized == 0)
+												if (Console_Variable_Bruteforce_Memory.Integer == 0)
 												{
 													Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
 												}
 												else
 												{
-													Player_Data->Memorized -= 1;
+													if (Player_Data->Memorized == 0)
+													{
+														Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
+													}
+													else
+													{
+														Player_Data->Memorized -= 1;
+													}
 												}
 											}
 
