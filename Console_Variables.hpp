@@ -16,8 +16,6 @@ Console_Variable_Structure Console_Variable_Extrapolation;
 
 Console_Variable_Structure Console_Variable_Extrapolation_Tolerance;
 
-Console_Variable_Structure Console_Variable_Extrapolation_Gravity_Tolerance;
-
 Console_Variable_Structure Console_Variable_Aim_Height;
 
 Console_Variable_Structure Console_Variable_Angle_X;

@@ -419,7 +419,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 															Trace_Structure Trace;
 
-															auto Trace_Ray = [&](float* Start, float* End, Trace_Structure* Trace, __int8 Investigation) -> __int8
+															auto Trace_Ray = [&](float* Start, float* End, void* Skip, Trace_Structure* Trace, __int8 Investigation) -> __int8
 															{
 																struct Ray_Structure
 																{
@@ -449,7 +449,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																Trace_Filter.Trace_Filter = (void*)607282712;
 
-																Trace_Filter.Skip = Local_Player;
+																Trace_Filter.Skip = Skip;
 
 																Trace_Filter.Collision_Group = 0;
 
@@ -506,7 +506,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 															if (Console_Variable_Extrapolation.Integer == 1)
 															{
-																__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+																__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
 																__int32 Current_Player_History_Number = 0;
 
@@ -516,7 +516,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																Traverse_Player_History_Find_High_Label:
 																{
-																	float Current_Simulation_Time = Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+																	float Current_Simulation_Time = Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
 
 																	if (High_Simulation_Time < Current_Simulation_Time)
 																	{
@@ -533,7 +533,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																	}
 																}
 							
-																if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) == 1)
+																if ((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f <= Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f)
 																{
 																	Extrapolation_Time = 0;
 																}
@@ -545,7 +545,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																	Traverse_Player_History_Find_Mid_Label:
 																	{
-																		float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+																		float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
 
 																		if (Current_Simulation_Time != 0)
 																		{
@@ -564,12 +564,17 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																			goto Traverse_Player_History_Find_Mid_Label;
 																		}
 
-																		Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
+																		if (Mid_Simulation_Time != High_Simulation_Time)
+																		{
+																			Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
+																		}
 																	}
 
-																	Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
-
-																	if (Extrapolation_Time != 0)
+																	if (High_Simulation_Time - Mid_Simulation_Time == 0)
+																	{
+																		Extrapolation_Time = 0;
+																	}
+																	else
 																	{
 																		float Low_Simulation_Time = Mid_Simulation_Time;
 
@@ -577,7 +582,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																		Traverse_Player_History_Find_Low_Label:
 																		{
-																			float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+																			float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
 
 																			if (Current_Simulation_Time > 0)
 																			{
@@ -599,9 +604,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																		if (Mid_Simulation_Time != Low_Simulation_Time)
 																		{
-																			Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
+																			Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Number][Mid_Player_History_Number];
 
-																			Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
+																			Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Number][Low_Player_History_Number];
 
 																			float Mid_Low_Origin_Difference[3] =
 																			{
@@ -616,7 +621,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																			float High_Mid_Origin_Difference_Acceleration[3];
 
-																			Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
+																			Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Number][High_Player_History_Number];
 
 																			float High_Mid_Origin_Difference[3] =
 																			{
@@ -626,8 +631,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																				High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
 																			};
-
-																			float Accelerated_High_Mid_Origin_Difference[3];
 
 																			Accelerate_High_Mid_Origin_Difference_Label:
 																			{
@@ -642,7 +645,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 																				}
 
-																				Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] * High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
+																				High_Mid_Origin_Difference[Origin_Difference_Number] *= High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
 
 																				Origin_Difference_Number += 1;
 
@@ -656,7 +659,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																			{
 																				if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[1]) - High_Mid_Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 																				{
-																					if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+																					if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 																					{
 																						float Previous_Optimal_Target_Origin[3] =
 																						{
@@ -669,14 +672,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																						float Extrapolated_Optimal_Target_Origin[3]
 																						{
-																							Optimal_Target_Origin[0] + Accelerated_High_Mid_Origin_Difference[0],
+																							Optimal_Target_Origin[0] + High_Mid_Origin_Difference[0],
 
-																							Optimal_Target_Origin[1] + Accelerated_High_Mid_Origin_Difference[1],
+																							Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1],
 
-																							Optimal_Target_Origin[2] + Accelerated_High_Mid_Origin_Difference[2],
+																							Optimal_Target_Origin[2] + High_Mid_Origin_Difference[2],
 																						};
 
-																						Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, &Trace, 1);
+																						Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, Optimal_Target, &Trace, 1);
 
 																						Optimal_Target_Origin[0] = Trace.End[0];
 
@@ -684,7 +687,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																						Optimal_Target_Origin[2] = Trace.End[2];
 
-																						if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 0)
+																						if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 0)
 																						{
 																							Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
 
@@ -705,8 +708,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																	}
 																}
 															}
-						
-															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
+
+															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 1 && Extrapolation_Time)
 															{
 																Set_Aim_Angles_Label:
 																{
@@ -769,9 +772,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												User_Command->View_Angles[1] = Aim_Angles[1];
 												
-												__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+												__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
-												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Index];
+												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Number];
 
 												if (Console_Variable_Bruteforce_Memory.Integer == 0)
 												{
