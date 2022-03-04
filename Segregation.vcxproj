@@ -90,6 +90,7 @@
     <ClInclude Include="Sounds.hpp" />
     <ClInclude Include="Structures.hpp" />
     <ClInclude Include="Weapon_Spread.hpp" />
+    <ClInclude Include="Write_Events.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

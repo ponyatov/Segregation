@@ -52,6 +52,8 @@
 
 #include "Event_Listener.hpp"
 
+#include "Write_Events.hpp"
+
 #include "Shutdown.hpp"
 
 __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reason, void* Reserved)
@@ -359,6 +361,8 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
 
 			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"bullet_impact", 0);
+
+			Redirection_Manager::Redirect_Function(Original_Write_Events_Caller_Location, 2, (void*)537582208, 1, (void*)Redirected_Write_Events);
 
 			wprintf(L"[ + ] Events\n");
 
