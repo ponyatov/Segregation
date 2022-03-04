@@ -281,7 +281,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	__int8 In_Attack = 0;
 
-	if (Absolute(Global_Variables->Current_Time - Queued_Bullets) > 0.5f)
+	if (Global_Variables->Current_Time - Shot_Time > 0.2f)
 	{
 		if ((User_Command->Buttons_State & 2048) == 0)
 		{
@@ -758,7 +758,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 										if ((User_Command->Buttons_State & 1) == 1)
 										{
-											Queued_Bullets = Global_Variables->Current_Time;
+											Shot_Time = Global_Variables->Current_Time;
 
 											Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 

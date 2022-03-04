@@ -12,7 +12,7 @@ void __stdcall Event_Processor(void* Event)
 
 		if (Name[0] == 'r')
 		{
-			Queued_Bullets = 0;
+			Shot_Time = 0;
 		}
 		else
 		{
@@ -71,7 +71,7 @@ void __stdcall Event_Processor(void* Event)
 
 				if (Shooter_Identifier == Local_Player_Number)
 				{
-					Queued_Bullets = 0;
+					Shot_Time = 0;
 				}
 			}
 		}

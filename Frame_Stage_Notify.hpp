@@ -2,7 +2,7 @@
 
 Player_History_Structure Players_History[64][90];
 
-float Queued_Bullets;
+float Shot_Time;
 
 constexpr float Bruteforce_Angles[5] =
 {
@@ -60,7 +60,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 					{
 						__builtin_memset(Players_History, 0, sizeof(Players_History));
 
-						Queued_Bullets = 0;
+						Shot_Time = 0;
 					}
 				}
 				else
@@ -89,7 +89,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 									goto Bruteforce_Label;
 								}
 
-								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Memorized_Y;
+								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + Player_Data->Memorized_Y;
 							}
 						}
 					}
