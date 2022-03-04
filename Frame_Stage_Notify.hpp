@@ -2,6 +2,19 @@
 
 Player_History_Structure Players_History[64][90];
 
+constexpr float Bruteforce_Angles[5] =
+{
+	0,
+
+	-45,
+
+	45,
+
+	-90,
+
+	90
+};
+
 void* Original_Frame_Stage_Notify_Caller_Location;
 
 float Absolute(float X)
@@ -44,6 +57,8 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 					if (*(__int8*)((unsigned __int32)Entity + 135) != 0)
 					{
 						__builtin_memset(Players_History, 0, sizeof(Players_History));
+
+						//is shutdown triggered on retry?
 					}
 				}
 				else
@@ -62,19 +77,6 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 							{
 								Bruteforce_Label:
 								{
-									constexpr float Bruteforce_Angles[5] =
-									{
-										0,
-
-										-45,
-
-										45,
-
-										-90,
-
-										90
-									};
-
 									*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + Bruteforce_Angles[Player_Data->Shots_Fired];
 								}
 							}

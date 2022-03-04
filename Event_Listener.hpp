@@ -45,20 +45,7 @@ void __stdcall Event_Processor(void* Event)
 
 					Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
 
-					constexpr float Angles[5] =
-					{
-						0,
-
-						-45,
-
-						45,
-
-						-90,
-
-						90
-					};
-
-					Player_Data->Memorized_Y = Angles[(Player_Data->Shots_Fired - 1) % 5];
+					Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % 5];
 				}
 
 				if (Console_Variable_Commentator.Integer == 1)
