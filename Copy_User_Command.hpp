@@ -218,9 +218,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		void* Target;
 	};
 
-	static std::vector<Target_Structure> Distance_Sorted_Target_List;
+	static std::vector<Target_Structure> Sorted_Target_List;
 
-	Distance_Sorted_Target_List.clear();
+	Sorted_Target_List.clear();
 
 	static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
 
@@ -252,7 +252,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 							Target.Target = Entity;
 
-							Distance_Sorted_Target_List.push_back(Target);
+							Sorted_Target_List.push_back(Target);
 						}
 					}
 				}
@@ -267,7 +267,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		}
 	}
 
-	auto Compare = [](Target_Structure X, Target_Structure Y) -> __int8
+	auto Target_List_Sort = [](Target_Structure X, Target_Structure Y) -> __int8
 	{
 		if (X.Priority > Y.Priority)
 		{
@@ -277,483 +277,483 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		return X.Distance < Y.Distance;
 	};
 
-	std::sort(Distance_Sorted_Target_List.begin(), Distance_Sorted_Target_List.end(), Compare);
+	std::sort(Sorted_Target_List.begin(), Sorted_Target_List.end(), Target_List_Sort);
 
 	__int8 In_Attack = 0;
 
 	if (Queued_Bullets == 0)
 	{
-		size_t Target_Number = 0;
-
-		void* Optimal_Target;
-
-		float Extrapolation_Time = 0;
-
-		using Eye_Position = void(__thiscall*)(void* Player, float* Eye_Position);
-
-		float Local_Player_Eye_Position[3];
-
-		Eye_Position(604058320)(Local_Player, Local_Player_Eye_Position);
-
-		__int32 Target_Tick_Number;
-
-		using Get_Latency_Type = float(__thiscall*)(void* Network_Channel, __int32 Flow_Type);
-
-		void* Network_Channel = *(void**)540608912;
-
-		float Total_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) + Get_Latency_Type(537919008)(Network_Channel, 1);
-
-		float Interpolation_Ratio = *(float*)607906336;
-
-		float Minimum_Interpolation_Ratio = *(float*)542242312;
-
-		float Maximum_Interpolation_Ratio = *(float*)542242072;
-
-		if (Interpolation_Ratio < Minimum_Interpolation_Ratio)
+		if ((User_Command->Buttons_State & 2048) == 0)
 		{
-			Interpolation_Ratio = Minimum_Interpolation_Ratio;
-		}
-		else
-		{
-			if (Interpolation_Ratio > Maximum_Interpolation_Ratio)
+			if (Send_Packet == 0)
 			{
-				Interpolation_Ratio = Maximum_Interpolation_Ratio;
-			}
-		}
-
-		__int32 Update_Rate = *(__int32*)540495212;
-
-		__int32 Maximum_Update_Rate = *(__int32*)542221412;
-
-		__int32 Minimum_Update_Rate = *(__int32*)542221268;
-
-		if (Update_Rate < Minimum_Update_Rate)
-		{
-			Update_Rate = Minimum_Update_Rate;
-		}
-		else
-		{
-			if (Update_Rate > Maximum_Update_Rate)
-			{
-				Update_Rate = Maximum_Update_Rate;
-			}
-		}
-
-		float Interpolation_Time = Interpolation_Ratio / Update_Rate;
-
-		float Interpolation = *(float*)541928632;
-
-		if (Interpolation_Time < Interpolation)
-		{
-			Interpolation_Time = Interpolation;
-		}
-
-		float Corrected_Interpolation_Time = std::clamp(Total_Latency + Interpolation_Time, 0.f, 1.f);
-
-		float Aim_Angles[2];
-
-		Traverse_Distance_Sorted_Target_List_Label:
-		{
-			if (Target_Number == Distance_Sorted_Target_List.size())
-			{
-				Optimal_Target = nullptr;
-			}
-			else
-			{
-				using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
-
-				Optimal_Target = Distance_Sorted_Target_List.at(Target_Number).Target;
-
-				void* Renderable = (void*)((unsigned __int32)Optimal_Target + 4);
-
-				float Bones[128][3][4];
-
-				if (Setup_Bones_Type(604209888)(Renderable, Bones, 128, 524032, Global_Variables->Current_Time) == 1)
+				if (Predicted_Send_Packet == 1)
 				{
-					void* Model = *(void**)((unsigned __int32)Renderable + 88);
-
-					if (Model != nullptr)
+					if (*(float*)((unsigned __int32)Local_Player + 2544) <= Global_Variables->Current_Time)
 					{
-						using Get_Studio_Model_Type = void*(__thiscall*)(void* Model_Cache, void* Model);
+						unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
 
-						static void* Get_Studio_Model_Location = (void*)((unsigned __int32)GetModuleHandleW(L"datacache.dll") + 46416);
+						void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
 
-						static void* Model_Cache = (void*)((unsigned __int32)GetModuleHandleW(L"datacache.dll") + 125464);
-
-						void* Studio_Model = Get_Studio_Model_Type((unsigned __int32)Get_Studio_Model_Location)(Model_Cache, *(void**)((unsigned __int32)Model + 144));
-
-						if (Studio_Model != nullptr)
+						if (Weapon != nullptr)
 						{
-							struct Trace_Structure
+							if (*(__int8*)((unsigned __int32)Weapon + 1732) == 0)
 							{
-								__int8 Additional_Bytes_1[12];
-
-								float End[3];
-
-								__int8 Additional_Bytes_2[52];
-
-								void* Entity;
-
-								__int8 Additional_Bytes_3[4];
-							};
-
-							Trace_Structure Trace;
-
-							auto Trace_Ray = [&](float* Start, float* End, Trace_Structure* Trace, __int8 Investigation) -> __int8
-							{
-								struct Ray_Structure
+								if (*(__int32*)((unsigned __int32)Weapon + 1788) > 0)
 								{
-									__int8 Additional_Bytes[50];
-								};
-
-								struct Trace_Filter_Structure
-								{
-									void* Trace_Filter;
-
-									void* Skip;
-
-									__int8 Additional_Bytes[4];
-
-									__int32 Collision_Group;
-								};
-
-								using Trace_Ray_Type = void(__thiscall*)(void* Engine_Trace, Ray_Structure* Ray, __int32 Mask, Trace_Filter_Structure* Trace_Filter, Trace_Structure* Trace);
-
-								Ray_Structure Ray;
-
-								using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);
-
-								Initialize_Ray_Type(537380224)(&Ray, Start, End);
-
-								Trace_Filter_Structure Trace_Filter;
-
-								Trace_Filter.Trace_Filter = (void*)607282712;
-
-								Trace_Filter.Skip = Local_Player;
-
-								Trace_Filter.Collision_Group = 0;
-
-								Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, Trace);
-
-								if (Investigation == 0)
-								{
-									if (Trace->Entity == nullptr)
+									if (*(float*)((unsigned __int32)Weapon + 1720) <= Global_Variables->Current_Time)
 									{
-										return 1;
-									}
+										size_t Target_Number = 0;
 
-									if (Trace->Entity == Optimal_Target)
-									{
-										return 1;
-									}
-								}
+										void* Optimal_Target;
 
-								return 0;
-							};
+										float Extrapolation_Time = 0;
 
-							void* Hitbox_Set = (void*)((unsigned __int32)Studio_Model + *(__int32*)((unsigned __int32)Studio_Model + 176));
+										using Eye_Position = void(__thiscall*)(void* Player, float* Eye_Position);
 
-							float* Bounding_Box_Minimum = (float*)((unsigned __int32)Hitbox_Set + 836);
+										float Local_Player_Eye_Position[3];
 
-							float* Bounding_Box_Maximum = (float*)((unsigned __int32)Hitbox_Set + 848);
+										Eye_Position(604058320)(Local_Player, Local_Player_Eye_Position);
 
-							float Hitbox_Minimum[3] =
-							{
-								Bounding_Box_Minimum[0] * Bones[14][0][0] + Bounding_Box_Minimum[1] * Bones[14][0][1] + Bounding_Box_Minimum[2] * Bones[14][0][2] + Bones[14][0][3],
+										__int32 Target_Tick_Number;
 
-								Bounding_Box_Minimum[0] * Bones[14][1][0] + Bounding_Box_Minimum[1] * Bones[14][1][1] + Bounding_Box_Minimum[2] * Bones[14][1][2] + Bones[14][1][3],
+										using Get_Latency_Type = float(__thiscall*)(void* Network_Channel, __int32 Flow_Type);
 
-								Bounding_Box_Minimum[0] * Bones[14][2][0] + Bounding_Box_Minimum[1] * Bones[14][2][1] + Bounding_Box_Minimum[2] * Bones[14][2][2] + Bones[14][2][3]
-							};
+										void* Network_Channel = *(void**)540608912;
 
-							float Hitbox_Maximum[3] =
-							{
-								Bounding_Box_Maximum[0] * Bones[14][0][0] + Bounding_Box_Maximum[1] * Bones[14][0][1] + Bounding_Box_Maximum[2] * Bones[14][0][2] + Bones[14][0][3],
+										float Total_Latency = Get_Latency_Type(537919008)(Network_Channel, 0) + Get_Latency_Type(537919008)(Network_Channel, 1);
 
-								Bounding_Box_Maximum[0] * Bones[14][1][0] + Bounding_Box_Maximum[1] * Bones[14][1][1] + Bounding_Box_Maximum[2] * Bones[14][1][2] + Bones[14][1][3],
+										float Interpolation_Ratio = *(float*)607906336;
 
-								Bounding_Box_Maximum[0] * Bones[14][2][0] + Bounding_Box_Maximum[1] * Bones[14][2][1] + Bounding_Box_Maximum[2] * Bones[14][2][2] + Bones[14][2][3]
-							};
+										float Minimum_Interpolation_Ratio = *(float*)542242312;
 
-							float Optimal_Target_Origin[3] =
-							{
-								(Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2,
+										float Maximum_Interpolation_Ratio = *(float*)542242072;
 
-								(Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2,
-
-								Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
-							};
-
-							if (Console_Variable_Extrapolation.Integer == 1)
-							{
-								__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
-
-								__int32 Current_Player_History_Number = 0;
-
-								float High_Simulation_Time = 0;
-
-								__int32 High_Player_History_Number;
-
-								Traverse_Player_History_Find_High_Label:
-								{
-									float Current_Simulation_Time = Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
-
-									if (High_Simulation_Time < Current_Simulation_Time)
-									{
-										High_Simulation_Time = Current_Simulation_Time;
-
-										High_Player_History_Number = Current_Player_History_Number;
-									}
-
-									Current_Player_History_Number += 1;
-
-									if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
-									{
-										goto Traverse_Player_History_Find_High_Label;
-									}
-								}
-							
-								if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) == 1)
-								{
-									Extrapolation_Time = 0;
-								}
-								else
-								{
-									float Mid_Simulation_Time = High_Simulation_Time;
-
-									__int32 Mid_Player_History_Number;
-
-									Traverse_Player_History_Find_Mid_Label:
-									{
-										float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
-
-										if (Current_Simulation_Time != 0)
+										if (Interpolation_Ratio < Minimum_Interpolation_Ratio)
 										{
-											if (Mid_Simulation_Time > Current_Simulation_Time)
+											Interpolation_Ratio = Minimum_Interpolation_Ratio;
+										}
+										else
+										{
+											if (Interpolation_Ratio > Maximum_Interpolation_Ratio)
 											{
-												Mid_Simulation_Time = Current_Simulation_Time;
-
-												Mid_Player_History_Number = Current_Player_History_Number;
+												Interpolation_Ratio = Maximum_Interpolation_Ratio;
 											}
 										}
 
-										if (Current_Player_History_Number != 0)
-										{
-											Current_Player_History_Number -= 1;
+										__int32 Update_Rate = *(__int32*)540495212;
 
-											goto Traverse_Player_History_Find_Mid_Label;
+										__int32 Maximum_Update_Rate = *(__int32*)542221412;
+
+										__int32 Minimum_Update_Rate = *(__int32*)542221268;
+
+										if (Update_Rate < Minimum_Update_Rate)
+										{
+											Update_Rate = Minimum_Update_Rate;
 										}
-
-										Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
-									}
-
-									Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
-
-									if (Extrapolation_Time != 0)
-									{
-										float Low_Simulation_Time = Mid_Simulation_Time;
-
-										__int32 Low_Player_History_Number;
-
-										Traverse_Player_History_Find_Low_Label:
+										else
 										{
-											float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
-
-											if (Current_Simulation_Time > 0)
+											if (Update_Rate > Maximum_Update_Rate)
 											{
-												if (Low_Simulation_Time > Current_Simulation_Time)
-												{
-													Low_Simulation_Time = Current_Simulation_Time;
-
-													Low_Player_History_Number = Current_Player_History_Number;
-												}
-											}
-
-											Current_Player_History_Number += 1;
-
-											if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
-											{
-												goto Traverse_Player_History_Find_Low_Label;
+												Update_Rate = Maximum_Update_Rate;
 											}
 										}
 
-										if (Mid_Simulation_Time != Low_Simulation_Time)
+										float Interpolation_Time = Interpolation_Ratio / Update_Rate;
+
+										float Interpolation = *(float*)541928632;
+
+										if (Interpolation_Time < Interpolation)
 										{
-											Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
+											Interpolation_Time = Interpolation;
+										}
 
-											Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
+										float Corrected_Interpolation_Time = std::clamp(Total_Latency + Interpolation_Time, 0.f, 1.f);
 
-											float Mid_Low_Origin_Difference[3] =
+										float Aim_Angles[2];
+
+										Traverse_Sorted_Target_List_Label:
+										{
+											if (Target_Number == Sorted_Target_List.size())
 											{
-												Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
-
-												Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
-
-												Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
-											};
-
-											__int32 Origin_Difference_Number = 0;
-
-											float High_Mid_Origin_Difference_Acceleration[3];
-
-											Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
-
-											float High_Mid_Origin_Difference[3] =
-											{
-												High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
-
-												High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
-
-												High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
-											};
-
-											float Accelerated_High_Mid_Origin_Difference[3];
-
-											Accelerate_High_Mid_Origin_Difference_Label:
-											{
-												float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
-
-												if (Mid_Low_Difference != 0)
-												{
-													High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] / Mid_Low_Difference;
-												}
-												else
-												{
-													High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
-												}
-
-												Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] * High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
-
-												Origin_Difference_Number += 1;
-
-												if (Origin_Difference_Number != 3)
-												{
-													goto Accelerate_High_Mid_Origin_Difference_Label;
-												}
+												Optimal_Target = nullptr;
 											}
-
-											if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+											else
 											{
-												if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[1]) - High_Mid_Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+												using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
+
+												Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
+
+												void* Renderable = (void*)((unsigned __int32)Optimal_Target + 4);
+
+												float Bones[128][3][4];
+
+												if (Setup_Bones_Type(604209888)(Renderable, Bones, 128, 524032, Global_Variables->Current_Time) == 1)
 												{
-													if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+													void* Model = *(void**)((unsigned __int32)Renderable + 88);
+
+													if (Model != nullptr)
 													{
-														float Previous_Optimal_Target_Origin[3] =
+														using Get_Studio_Model_Type = void*(__thiscall*)(void* Model_Cache, void* Model);
+
+														static void* Get_Studio_Model_Location = (void*)((unsigned __int32)GetModuleHandleW(L"datacache.dll") + 46416);
+
+														static void* Model_Cache = (void*)((unsigned __int32)GetModuleHandleW(L"datacache.dll") + 125464);
+
+														void* Studio_Model = Get_Studio_Model_Type((unsigned __int32)Get_Studio_Model_Location)(Model_Cache, *(void**)((unsigned __int32)Model + 144));
+
+														if (Studio_Model != nullptr)
 														{
-															Optimal_Target_Origin[0],
+															struct Trace_Structure
+															{
+																__int8 Additional_Bytes_1[12];
 
-															Optimal_Target_Origin[1],
+																float End[3];
 
-															Optimal_Target_Origin[2]
-														};
+																__int8 Additional_Bytes_2[52];
 
-														float Extrapolated_Optimal_Target_Origin[3]
-														{
-															Optimal_Target_Origin[0] + Accelerated_High_Mid_Origin_Difference[0],
+																void* Entity;
 
-															Optimal_Target_Origin[1] + Accelerated_High_Mid_Origin_Difference[1],
+																__int8 Additional_Bytes_3[4];
+															};
 
-															Optimal_Target_Origin[2] + Accelerated_High_Mid_Origin_Difference[2],
-														};
+															Trace_Structure Trace;
 
-														Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, &Trace, 1);
+															auto Trace_Ray = [&](float* Start, float* End, Trace_Structure* Trace, __int8 Investigation) -> __int8
+															{
+																struct Ray_Structure
+																{
+																	__int8 Additional_Bytes[50];
+																};
 
-														Optimal_Target_Origin[0] = Trace.End[0];
+																struct Trace_Filter_Structure
+																{
+																	void* Trace_Filter;
 
-														Optimal_Target_Origin[1] = Trace.End[1];
+																	void* Skip;
 
-														Optimal_Target_Origin[2] = Trace.End[2];
+																	__int8 Additional_Bytes[4];
 
-														if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 0)
-														{
-															Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
+																	__int32 Collision_Group;
+																};
 
-															Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
+																using Trace_Ray_Type = void(__thiscall*)(void* Engine_Trace, Ray_Structure* Ray, __int32 Mask, Trace_Filter_Structure* Trace_Filter, Trace_Structure* Trace);
 
-															Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
-														}
-														else
-														{
-															goto Set_Aim_Angles_Label;
+																Ray_Structure Ray;
+
+																using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);
+
+																Initialize_Ray_Type(537380224)(&Ray, Start, End);
+
+																Trace_Filter_Structure Trace_Filter;
+
+																Trace_Filter.Trace_Filter = (void*)607282712;
+
+																Trace_Filter.Skip = Local_Player;
+
+																Trace_Filter.Collision_Group = 0;
+
+																Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, Trace);
+
+																if (Investigation == 0)
+																{
+																	if (Trace->Entity == nullptr)
+																	{
+																		return 1;
+																	}
+
+																	if (Trace->Entity == Optimal_Target)
+																	{
+																		return 1;
+																	}
+																}
+
+																return 0;
+															};
+
+															void* Hitbox_Set = (void*)((unsigned __int32)Studio_Model + *(__int32*)((unsigned __int32)Studio_Model + 176));
+
+															float* Bounding_Box_Minimum = (float*)((unsigned __int32)Hitbox_Set + 836);
+
+															float* Bounding_Box_Maximum = (float*)((unsigned __int32)Hitbox_Set + 848);
+
+															float Hitbox_Minimum[3] =
+															{
+																Bounding_Box_Minimum[0] * Bones[14][0][0] + Bounding_Box_Minimum[1] * Bones[14][0][1] + Bounding_Box_Minimum[2] * Bones[14][0][2] + Bones[14][0][3],
+
+																Bounding_Box_Minimum[0] * Bones[14][1][0] + Bounding_Box_Minimum[1] * Bones[14][1][1] + Bounding_Box_Minimum[2] * Bones[14][1][2] + Bones[14][1][3],
+
+																Bounding_Box_Minimum[0] * Bones[14][2][0] + Bounding_Box_Minimum[1] * Bones[14][2][1] + Bounding_Box_Minimum[2] * Bones[14][2][2] + Bones[14][2][3]
+															};
+
+															float Hitbox_Maximum[3] =
+															{
+																Bounding_Box_Maximum[0] * Bones[14][0][0] + Bounding_Box_Maximum[1] * Bones[14][0][1] + Bounding_Box_Maximum[2] * Bones[14][0][2] + Bones[14][0][3],
+
+																Bounding_Box_Maximum[0] * Bones[14][1][0] + Bounding_Box_Maximum[1] * Bones[14][1][1] + Bounding_Box_Maximum[2] * Bones[14][1][2] + Bones[14][1][3],
+
+																Bounding_Box_Maximum[0] * Bones[14][2][0] + Bounding_Box_Maximum[1] * Bones[14][2][1] + Bounding_Box_Maximum[2] * Bones[14][2][2] + Bones[14][2][3]
+															};
+
+															float Optimal_Target_Origin[3] =
+															{
+																(Hitbox_Minimum[0] + Hitbox_Maximum[0]) / 2,
+
+																(Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2,
+
+																Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
+															};
+
+															if (Console_Variable_Extrapolation.Integer == 1)
+															{
+																__int32 Optimal_Target_Index = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+
+																__int32 Current_Player_History_Number = 0;
+
+																float High_Simulation_Time = 0;
+
+																__int32 High_Player_History_Number;
+
+																Traverse_Player_History_Find_High_Label:
+																{
+																	float Current_Simulation_Time = Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+
+																	if (High_Simulation_Time < Current_Simulation_Time)
+																	{
+																		High_Simulation_Time = Current_Simulation_Time;
+
+																		High_Player_History_Number = Current_Player_History_Number;
+																	}
+
+																	Current_Player_History_Number += 1;
+
+																	if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
+																	{
+																		goto Traverse_Player_History_Find_High_Label;
+																	}
+																}
+							
+																if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) == 1)
+																{
+																	Extrapolation_Time = 0;
+																}
+																else
+																{
+																	float Mid_Simulation_Time = High_Simulation_Time;
+
+																	__int32 Mid_Player_History_Number;
+
+																	Traverse_Player_History_Find_Mid_Label:
+																	{
+																		float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+
+																		if (Current_Simulation_Time != 0)
+																		{
+																			if (Mid_Simulation_Time > Current_Simulation_Time)
+																			{
+																				Mid_Simulation_Time = Current_Simulation_Time;
+
+																				Mid_Player_History_Number = Current_Player_History_Number;
+																			}
+																		}
+
+																		if (Current_Player_History_Number != 0)
+																		{
+																			Current_Player_History_Number -= 1;
+
+																			goto Traverse_Player_History_Find_Mid_Label;
+																		}
+
+																		Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
+																	}
+
+																	Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
+
+																	if (Extrapolation_Time != 0)
+																	{
+																		float Low_Simulation_Time = Mid_Simulation_Time;
+
+																		__int32 Low_Player_History_Number;
+
+																		Traverse_Player_History_Find_Low_Label:
+																		{
+																			float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Index][Current_Player_History_Number].Simulation_Time;
+
+																			if (Current_Simulation_Time > 0)
+																			{
+																				if (Low_Simulation_Time > Current_Simulation_Time)
+																				{
+																					Low_Simulation_Time = Current_Simulation_Time;
+
+																					Low_Player_History_Number = Current_Player_History_Number;
+																				}
+																			}
+
+																			Current_Player_History_Number += 1;
+
+																			if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
+																			{
+																				goto Traverse_Player_History_Find_Low_Label;
+																			}
+																		}
+
+																		if (Mid_Simulation_Time != Low_Simulation_Time)
+																		{
+																			Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Index][Mid_Player_History_Number];
+
+																			Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Index][Low_Player_History_Number];
+
+																			float Mid_Low_Origin_Difference[3] =
+																			{
+																				Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
+
+																				Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
+
+																				Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
+																			};
+
+																			__int32 Origin_Difference_Number = 0;
+
+																			float High_Mid_Origin_Difference_Acceleration[3];
+
+																			Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Index][High_Player_History_Number];
+
+																			float High_Mid_Origin_Difference[3] =
+																			{
+																				High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
+
+																				High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
+
+																				High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
+																			};
+
+																			float Accelerated_High_Mid_Origin_Difference[3];
+
+																			Accelerate_High_Mid_Origin_Difference_Label:
+																			{
+																				float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
+
+																				if (Mid_Low_Difference != 0)
+																				{
+																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] / Mid_Low_Difference;
+																				}
+																				else
+																				{
+																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
+																				}
+
+																				Accelerated_High_Mid_Origin_Difference[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] * High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
+
+																				Origin_Difference_Number += 1;
+
+																				if (Origin_Difference_Number != 3)
+																				{
+																					goto Accelerate_High_Mid_Origin_Difference_Label;
+																				}
+																			}
+
+																			if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+																			{
+																				if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[1]) - High_Mid_Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+																				{
+																					if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Gravity_Tolerance.Floating_Point)
+																					{
+																						float Previous_Optimal_Target_Origin[3] =
+																						{
+																							Optimal_Target_Origin[0],
+
+																							Optimal_Target_Origin[1],
+
+																							Optimal_Target_Origin[2]
+																						};
+
+																						float Extrapolated_Optimal_Target_Origin[3]
+																						{
+																							Optimal_Target_Origin[0] + Accelerated_High_Mid_Origin_Difference[0],
+
+																							Optimal_Target_Origin[1] + Accelerated_High_Mid_Origin_Difference[1],
+
+																							Optimal_Target_Origin[2] + Accelerated_High_Mid_Origin_Difference[2],
+																						};
+
+																						Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, &Trace, 1);
+
+																						Optimal_Target_Origin[0] = Trace.End[0];
+
+																						Optimal_Target_Origin[1] = Trace.End[1];
+
+																						Optimal_Target_Origin[2] = Trace.End[2];
+
+																						if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 0)
+																						{
+																							Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
+
+																							Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
+
+																							Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
+																						}
+																						else
+																						{
+																							goto Set_Aim_Angles_Label;
+																						}
+																					}
+																				}
+																			}
+																		}
+
+																		Extrapolation_Time = 0;
+																	}
+																}
+															}
+						
+															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
+															{
+																Set_Aim_Angles_Label:
+																{
+																	Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
+
+																	__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
+
+																	if (Tick_Number_Difference * -1 <= 7)
+																	{
+																		if (Absolute(Corrected_Interpolation_Time - Tick_Number_Difference * Global_Variables->Interval_Per_Tick) <= 0.2f)
+																		{
+																			float Origin_Difference[3] =
+																			{
+																				Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
+
+																				Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
+
+																				Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
+																			};
+
+																			Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
+
+																			Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
+
+																			User_Command->Buttons_State |= 1;
+
+																			goto Found_Optimal_Target_Label;
+																		}
+																	}
+																}
+															}
 														}
 													}
 												}
+
+												Target_Number += 1;
+
+												goto Traverse_Sorted_Target_List_Label;
+
+												Found_Optimal_Target_Label:
+												{
+
+												}
 											}
 										}
 
-										Extrapolation_Time = 0;
-									}
-								}
-							}
-						
-							if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, &Trace, 0) == 1)
-							{
-								Set_Aim_Angles_Label:
-								{
-									Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
-
-									__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
-
-									if (Tick_Number_Difference * -1 <= 7)
-									{
-										if (Absolute(Corrected_Interpolation_Time - Tick_Number_Difference * Global_Variables->Interval_Per_Tick) <= 0.2f)
-										{
-											float Origin_Difference[3] =
-											{
-												Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
-
-												Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
-
-												Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
-											};
-
-											Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
-
-											Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
-
-											User_Command->Buttons_State |= 1;
-
-											goto Found_Optimal_Target_Label;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-
-				Target_Number += 1;
-
-				goto Traverse_Distance_Sorted_Target_List_Label;
-
-				Found_Optimal_Target_Label:
-				{
-
-				}
-			}
-		}
-
-		if ((User_Command->Buttons_State & 1) == 1)
-		{
-			if ((User_Command->Buttons_State & 2048) == 0)
-			{
-				if (Send_Packet == 0)
-				{
-					if (Predicted_Send_Packet == 1)
-					{
-						if (*(float*)((unsigned __int32)Local_Player + 2544) <= Global_Variables->Current_Time)
-						{
-							unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
-
-							void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
-
-							if (Weapon != nullptr)
-							{
-								if (*(__int8*)((unsigned __int32)Weapon + 1732) == 0)
-								{
-									if (*(__int32*)((unsigned __int32)Weapon + 1788) > 0)
-									{
-										if (*(float*)((unsigned __int32)Weapon + 1720) <= Global_Variables->Current_Time)
+										if ((User_Command->Buttons_State & 1) == 1)
 										{
 											Queued_Bullets = 1;
 
@@ -867,13 +867,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	{
 		User_Command->Buttons_State &= ~1;
 
-		if (Distance_Sorted_Target_List.size() != 0)
+		if (Sorted_Target_List.size() != 0)
 		{
 			User_Command->View_Angles[0] = Console_Variable_Angle_X.Floating_Point;
 
 			Update_Animation_Angle[0] = User_Command->View_Angles[0];
 
-			float* Optimal_Target_Origin = (float*)((unsigned __int32)Distance_Sorted_Target_List.at(0).Target + 668);
+			float* Optimal_Target_Origin = (float*)((unsigned __int32)Sorted_Target_List.at(0).Target + 668);
 
 			float Origin_Difference[2] =
 			{
