@@ -532,8 +532,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																		goto Traverse_Player_History_Find_High_Label;
 																	}
 																}
-							
-																if ((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f <= Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f)
+																
+																if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) <= (__int32)(Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f))
 																{
 																	Extrapolation_Time = 0;
 																}
@@ -654,6 +654,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																					goto Accelerate_High_Mid_Origin_Difference_Label;
 																				}
 																			}
+
+																			//TODO: follow game rules for more accurate appxomation
 
 																			if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 																			{
