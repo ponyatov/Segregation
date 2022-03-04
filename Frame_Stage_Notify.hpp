@@ -2,6 +2,8 @@
 
 Player_History_Structure Players_History[64][90];
 
+__int32 Queued_Bullets;
+
 constexpr float Bruteforce_Angles[5] =
 {
 	0,
@@ -58,7 +60,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 					{
 						__builtin_memset(Players_History, 0, sizeof(Players_History));
 
-						//is shutdown triggered on retry?
+						Queued_Bullets = 0;
 					}
 				}
 				else

@@ -4,9 +4,9 @@ void* Original_Item_Post_Frame_Caller_Location;
 
 void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 {
-	if (Shot_Tick == -1)
+	if (Shot_Tick_Number == -1)
 	{
-		Shot_Tick = 0;
+		Shot_Tick_Number = 0;
 	}
 	else
 	{
@@ -22,11 +22,11 @@ void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 
 			static float Accuracy;
 
-			if (*(__int32*)((unsigned __int32)Local_Player + 3592) == Shot_Tick)
+			if (*(__int32*)((unsigned __int32)Local_Player + 3592) == Shot_Tick_Number)
 			{
 				Accuracy = *(float*)((unsigned __int32)Weapon + 1888);
 
-				Shot_Tick = 0;
+				Shot_Tick_Number = 0;
 			}
 
 			using Get_Primary_Ammo_Capacity_Type = __int32(__thiscall**)(void* Weapon);

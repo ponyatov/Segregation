@@ -356,6 +356,8 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
 
+			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"bullet_impact", 0);
+
 			wprintf(L"[ + ] Events\n");
 
 			Redirection_Manager::Redirect_Function(Original_Shutdown_Caller_Location, 0, (void*)537926128, 1, (void*)Redirected_Shutdown);
