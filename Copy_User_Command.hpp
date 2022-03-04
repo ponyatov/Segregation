@@ -276,12 +276,12 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		return X.Distance < Y.Distance;
 	};
-
+	
 	std::sort(Sorted_Target_List.begin(), Sorted_Target_List.end(), Target_List_Sort);
 
 	__int8 In_Attack = 0;
 
-	if (Queued_Bullets == 0)
+	if (Absolute(Global_Variables->Current_Time - Queued_Bullets) > 0.5f)
 	{
 		if ((User_Command->Buttons_State & 2048) == 0)
 		{
@@ -755,12 +755,12 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 										if ((User_Command->Buttons_State & 1) == 1)
 										{
-											Queued_Bullets = 1;
+											Queued_Bullets = Global_Variables->Current_Time;
 
 											Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
 											In_Attack = 1;
-
+											
 											if (Optimal_Target != nullptr)
 											{
 												User_Command->Tick_Number = Target_Tick_Number;

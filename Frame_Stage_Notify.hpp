@@ -2,7 +2,7 @@
 
 Player_History_Structure Players_History[64][90];
 
-__int32 Queued_Bullets;
+float Queued_Bullets;
 
 constexpr float Bruteforce_Angles[5] =
 {
