@@ -709,7 +709,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																}
 															}
 
-															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 1 && Extrapolation_Time)
+															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 1)
 															{
 																Set_Aim_Angles_Label:
 																{
