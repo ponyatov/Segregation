@@ -48,7 +48,7 @@
 
 #include "Item_Post_Frame.hpp"
 
-#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "WinMM.Lib")
 
 #include "Event_Listener.hpp"
 
