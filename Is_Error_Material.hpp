@@ -8,9 +8,9 @@ __int8 __thiscall Redirected_Is_Error_Material(void* Material)
 
 	if (Is_Error_Material == 0)
 	{
-		static void* Get_Group_Location = (void*)((unsigned __int32)GetModuleHandleW(L"MaterialSystem.dll") + 18224);
-
 		using Get_Group_Type = char*(__thiscall*)(void* Material);
+
+		static void* Get_Group_Location = (void*)((unsigned __int32)GetModuleHandleW(L"MaterialSystem.dll") + 18224);
 
 		char* Group = Get_Group_Type(Get_Group_Location)(Material);
 

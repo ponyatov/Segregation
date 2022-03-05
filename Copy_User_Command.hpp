@@ -638,6 +638,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																				{
 																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 																				}
+																				
+																				//horizontal extrapolation doesn't seems to be problematic even on servers with custom acceleration (if player doesn't strafes) instead should focus on improving vertical extrapolation
 
 																				High_Mid_Origin_Difference[Origin_Difference_Number] *= High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
 
@@ -649,54 +651,43 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																				}
 																			}
 
-																			//TODO: follow game rules for more accurate approximation
-
-																			if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
+																			float Previous_Optimal_Target_Origin[3] =
 																			{
-																				if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[1]) - High_Mid_Origin_Difference_Acceleration[1]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
-																				{
-																					if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[2]) - High_Mid_Origin_Difference_Acceleration[2]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
-																					{
-																						float Previous_Optimal_Target_Origin[3] =
-																						{
-																							Optimal_Target_Origin[0],
+																				Optimal_Target_Origin[0],
 
-																							Optimal_Target_Origin[1],
+																				Optimal_Target_Origin[1],
 
-																							Optimal_Target_Origin[2]
-																						};
+																				Optimal_Target_Origin[2]
+																			};
 
-																						float Extrapolated_Optimal_Target_Origin[3]
-																						{
-																							Optimal_Target_Origin[0] + High_Mid_Origin_Difference[0],
+																			float Extrapolated_Optimal_Target_Origin[3]
+																			{
+																				Optimal_Target_Origin[0] + High_Mid_Origin_Difference[0],
 
-																							Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1],
+																				Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1],
 
-																							Optimal_Target_Origin[2] + High_Mid_Origin_Difference[2],
-																						};
+																				Optimal_Target_Origin[2] + High_Mid_Origin_Difference[2],
+																			};
 
-																						Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, Optimal_Target, &Trace, 1);
+																			Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, Optimal_Target, &Trace, 1);
 
-																						Optimal_Target_Origin[0] = Trace.End[0];
+																			Optimal_Target_Origin[0] = Trace.End[0];
 
-																						Optimal_Target_Origin[1] = Trace.End[1];
+																			Optimal_Target_Origin[1] = Trace.End[1];
 
-																						Optimal_Target_Origin[2] = Trace.End[2];
+																			Optimal_Target_Origin[2] = Trace.End[2];
 
-																						if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 0)
-																						{
-																							Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
+																			if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 0)
+																			{
+																				Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
 
-																							Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
+																				Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
 
-																							Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
-																						}
-																						else
-																						{
-																							goto Set_Aim_Angles_Label;
-																						}
-																					}
-																				}
+																				Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
+																			}
+																			else
+																			{
+																				goto Set_Aim_Angles_Label;
 																			}
 																		}
 																	}
