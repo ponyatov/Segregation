@@ -15,10 +15,10 @@ void Bruteforce_Memory_Reset()
 			Player_Data->Shots_Fired = (Player_Data->Shots_Fired - 1) % 5;
 		}
 
+		Entity_Number += 1;
+
 		if (Entity_Number != 64)
 		{
-			Entity_Number += 1;
-
 			goto Traverse_Players_Data_Label;
 		}
 	}
