@@ -532,91 +532,85 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																		goto Traverse_Player_History_Find_High_Label;
 																	}
 																}
-																
-																if ((__int32)((Global_Variables->Current_Time - High_Simulation_Time) / Global_Variables->Interval_Per_Tick + 0.5f) <= (__int32)(Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f))
+
+																float Mid_Simulation_Time = High_Simulation_Time;
+
+																__int32 Mid_Player_History_Number;
+
+																Traverse_Player_History_Find_Mid_Label:
 																{
-																	Extrapolation_Time = 0;
+																	float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
+
+																	if (Current_Simulation_Time != 0)
+																	{
+																		if (Mid_Simulation_Time > Current_Simulation_Time)
+																		{
+																			Mid_Simulation_Time = Current_Simulation_Time;
+
+																			Mid_Player_History_Number = Current_Player_History_Number;
+																		}
+																	}
+
+																	if (Current_Player_History_Number != 0)
+																	{
+																		Current_Player_History_Number -= 1;
+
+																		goto Traverse_Player_History_Find_Mid_Label;
+																	}
+
+																	if (Mid_Simulation_Time != High_Simulation_Time)
+																	{
+																		Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
+																	}
 																}
-																else
+
+																Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
+
+																if (Extrapolation_Time != 0)
 																{
-																	float Mid_Simulation_Time = High_Simulation_Time;
+																	float Low_Simulation_Time = Mid_Simulation_Time;
 
-																	__int32 Mid_Player_History_Number;
+																	__int32 Low_Player_History_Number;
 
-																	Traverse_Player_History_Find_Mid_Label:
+																	Traverse_Player_History_Find_Low_Label:
 																	{
-																		float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
+																		float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
 
-																		if (Current_Simulation_Time != 0)
+																		if (Current_Simulation_Time > 0)
 																		{
-																			if (Mid_Simulation_Time > Current_Simulation_Time)
+																			if (Low_Simulation_Time > Current_Simulation_Time)
 																			{
-																				Mid_Simulation_Time = Current_Simulation_Time;
+																				Low_Simulation_Time = Current_Simulation_Time;
 
-																				Mid_Player_History_Number = Current_Player_History_Number;
+																				Low_Player_History_Number = Current_Player_History_Number;
 																			}
 																		}
 
-																		if (Current_Player_History_Number != 0)
-																		{
-																			Current_Player_History_Number -= 1;
+																		Current_Player_History_Number += 1;
 
-																			goto Traverse_Player_History_Find_Mid_Label;
-																		}
-
-																		if (Mid_Simulation_Time != High_Simulation_Time)
+																		if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
 																		{
-																			Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
+																			goto Traverse_Player_History_Find_Low_Label;
 																		}
 																	}
 
-																	if (High_Simulation_Time - Mid_Simulation_Time == 0)
+																	if (Mid_Simulation_Time != Low_Simulation_Time)
 																	{
-																		Extrapolation_Time = 0;
-																	}
-																	else
-																	{
-																		float Low_Simulation_Time = Mid_Simulation_Time;
+																		Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Number][Mid_Player_History_Number];
 
-																		__int32 Low_Player_History_Number;
+																		Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Number][Low_Player_History_Number];
 
-																		Traverse_Player_History_Find_Low_Label:
+																		float Mid_Low_Origin_Difference[3] =
 																		{
-																			float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
+																			Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
 
-																			if (Current_Simulation_Time > 0)
-																			{
-																				if (Low_Simulation_Time > Current_Simulation_Time)
-																				{
-																					Low_Simulation_Time = Current_Simulation_Time;
-
-																					Low_Player_History_Number = Current_Player_History_Number;
-																				}
-																			}
-
-																			Current_Player_History_Number += 1;
-
-																			if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
-																			{
-																				goto Traverse_Player_History_Find_Low_Label;
-																			}
-																		}
-
-																		if (Mid_Simulation_Time != Low_Simulation_Time)
+																			Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
+																			
+																			Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
+																		};
+																		
+																		if (__builtin_powf(Mid_Low_Origin_Difference[0], 2) + __builtin_powf(Mid_Low_Origin_Difference[1], 2) + __builtin_powf(Mid_Low_Origin_Difference[2], 2) > 4096)
 																		{
-																			Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Number][Mid_Player_History_Number];
-
-																			Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Number][Low_Player_History_Number];
-
-																			float Mid_Low_Origin_Difference[3] =
-																			{
-																				Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
-
-																				Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
-
-																				Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
-																			};
-
 																			__int32 Origin_Difference_Number = 0;
 
 																			float High_Mid_Origin_Difference_Acceleration[3];
@@ -655,7 +649,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																				}
 																			}
 
-																			//TODO: follow game rules for more accurate appxomation
+																			//TODO: follow game rules for more accurate approximation
 
 																			if (Absolute(__builtin_ceilf(High_Mid_Origin_Difference_Acceleration[0]) - High_Mid_Origin_Difference_Acceleration[0]) <= Console_Variable_Extrapolation_Tolerance.Floating_Point)
 																			{
@@ -705,9 +699,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																				}
 																			}
 																		}
-
-																		Extrapolation_Time = 0;
 																	}
+
+																	Extrapolation_Time = 0;
 																}
 															}
 
