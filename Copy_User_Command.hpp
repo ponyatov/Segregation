@@ -31,11 +31,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Local_Player = *(void**)607867332;
 
-	float Local_Player_Previous_Origin[2] =
+	float Local_Player_Previous_Origin[3] =
 	{
 		*(float*)((unsigned __int32)Local_Player + 668),
 
-		*(float*)((unsigned __int32)Local_Player + 672)
+		*(float*)((unsigned __int32)Local_Player + 672),
+
+		*(float*)((unsigned __int32)Local_Player + 676),
 	};
 
 	using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
@@ -134,18 +136,20 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	}
 	else
 	{
-		static float Previous_Networked_Origin[2];
+		static float Previous_Networked_Origin[3];
 
 		if (Choked_Commands_Count < Console_Variable_Maximum_Choked_Commands.Integer)
 		{
-			float Difference[2] =
+			float Difference[3] =
 			{
 				Previous_Networked_Origin[0] - Local_Player_Previous_Origin[0],
 
-				Previous_Networked_Origin[1] - Local_Player_Previous_Origin[1]
+				Previous_Networked_Origin[1] - Local_Player_Previous_Origin[1],
+
+				Previous_Networked_Origin[2] - Local_Player_Previous_Origin[2]
 			};
 
-			if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) <= 4096)
+			if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
 			{
 				Send_Packet = 0;
 			}
@@ -154,6 +158,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				Previous_Networked_Origin[0] = *(float*)((unsigned __int32)Local_Player + 668);
 
 				Previous_Networked_Origin[1] = *(float*)((unsigned __int32)Local_Player + 672);
+
+				Previous_Networked_Origin[2] = *(float*)((unsigned __int32)Local_Player + 676);
 
 				Send_Packet = 1;
 			}
@@ -170,7 +176,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 					Difference[1] = Previous_Networked_Origin[1] - Local_Player_Origin[1];
 
-					if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) <= 4096)
+					Difference[2] = Previous_Networked_Origin[2] - Local_Player_Origin[2];
+
+					if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
 					{
 						Predicted_Send_Packet = -1;
 					}
@@ -186,6 +194,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			Previous_Networked_Origin[0] = *(float*)((unsigned __int32)Local_Player + 668);
 
 			Previous_Networked_Origin[1] = *(float*)((unsigned __int32)Local_Player + 672);
+
+			Previous_Networked_Origin[2] = *(float*)((unsigned __int32)Local_Player + 676);
 
 			Send_Packet = 1;
 
@@ -246,7 +256,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				}
 			}
 		}
-
+		
 		if (Entity_Number != Maximum_Clients)
 		{
 			Entity_Number += 1;
@@ -264,7 +274,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		return X.Distance < Y.Distance;
 	};
-
+	
 	std::sort(Sorted_Target_List.begin(), Sorted_Target_List.end(), Target_List_Sort);
 
 	__int8 In_Attack = 0;
@@ -294,8 +304,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 										size_t Target_Number = 0;
 
 										void* Optimal_Target;
-
-										float Extrapolation_Time = 0;
 
 										using Eye_Position = void(__thiscall*)(void* Player, float* Eye_Position);
 
@@ -392,23 +400,21 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 														if (Studio_Model != nullptr)
 														{
-															struct Trace_Structure
+															auto Trace_Ray = [&](float* End) -> __int8
 															{
-																__int8 Additional_Bytes_1[12];
+																struct Trace_Structure
+																{
+																	__int8 Additional_Bytes_1[12];
 
-																float End[3];
+																	float End[3];
 
-																__int8 Additional_Bytes_2[52];
+																	__int8 Additional_Bytes_2[52];
 
-																void* Entity;
+																	void* Entity;
 
-																__int8 Additional_Bytes_3[4];
-															};
+																	__int8 Additional_Bytes_3[4];
+																};
 
-															Trace_Structure Trace;
-
-															auto Trace_Ray = [&](float* Start, float* End, void* Skip, Trace_Structure* Trace, __int8 Investigation) -> __int8
-															{
 																struct Ray_Structure
 																{
 																	__int8 Additional_Bytes[50];
@@ -420,40 +426,37 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																	void* Skip;
 
-																	__int8 Additional_Bytes[4];
-
-																	__int32 Collision_Group;
+																	__int32 Group;
 																};
 
 																using Trace_Ray_Type = void(__thiscall*)(void* Engine_Trace, Ray_Structure* Ray, __int32 Mask, Trace_Filter_Structure* Trace_Filter, Trace_Structure* Trace);
 
-																Ray_Structure Ray;
-
 																using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);
 
-																Initialize_Ray_Type(537380224)(&Ray, Start, End);
+																Ray_Structure Ray;
+
+																Initialize_Ray_Type(537380224)(&Ray, Local_Player_Origin, End);
 
 																Trace_Filter_Structure Trace_Filter;
 
-																Trace_Filter.Trace_Filter = (void*)607282712;
+																Trace_Filter.Trace_Filter = (void*)607282692;
 
-																Trace_Filter.Skip = Skip;
+																Trace_Filter.Skip = Local_Player;
 
-																Trace_Filter.Collision_Group = 0;
+																Trace_Filter.Group = 0;
 
-																Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, Trace);
+																Trace_Structure Trace;
 
-																if (Investigation == 0)
+																Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, &Trace);
+
+																if (Trace.Entity == nullptr)
 																{
-																	if (Trace->Entity == nullptr)
-																	{
-																		return 1;
-																	}
+																	return 1;
+																}
 
-																	if (Trace->Entity == Optimal_Target)
-																	{
-																		return 1;
-																	}
+																if (Trace.Entity == Optimal_Target)
+																{
+																	return 1;
 																}
 
 																return 0;
@@ -492,217 +495,32 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
 															};
 
-															if (Console_Variable_Extrapolation.Integer == 1)
+															if (Trace_Ray(Optimal_Target_Origin) == 1)
 															{
-																__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
+																Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
-																__int32 Current_Player_History_Number = 0;
+																__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
 
-																float High_Simulation_Time = 0;
-
-																__int32 High_Player_History_Number;
-
-																Traverse_Player_History_Find_High_Label:
+																if (Tick_Number_Difference * -1 <= 7)
 																{
-																	float Current_Simulation_Time = Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
-
-																	if (High_Simulation_Time < Current_Simulation_Time)
+																	if (Absolute(Corrected_Interpolation_Time - Tick_Number_Difference * Global_Variables->Interval_Per_Tick) <= 0.2f)
 																	{
-																		High_Simulation_Time = Current_Simulation_Time;
-
-																		High_Player_History_Number = Current_Player_History_Number;
-																	}
-
-																	Current_Player_History_Number += 1;
-
-																	if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
-																	{
-																		goto Traverse_Player_History_Find_High_Label;
-																	}
-																}
-
-																float Mid_Simulation_Time = High_Simulation_Time;
-
-																__int32 Mid_Player_History_Number;
-
-																Traverse_Player_History_Find_Mid_Label:
-																{
-																	float Current_Simulation_Time = High_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
-
-																	if (Current_Simulation_Time != 0)
-																	{
-																		if (Mid_Simulation_Time > Current_Simulation_Time)
+																		float Origin_Difference[3] =
 																		{
-																			Mid_Simulation_Time = Current_Simulation_Time;
+																			Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
 
-																			Mid_Player_History_Number = Current_Player_History_Number;
-																		}
-																	}
+																			Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
 
-																	if (Current_Player_History_Number != 0)
-																	{
-																		Current_Player_History_Number -= 1;
-
-																		goto Traverse_Player_History_Find_Mid_Label;
-																	}
-
-																	if (Mid_Simulation_Time != High_Simulation_Time)
-																	{
-																		Mid_Simulation_Time = High_Simulation_Time - Mid_Simulation_Time;
-																	}
-																}
-
-																Extrapolation_Time = High_Simulation_Time - Mid_Simulation_Time;
-
-																if (Extrapolation_Time != 0)
-																{
-																	float Low_Simulation_Time = Mid_Simulation_Time;
-
-																	__int32 Low_Player_History_Number;
-
-																	Traverse_Player_History_Find_Low_Label:
-																	{
-																		float Current_Simulation_Time = Mid_Simulation_Time - Players_History[Optimal_Target_Number][Current_Player_History_Number].Simulation_Time;
-
-																		if (Current_Simulation_Time > 0)
-																		{
-																			if (Low_Simulation_Time > Current_Simulation_Time)
-																			{
-																				Low_Simulation_Time = Current_Simulation_Time;
-
-																				Low_Player_History_Number = Current_Player_History_Number;
-																			}
-																		}
-
-																		Current_Player_History_Number += 1;
-
-																		if (Current_Player_History_Number != sizeof(Players_History[0]) / sizeof(Player_History_Structure))
-																		{
-																			goto Traverse_Player_History_Find_Low_Label;
-																		}
-																	}
-
-																	if (Mid_Simulation_Time != Low_Simulation_Time)
-																	{
-																		Player_History_Structure* Mid_Player_History = &Players_History[Optimal_Target_Number][Mid_Player_History_Number];
-
-																		Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Number][Low_Player_History_Number];
-
-																		float Mid_Low_Origin_Difference[2] =
-																		{
-																			Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
-
-																			Mid_Player_History->Origin[1] - Low_Player_History->Origin[1]
+																			Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
 																		};
 
-																		if (__builtin_powf(Mid_Low_Origin_Difference[0], 2) + __builtin_powf(Mid_Low_Origin_Difference[1], 2) > 4096)
-																		{
-																			__int32 Origin_Difference_Number = 0;
+																		Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
 
-																			float High_Mid_Origin_Difference_Acceleration[2];
+																		Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
 
-																			Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Number][High_Player_History_Number];
+																		User_Command->Buttons_State |= 1;
 
-																			float High_Mid_Origin_Difference[2] =
-																			{
-																				High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
-
-																				High_Player_History->Origin[1] - Mid_Player_History->Origin[1]
-																			};
-
-																			Accelerate_High_Mid_Origin_Difference_Label:
-																			{
-																				float Mid_Low_Difference = Mid_Low_Origin_Difference[Origin_Difference_Number];
-
-																				if (Mid_Low_Difference != 0)
-																				{
-																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = High_Mid_Origin_Difference[Origin_Difference_Number] / Mid_Low_Difference;
-																				}
-																				else
-																				{
-																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
-																				}
-
-																				//horizontal extrapolation doesn't seems to be problematic even on servers with custom acceleration (if player doesn't strafes) instead should focus on improving vertical extrapolation
-
-																				High_Mid_Origin_Difference[Origin_Difference_Number] *= High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
-
-																				Origin_Difference_Number += 1;
-
-																				if (Origin_Difference_Number != 2)
-																				{
-																					goto Accelerate_High_Mid_Origin_Difference_Label;
-																				}
-																			}
-
-																			float Previous_Optimal_Target_Origin[2] =
-																			{
-																				Optimal_Target_Origin[0],
-
-																				Optimal_Target_Origin[1]
-																			};
-
-																			float Extrapolated_Optimal_Target_Origin[2]
-																			{
-																				Optimal_Target_Origin[0] + High_Mid_Origin_Difference[0],
-
-																				Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1]
-																			};
-
-																			Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, Optimal_Target, &Trace, 1);
-
-																			Optimal_Target_Origin[0] = Trace.End[0]; //should take hitbox size into account
-
-																			Optimal_Target_Origin[1] = Trace.End[1];
-
-																			//for gravity both top and bottom should be taken into account
-
-																			if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 0)
-																			{
-																				Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
-
-																				Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
-																			}
-																			else
-																			{
-																				goto Set_Aim_Angles_Label;
-																			}
-																		}
-																	}
-
-																	Extrapolation_Time = 0;
-																}
-															}
-
-															if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 1)
-															{
-																Set_Aim_Angles_Label:
-																{
-																	Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
-
-																	__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
-
-																	if (Tick_Number_Difference * -1 <= 7)
-																	{
-																		if (Absolute(Corrected_Interpolation_Time - Tick_Number_Difference * Global_Variables->Interval_Per_Tick) <= 0.2f)
-																		{
-																			float Origin_Difference[3] =
-																			{
-																				Optimal_Target_Origin[0] - Local_Player_Eye_Position[0],
-
-																				Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
-
-																				Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
-																			};
-
-																			Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
-
-																			Aim_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f;
-
-																			User_Command->Buttons_State |= 1;
-
-																			goto Found_Optimal_Target_Label;
-																		}
+																		goto Found_Optimal_Target_Label;
 																	}
 																}
 															}
@@ -728,7 +546,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
 											In_Attack = 1;
-
+											
 											if (Optimal_Target != nullptr)
 											{
 												User_Command->Tick_Number = Target_Tick_Number;
@@ -736,7 +554,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												User_Command->View_Angles[0] = Aim_Angles[0];
 
 												User_Command->View_Angles[1] = Aim_Angles[1];
-
+												
 												__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
 												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Number];

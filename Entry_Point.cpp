@@ -91,7 +91,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Console_Font_Information.FontFamily = FF_DONTCARE;
 
 			Console_Font_Information.FontWeight = FW_NORMAL;
-
+			
 			wcscpy(Console_Font_Information.FaceName, L"Terminal");
 
 			SetCurrentConsoleFontEx(Standard_Output_Handle, 0, &Console_Font_Information);
@@ -258,10 +258,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Byte_Manager::Set_Bytes(1, (void*)537149598, 6, 144);
 
 			wprintf(L"[ + ] Prediction\n");
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolation, (char*)"Extrapolation", (char*)"0", nullptr);
-
-			wprintf(L"[ + ] Extrapolation %p\n", &Console_Variable_Extrapolation);
 
 			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.85", nullptr);
 
