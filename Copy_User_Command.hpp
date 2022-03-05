@@ -31,13 +31,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Local_Player = *(void**)607867332;
 
-	float Local_Player_Previous_Origin[3] =
+	float Local_Player_Previous_Origin[2] =
 	{
 		*(float*)((unsigned __int32)Local_Player + 668),
 
-		*(float*)((unsigned __int32)Local_Player + 672),
-
-		*(float*)((unsigned __int32)Local_Player + 676),
+		*(float*)((unsigned __int32)Local_Player + 672)
 	};
 
 	using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
@@ -48,13 +46,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	*(__int32*)((unsigned __int32)Local_Player + 3592) -= 1;
 
-	float Move_Angles[3] =
+	float Move_Angles[2] =
 	{
 		User_Command->View_Angles[0],
 
-		User_Command->View_Angles[1],
-
-		User_Command->View_Angles[2]
+		User_Command->View_Angles[1]
 	};
 
 	static float Previous_Move_Angle_Y = Move_Angles[1];
@@ -138,20 +134,18 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 	}
 	else
 	{
-		static float Previous_Networked_Origin[3];
+		static float Previous_Networked_Origin[2];
 
 		if (Choked_Commands_Count < Console_Variable_Maximum_Choked_Commands.Integer)
 		{
-			float Difference[3] =
+			float Difference[2] =
 			{
 				Previous_Networked_Origin[0] - Local_Player_Previous_Origin[0],
 
-				Previous_Networked_Origin[1] - Local_Player_Previous_Origin[1],
-
-				Previous_Networked_Origin[2] - Local_Player_Previous_Origin[2]
+				Previous_Networked_Origin[1] - Local_Player_Previous_Origin[1]
 			};
 
-			if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
+			if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) <= 4096)
 			{
 				Send_Packet = 0;
 			}
@@ -160,8 +154,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				Previous_Networked_Origin[0] = *(float*)((unsigned __int32)Local_Player + 668);
 
 				Previous_Networked_Origin[1] = *(float*)((unsigned __int32)Local_Player + 672);
-
-				Previous_Networked_Origin[2] = *(float*)((unsigned __int32)Local_Player + 676);
 
 				Send_Packet = 1;
 			}
@@ -178,9 +170,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 					Difference[1] = Previous_Networked_Origin[1] - Local_Player_Origin[1];
 
-					Difference[2] = Previous_Networked_Origin[2] - Local_Player_Origin[2];
-
-					if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) + __builtin_powf(Difference[2], 2) <= 4096)
+					if (__builtin_powf(Difference[0], 2) + __builtin_powf(Difference[1], 2) <= 4096)
 					{
 						Predicted_Send_Packet = -1;
 					}
@@ -196,8 +186,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			Previous_Networked_Origin[0] = *(float*)((unsigned __int32)Local_Player + 668);
 
 			Previous_Networked_Origin[1] = *(float*)((unsigned __int32)Local_Player + 672);
-
-			Previous_Networked_Origin[2] = *(float*)((unsigned __int32)Local_Player + 676);
 
 			Send_Packet = 1;
 
@@ -258,7 +246,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				}
 			}
 		}
-		
+
 		if (Entity_Number != Maximum_Clients)
 		{
 			Entity_Number += 1;
@@ -276,7 +264,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		return X.Distance < Y.Distance;
 	};
-	
+
 	std::sort(Sorted_Target_List.begin(), Sorted_Target_List.end(), Target_List_Sort);
 
 	__int8 In_Attack = 0;
@@ -600,30 +588,26 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																		Player_History_Structure* Low_Player_History = &Players_History[Optimal_Target_Number][Low_Player_History_Number];
 
-																		float Mid_Low_Origin_Difference[3] =
+																		float Mid_Low_Origin_Difference[2] =
 																		{
 																			Mid_Player_History->Origin[0] - Low_Player_History->Origin[0],
 
-																			Mid_Player_History->Origin[1] - Low_Player_History->Origin[1],
-																			
-																			Mid_Player_History->Origin[2] - Low_Player_History->Origin[2]
+																			Mid_Player_History->Origin[1] - Low_Player_History->Origin[1]
 																		};
-																		
-																		if (__builtin_powf(Mid_Low_Origin_Difference[0], 2) + __builtin_powf(Mid_Low_Origin_Difference[1], 2) + __builtin_powf(Mid_Low_Origin_Difference[2], 2) > 4096)
+
+																		if (__builtin_powf(Mid_Low_Origin_Difference[0], 2) + __builtin_powf(Mid_Low_Origin_Difference[1], 2) > 4096)
 																		{
 																			__int32 Origin_Difference_Number = 0;
 
-																			float High_Mid_Origin_Difference_Acceleration[3];
+																			float High_Mid_Origin_Difference_Acceleration[2];
 
 																			Player_History_Structure* High_Player_History = &Players_History[Optimal_Target_Number][High_Player_History_Number];
 
-																			float High_Mid_Origin_Difference[3] =
+																			float High_Mid_Origin_Difference[2] =
 																			{
 																				High_Player_History->Origin[0] - Mid_Player_History->Origin[0],
 
-																				High_Player_History->Origin[1] - Mid_Player_History->Origin[1],
-
-																				High_Player_History->Origin[2] - Mid_Player_History->Origin[2]
+																				High_Player_History->Origin[1] - Mid_Player_History->Origin[1]
 																			};
 
 																			Accelerate_High_Mid_Origin_Difference_Label:
@@ -638,52 +622,46 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 																				{
 																					High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number] = 0;
 																				}
-																				
+
 																				//horizontal extrapolation doesn't seems to be problematic even on servers with custom acceleration (if player doesn't strafes) instead should focus on improving vertical extrapolation
 
 																				High_Mid_Origin_Difference[Origin_Difference_Number] *= High_Mid_Origin_Difference_Acceleration[Origin_Difference_Number];
 
 																				Origin_Difference_Number += 1;
 
-																				if (Origin_Difference_Number != 3)
+																				if (Origin_Difference_Number != 2)
 																				{
 																					goto Accelerate_High_Mid_Origin_Difference_Label;
 																				}
 																			}
 
-																			float Previous_Optimal_Target_Origin[3] =
+																			float Previous_Optimal_Target_Origin[2] =
 																			{
 																				Optimal_Target_Origin[0],
 
-																				Optimal_Target_Origin[1],
-
-																				Optimal_Target_Origin[2]
+																				Optimal_Target_Origin[1]
 																			};
 
-																			float Extrapolated_Optimal_Target_Origin[3]
+																			float Extrapolated_Optimal_Target_Origin[2]
 																			{
 																				Optimal_Target_Origin[0] + High_Mid_Origin_Difference[0],
 
-																				Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1],
-
-																				Optimal_Target_Origin[2] + High_Mid_Origin_Difference[2],
+																				Optimal_Target_Origin[1] + High_Mid_Origin_Difference[1]
 																			};
 
 																			Trace_Ray(Optimal_Target_Origin, Extrapolated_Optimal_Target_Origin, Optimal_Target, &Trace, 1);
 
-																			Optimal_Target_Origin[0] = Trace.End[0];
+																			Optimal_Target_Origin[0] = Trace.End[0]; //should take hitbox size into account
 
 																			Optimal_Target_Origin[1] = Trace.End[1];
 
-																			Optimal_Target_Origin[2] = Trace.End[2];
+																			//for gravity both top and bottom should be taken into account
 
 																			if (Trace_Ray(Local_Player_Eye_Position, Optimal_Target_Origin, Local_Player, &Trace, 0) == 0)
 																			{
 																				Optimal_Target_Origin[0] = Previous_Optimal_Target_Origin[0];
 
 																				Optimal_Target_Origin[1] = Previous_Optimal_Target_Origin[1];
-
-																				Optimal_Target_Origin[2] = Previous_Optimal_Target_Origin[2];
 																			}
 																			else
 																			{
@@ -750,7 +728,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
 											In_Attack = 1;
-											
+
 											if (Optimal_Target != nullptr)
 											{
 												User_Command->Tick_Number = Target_Tick_Number;
@@ -758,7 +736,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												User_Command->View_Angles[0] = Aim_Angles[0];
 
 												User_Command->View_Angles[1] = Aim_Angles[1];
-												
+
 												__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
 												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Number];
@@ -885,7 +863,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			}
 			else
 			{
-				User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;		
+				User_Command->View_Angles[1] = Arc_Tangent_2(Origin_Difference[0], Origin_Difference[1]) * 180 / 3.1415927f + Console_Variable_Angle_Y.Floating_Point;
 
 				Update_Animation_Angle[1] = User_Command->View_Angles[1];
 			}
