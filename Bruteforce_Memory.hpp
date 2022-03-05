@@ -15,7 +15,7 @@ void Bruteforce_Memory_Reset()
 			Player_Data->Shots_Fired = (Player_Data->Shots_Fired - 1) % 5;
 		}
 
-		if (Entity_Number < 64)
+		if (Entity_Number != 64)
 		{
 			Entity_Number += 1;
 
