@@ -77,10 +77,13 @@ namespace dirt
 		*((float*)global + 4) = *(float*)((unsigned __int32)player + 3888) * *((float*)global + 4);
 
 		float v2 = 1;
-		velocity[2] = velocity[2]
-			- v2 * *(float*)(*(unsigned __int32*)0x243E90D0 + 40) * *((float*)global + 4) * 0.5;
-		velocity[2] = *((float*)global + 4) * *(float*)((DWORD)player + 284)
-			+ velocity[2];
+		//velocity[2] = velocity[2]
+		//	- v2 * *(float*)(*(unsigned __int32*)0x243E90D0 + 40) * *((float*)global + 4) * 0.5;
+		//velocity[2] = *((float*)global + 4) * *(float*)((DWORD)player + 284)
+		//	+ velocity[2];
+		//ida pseudo is wrong causing 0.00000x inaccuracy so rather take code from se2007 or disassembler
+		velocity[2] -= (v2 * *(float*)(*(unsigned __int32*)0x243E90D0 + 40) * 0.5 * global->Frame_Time);
+		velocity[2] += *(float*)((DWORD)player + 284) * global->Frame_Time;
 
 		*(float*)((DWORD)player + 284) = 0;
 
