@@ -79,5 +79,8 @@
     <ClInclude Include="Write_Events.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
+    <ClInclude Include="dirt.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

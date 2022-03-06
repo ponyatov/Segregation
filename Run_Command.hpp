@@ -12,27 +12,15 @@ void __thiscall Redirected_Run_Command(void* Prediction, void* Player, void* Use
 
 	float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
 
-	Uncompressed_Velocity[Tick_Base][0] = Velocity[0];
-
-	Uncompressed_Velocity[Tick_Base][1] = Velocity[1];
-
-	Uncompressed_Velocity[Tick_Base][2] = Velocity[2];
+	__builtin_memcpy(Uncompressed_Velocity[Tick_Base], Velocity, sizeof(Uncompressed_Velocity[Tick_Base]));
 
 	float* Base_Velocity = (float*)((unsigned __int32)Local_Player + 276);
 
-	Uncompressed_Base_Velocity[Tick_Base][0] = Base_Velocity[0];
-
-	Uncompressed_Base_Velocity[Tick_Base][1] = Base_Velocity[1];
-
-	Uncompressed_Base_Velocity[Tick_Base][2] = Base_Velocity[2];
+	__builtin_memcpy(Uncompressed_Base_Velocity[Tick_Base], Base_Velocity, sizeof(Uncompressed_Base_Velocity[Tick_Base]));
 
 	float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
 
-	Uncompressed_Recoil[Tick_Base][0] = Recoil[0];
-
-	Uncompressed_Recoil[Tick_Base][1] = Recoil[1];
-
-	Uncompressed_Fall_Velocity[Tick_Base] = *(float*)((unsigned __int32)Local_Player + 2972);
+	__builtin_memcpy(Uncompressed_Recoil[Tick_Base], Recoil, sizeof(Uncompressed_Recoil[Tick_Base]));
 
 	Uncompressed_Stamina[Tick_Base] = *(float*)((unsigned __int32)Local_Player + 4016);
 }

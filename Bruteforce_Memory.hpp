@@ -17,7 +17,7 @@ void Bruteforce_Memory_Reset()
 
 		Entity_Number += 1;
 
-		if (Entity_Number != 64)
+		if (Entity_Number != sizeof(Players_Data) / sizeof(Player_Data_Structure))
 		{
 			goto Traverse_Players_Data_Label;
 		}

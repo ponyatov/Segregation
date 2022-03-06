@@ -30,8 +30,6 @@ float Uncompressed_Base_Velocity[90][3];
 
 float Uncompressed_Recoil[90][2];
 
-float Uncompressed_Fall_Velocity[90];
-
 float Uncompressed_Stamina[90];
 
 void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 Stage)
@@ -115,11 +113,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 			{
 				if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= 0.5f)
 				{
-					*(float*)((unsigned __int32)Local_Player + 224) = Uncompressed_Velocity[Tick_Base][0];
-
-					*(float*)((unsigned __int32)Local_Player + 228) = Uncompressed_Velocity[Tick_Base][1];
-
-					*(float*)((unsigned __int32)Local_Player + 232) = Uncompressed_Velocity[Tick_Base][2];
+					__builtin_memcpy((float*)((unsigned __int32)Local_Player + 224), Uncompressed_Velocity[Tick_Base], sizeof(Uncompressed_Velocity[Tick_Base]));
 				}
 			}
 		}
@@ -132,11 +126,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 			{
 				if (Absolute(Base_Velocity[2] - Uncompressed_Base_Velocity[Tick_Base][2]) <= 0.1f)
 				{
-					*(float*)((unsigned __int32)Local_Player + 276) = Uncompressed_Base_Velocity[Tick_Base][0];
-
-					*(float*)((unsigned __int32)Local_Player + 280) = Uncompressed_Base_Velocity[Tick_Base][1];
-
-					*(float*)((unsigned __int32)Local_Player + 284) = Uncompressed_Base_Velocity[Tick_Base][2];
+					__builtin_memcpy((float*)((unsigned __int32)Local_Player + 276), Uncompressed_Base_Velocity[Tick_Base], sizeof(Uncompressed_Base_Velocity[Tick_Base]));
 				}
 			}
 		}
@@ -147,15 +137,8 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 		{
 			if (Absolute(Recoil[1] - Uncompressed_Recoil[Tick_Base][1]) <= 0.125f)
 			{
-				*(float*)((unsigned __int32)Local_Player + 2992) = Uncompressed_Recoil[Tick_Base][0];
-
-				*(float*)((unsigned __int32)Local_Player + 2996) = Uncompressed_Recoil[Tick_Base][1];
+				__builtin_memcpy((float*)((unsigned __int32)Local_Player + 2992), Uncompressed_Recoil[Tick_Base], sizeof(Uncompressed_Recoil[Tick_Base]));
 			}
-		}
-
-		if (Absolute(*(float*)((unsigned __int32)Local_Player + 2972) - Uncompressed_Fall_Velocity[Tick_Base]) <= 0.5f)
-		{
-			*(float*)((unsigned __int32)Local_Player + 2972) = Uncompressed_Fall_Velocity[Tick_Base];
 		}
 
 		if (Absolute(*(float*)((unsigned __int32)Local_Player + 4016) - Uncompressed_Stamina[Tick_Base]) <= 0.1f)

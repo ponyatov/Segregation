@@ -16,21 +16,25 @@ namespace dirt
 
 	__int8 grab;
 
+	__int32 buttons;
+
 	Global_Variables_Structure* global;
 
-	void give(void* playerr, Global_Variables_Structure* nariosetnr)
+	void give(void* playerr, Global_Variables_Structure* nariosetnr, __int32 aioresntoarsnita)
 	{
 		player = playerr;
 		__builtin_memcpy(velocity, (void*)((unsigned __int32)player + 224), sizeof(velocity));
 
 		__builtin_memcpy(origin, (void*)((unsigned __int32)player + 668), sizeof(origin));
 
+		buttons = aioresntoarsnita;
+
 		global = nariosetnr;
 
 		grab = 1;
 	}
 
-	void CheckVelocity()
+	void CheckVelocity() //iirc cvar maxvelocity.float is unitialized unlike integer (bug) actually most of time this function is useless
 	{
 		int i; // esi
 		float* v3; // ecx
@@ -62,6 +66,11 @@ namespace dirt
 
 	void process()
 	{
+		*((float*)global + 3) = *(int*)((unsigned __int32)player + 3592) * *((float*)global + 7);
+		*((DWORD*)global + 4) = *((DWORD*)global + 7);
+
+		*((float*)global + 4) = *(float*)((unsigned __int32)player + 3888) * *((float*)global + 4);
+
 		float stamina = *(float*)((unsigned __int32)player + 4016);
 
 		if (stamina > 0.0)
@@ -70,11 +79,6 @@ namespace dirt
 			if (stamina < 0.0)
 				stamina = 0.0;
 		}
-
-		*((float*)global + 3) = *(int*)((unsigned __int32)player + 3592) * *((float*)global + 7);
-		*((DWORD*)global + 4) = *((DWORD*)global + 7);
-
-		*((float*)global + 4) = *(float*)((unsigned __int32)player + 3888) * *((float*)global + 4);
 
 		float v2 = 1;
 		//velocity[2] = velocity[2]
@@ -88,6 +92,34 @@ namespace dirt
 		*(float*)((DWORD)player + 284) = 0;
 
 		CheckVelocity();
+
+		if (*(__int32*)((unsigned __int32)player + 456) != -1)
+		{
+			if ((buttons & 2) == 2)
+			{
+				int v12 = 0x3F800000;
+
+				if ((*(__int32*)((unsigned __int32)player + 692) & 2) == 2)
+				{
+					velocity[2] = Square_Root(91200) * *(float*)&v12;
+				}
+				else
+				{
+					velocity[2] += Square_Root(91200) * *(float*)&v12;
+				}
+
+				if (stamina > 0)
+				{
+					velocity[2] *= (100.0 - stamina * 0.001 * 19.0) * 0.01;
+				}
+
+				stamina = 1315.789473684211;
+
+				velocity[2] -= (v2 * *(float*)(*(unsigned __int32*)0x243E90D0 + 40) * global->Frame_Time * 0.5);
+
+				CheckVelocity();
+			}
+		}
 
 		grab = 1;
 	}
@@ -126,6 +158,6 @@ namespace dirt
 
 	void attach_Debbbuger()
 	{
-		Redirection_Manager::Redirect_Function(org, 3, (void*)0x240CACF0, 1, (void*)debugger);
+		Redirection_Manager::Redirect_Function(org, 0, (void*)0x241C5A40, 1, (void*)debugger);
 	}
 }

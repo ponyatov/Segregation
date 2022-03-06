@@ -78,6 +78,7 @@
     <ClInclude Include="Bruteforce_Memory.hpp" />
     <ClInclude Include="Console_Variables.hpp" />
     <ClInclude Include="Converge_Angles.hpp" />
+    <ClInclude Include="dirt.hpp" />
     <ClInclude Include="Draw_Crosshair.hpp" />
     <ClInclude Include="Event_Listener.hpp" />
     <ClInclude Include="Interpolate.hpp" />
