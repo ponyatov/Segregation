@@ -8,9 +8,9 @@ void __thiscall Redirected_Draw_Crosshair(void* Unknown_Parameter)
 
 	static void* Surface = *(void**)608279384;
 
-	auto Uber_Alles = [&](unsigned __int32 X, unsigned __int32 Red, unsigned __int32 Y)
+	auto Uber_Alles = [&](__int32 X, __int8 Red, __int32 Y)
 	{
-		using Surface_Set_Color = void(__thiscall**)(void* Surface, unsigned __int32 Red, unsigned __int32 Green, unsigned __int32 Blue, unsigned __int32 Alpha);
+		using Surface_Set_Color = void(__thiscall**)(void* Surface, unsigned __int8 Red, unsigned __int8 Green, unsigned __int8 Blue, unsigned __int8 Alpha);
 
 		if (Red == 0)
 		{
@@ -23,42 +23,42 @@ void __thiscall Redirected_Draw_Crosshair(void* Unknown_Parameter)
 
 		float Uber_Alles = 2 * Console_Variable_Uber_Alles_Scale.Integer;
 
-		unsigned __int32 Points[16]
+		__int32 Points[16]
 		{
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle - 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle - 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle - 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle - 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle - 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle - 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle - 90) * 3.1415927f / 180 + 1)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle - 90) * 3.1415927f / 180 + 1)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf(Rotation_Angle * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf(Rotation_Angle * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf(Rotation_Angle * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf(Rotation_Angle * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf(Rotation_Angle * 3.1415927f / 180 + 1)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf(Rotation_Angle * 3.1415927f / 180 + 1)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf(Rotation_Angle * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf(Rotation_Angle * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 90) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 90) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 90) * 3.1415927f / 180 + 1)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 90) * 3.1415927f / 180 + 1)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 180) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 180) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 180) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 180) * 3.1415927f / 180)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 180) * 3.1415927f / 180 + 1)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_sinf((Rotation_Angle + 180) * 3.1415927f / 180 + 1)),
 
-			(unsigned __int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 180) * 3.1415927f / 180)),
+			(__int32)__builtin_roundf(Uber_Alles * __builtin_cosf((Rotation_Angle + 180) * 3.1415927f / 180)),
 		};
 
-		using Surface_Draw_Line = void(__thiscall**)(void* Surface, unsigned __int32 From_X, unsigned __int32 From_Y, unsigned __int32 To_X, unsigned __int32 To_Y);
+		using Surface_Draw_Line = void(__thiscall**)(void* Surface, __int32 From_X, __int32 From_Y, __int32 To_X, __int32 To_Y);
 
 		(*Surface_Draw_Line(*(unsigned __int32*)Surface + 60))(Surface, X, Y, X + Points[0], Y - Points[1]);
 
@@ -77,11 +77,11 @@ void __thiscall Redirected_Draw_Crosshair(void* Unknown_Parameter)
 		(*Surface_Draw_Line(*(unsigned __int32*)Surface + 60))(Surface, X + Points[12], Y - Points[13], X + Points[14], Y - Points[15]);
 	};
 
-	using Screen_Size = unsigned __int32(__cdecl*)();
+	using Screen_Size = __int32(__cdecl*)();
 
-	unsigned __int32 Screen_Width = Screen_Size(604542880)() / 2;
+	__int32 Screen_Width = Screen_Size(604542880)() / 2;
 
-	unsigned __int32 Screen_Height = Screen_Size(604542848)() / 2;
+	__int32 Screen_Height = Screen_Size(604542848)() / 2;
 
 	Uber_Alles(Screen_Width - 1, 0, Screen_Height);
 

@@ -4,7 +4,7 @@ __int32 Shot_Tick_Number;
 
 float Arc_Tangent_2(float X, float Y)
 {
-	asm("fpatan" : "+t"(X) : "u"(Y));
+	asm("fpatan" : "+t"(X) : "u"(Y) : "st(1)");
 
 	return X;
 }
@@ -404,15 +404,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 															{
 																struct Trace_Structure
 																{
-																	__int8 Additional_Bytes_1[12];
-
-																	float End[3];
-
-																	__int8 Additional_Bytes_2[52];
+																	__int8 Additional_Bytes_1[76];
 
 																	void* Entity;
 
-																	__int8 Additional_Bytes_3[4];
+																	__int8 Additional_Bytes_2[4];
 																};
 
 																struct Ray_Structure

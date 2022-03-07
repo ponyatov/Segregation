@@ -65,6 +65,233 @@ namespace dirt
 		}
 	}
 
+	struct trace_t
+	{
+		__int8 arienost[1234];
+	};
+
+	struct Ray_t
+	{
+		__int8 airesnt[345];
+	};
+
+	float* GetPlayerMins()
+	{
+		if ((*(__int32*)((unsigned __int32)player + 692) & 2) == 0)
+		{
+			return (float*)0x243FB894;
+		}
+
+		return (float*)0x243FB8AC;
+	}
+
+	float* GetPlayerMaxs()
+	{
+		if ((*(__int32*)((unsigned __int32)player + 692) & 2) == 0)
+		{
+			return (float*)0x243FB8A0;
+		}
+
+		return (float*)0x243FB8B8;
+	}
+
+	void TracePlayerBBox(float* start, float* end, unsigned int fMask, int collisionGroup, trace_t* pm)
+	{
+		Ray_t ray;
+		using rayinit = void(__thiscall*)(Ray_t* ray, float* start, float* end, float* mins, float* maxs);
+		rayinit(0x24012BF0)(&ray, start, end, GetPlayerMins(), GetPlayerMaxs());
+		using UTIL_TraceRay = void(__cdecl*)(Ray_t* ray, __int32 Mask, void* handle, __int32 colgroup, trace_t* trace);
+		DWORD v8 = *(DWORD*)((unsigned __int32)player + 160);
+		int v9; // edx
+		void* v10; // ecx
+		if (v8 == -1
+			|| (v9 = 16 * (v8 & 0xFFF),
+				*(DWORD*)(*(char**)0x24392FDC + v9 + 8) != v8 >> 12))
+		{
+			v10 = 0;
+		}
+		else
+		{
+			v10 = *(void**)(*(char**)0x24392FDC + v9 + 4);
+		}
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, v10, collisionGroup, pm);
+	}
+
+	__int32 TryPlayerMove(float* pFirstDest, trace_t* pFirstTrace)
+	{
+		int			bumpcount, numbumps;
+		float		dir[3];
+		float		d;
+		int			numplanes;
+		float		planes[5][3];
+		float		primal_velocity[3], original_velocity[3];
+		float      new_velocity[3];
+		int			i, j;
+		trace_t	pm;
+		float		end[3];
+		float		time_left, allFraction;
+		int			blocked;
+		numbumps = 4;
+		blocked = 0;
+		numplanes = 0;
+
+		__builtin_memcpy(original_velocity, velocity, sizeof(velocity));
+		__builtin_memcpy(primal_velocity, velocity, sizeof(velocity));
+
+		allFraction = 0;
+		time_left = global->Frame_Time;
+
+		__builtin_memset(new_velocity, 0, sizeof(new_velocity));
+
+		for (bumpcount = 0; bumpcount < numbumps; bumpcount++)
+		{
+			if (__builtin_powf(velocity[0], 2) + __builtin_powf(velocity[1], 2) + __builtin_powf(velocity[2], 2) == 0)
+				break;
+
+			end[0] = origin[0] + velocity[0] * time_left;
+			end[1] = origin[1] + velocity[1] * time_left;
+			end[2] = origin[2] + velocity[2] * time_left;
+
+			if (pFirstDest
+				&& *pFirstDest == *end
+				&& pFirstDest[1] == *&end[1]
+				&& pFirstDest[2] == *&end[2])
+			{
+				__builtin_memcpy(&pm, pFirstTrace, sizeof(pm));
+			}
+			else
+			{
+				TracePlayerBBox(origin, end, 33636363, 8, &pm);
+			}
+
+			allFraction += *(float*)((unsigned __int32)&pm + 0x2c);
+
+			if (*(__int8*)((unsigned __int32)&pm + 0x36))
+			{
+				velocity[0] = 0;
+				velocity[1] = 0;
+				velocity[2] = 0;
+				return 4;
+			}
+
+			if (*(float*)((unsigned __int32)&pm + 0x2c) > 0)
+			{
+				origin[0] = *(float*)((unsigned __int32)&pm + 0xc);
+				origin[1] = *(float*)((unsigned __int32)&pm + 0xc+4);
+				origin[2] = *(float*)((unsigned __int32)&pm + 0xc+8);
+				original_velocity[0] = velocity[0];
+				original_velocity[1] = velocity[1];
+				original_velocity[2] = velocity[2];
+				numplanes = 0;
+			}
+
+			if (*(float*)((unsigned __int32)&pm + 0x2c) == 1)
+			{
+				break;
+			}
+
+			if (*(float*)((unsigned __int32)&pm + 0x20) > 0.7)
+				blocked |= 1u;
+			if (*(float*)((unsigned __int32)&pm + 0x20) == 0.0)
+				blocked |= 2u;
+
+			time_left -= time_left * *(float*)((unsigned __int32)&pm + 0x2c);
+
+			if (numplanes >= 5)
+			{
+				break;
+			}
+
+			planes[numplanes][0] = *(float*)((unsigned __int32)&pm + 0x18);
+			planes[numplanes][1] = *(float*)((unsigned __int32)&pm + 0x18 + 4);
+			planes[numplanes][2] = *(float*)((unsigned __int32)&pm + 0x18 + 8);
+
+			++numplanes;
+			using ClipVelocity = __int32(__stdcall*)(float* in, float* normal, float* out, float overbounce);
+			if (numplanes == 1 && *(__int32*)((unsigned __int32)player + 456) == -1)
+			{
+				for (i = 0; i < numplanes; i++)
+				{
+					if (planes[i][2] > 0.7)
+					{
+						ClipVelocity(0x240C8C90)(original_velocity, planes[i], new_velocity, 1);
+					}
+					else
+					{
+						ClipVelocity(0x240C8C90)(original_velocity, planes[i], new_velocity, 1.0 + *(float*)(*(unsigned __int32*)0x243E9550 + 40) * (1 - *(float*)((unsigned __int32)player + 3936)));
+					}
+				}
+
+				velocity[0] = new_velocity[0];
+				velocity[1] = new_velocity[1];
+				velocity[2] = new_velocity[2];
+				original_velocity[0] = new_velocity[0];
+				original_velocity[1] = new_velocity[1];
+				original_velocity[2] = new_velocity[2];
+			}
+			else
+			{
+				for (i = 0; i < numplanes; i++)
+				{
+					ClipVelocity(0x240C8C90)(
+						original_velocity,
+						planes[i],
+						velocity,
+						1);
+
+					for (j = 0; j < numplanes; j++)
+						if (j != i)
+						{
+							if (velocity[0] * planes[j][0] + velocity[1] * planes[j][1] + velocity[2] * planes[j][2] < 0)
+								break;
+						}
+					if (j == numplanes)
+						break;
+				}
+
+				if (i == numplanes)
+				{
+					if (numplanes != 2)
+					{
+						velocity[0] = 0;
+						velocity[1] = 0;
+						velocity[2] = 0;
+						break;
+					}
+					dir[0] = planes[0][1] * planes[1][2] - planes[0][2] * planes[1][1];
+					dir[1] = planes[0][2] * planes[1][0] - planes[0][0] * planes[1][2];
+					dir[2] = planes[0][0] * planes[1][1] - planes[0][1] * planes[1][0];
+					float Magnitude = 1 / (Square_Root(__builtin_powf(dir[0], 2) + __builtin_powf(dir[1], 2) + __builtin_powf(dir[2], 2)) + FLT_EPSILON);
+					dir[0] *= Magnitude;
+					dir[1] *= Magnitude;
+					dir[2] *= Magnitude;
+					d = dir[0] * velocity[0] + dir[1] * velocity[1] + dir[2] * velocity[2];
+					velocity[0] = dir[0] * d;
+					velocity[1] = dir[1] * d;
+					velocity[2] = dir[2] * d;
+				}
+
+				d = velocity[0] * primal_velocity[0] + velocity[1] * primal_velocity[1] + velocity[2] * primal_velocity[2];
+				if (d <= 0)
+				{
+					velocity[0] = 0;
+					velocity[1] = 0;
+					velocity[2] = 0;
+					break;
+				}
+			}
+		}
+
+		if (allFraction == 0)
+		{
+			velocity[0] = 0;
+			velocity[1] = 0;
+			velocity[2] = 0;
+		}
+
+		return blocked;
+	}
+
 	void process()
 	{
 		*((float*)global + 3) = *(int*)((unsigned __int32)player + 3592) * *((float*)global + 7);
@@ -127,7 +354,7 @@ namespace dirt
 				wishdir[0] *= 1 / (Magnitude + FLT_EPSILON);
 				wishdir[1] *= 1 / (Magnitude + FLT_EPSILON);
 
-				float wishspeed = Magnitude; //instruction set inaccuracy
+				float wishspeed = Magnitude;
 
 				float m_flMaxSpeed = *(float*)(*(unsigned __int32*)0x243E9598 + 40);
 
@@ -143,29 +370,34 @@ namespace dirt
 
 				float addspeed, accelspeed, currentspeed;
 
-				if (wishspeed > 30)
-					wishspeed = 30;
+				float wishspd = wishspeed;
+
+				if (wishspd > 30)
+					wishspd = 30;
 
 				currentspeed = velocity[0] * wishdir[0] + velocity[1] * wishdir[1] + velocity[2] * wishdir[2];
 
-				addspeed = wishspeed - currentspeed;
+				addspeed = wishspd - currentspeed;
 
-				if (addspeed <= 0)
-					return;
+				if (addspeed > 0)
+				{
+					accelspeed = *(float*)((unsigned __int32)player + 3936) * *((float*)global + 4) * wishspeed * accel;
 
-				accelspeed = accel * wishspeed * global->Frame_Time;
+					if (accelspeed > addspeed)
+						accelspeed = addspeed;
 
-				if (accelspeed > addspeed)
-					accelspeed = addspeed;
+					for (int i = 0; i < 3; i++)
+					{
+						velocity[i] += accelspeed * wishdir[i];
+					}
+				}
 
 				for (int i = 0; i < 3; i++)
 				{
-					velocity[i] += accelspeed * wishdir[i];
-
 					velocity[i] += *(float*)((DWORD)player + 276 + i * 4);
 				}
 
-				//PlayerMove
+				TryPlayerMove(nullptr, nullptr);
 
 				for (int i = 0; i < 3; i++)
 				{
@@ -179,13 +411,13 @@ namespace dirt
 			{
 				int v12 = 0x3F800000;
 
-				if ((*(__int32*)((unsigned __int32)player + 692) & 2) == 2)
+				if ((*(__int32*)((unsigned __int32)player + 692) & 2) == 0)
 				{
-					velocity[2] = Square_Root(91200) * *(float*)&v12;
+					velocity[2] += Square_Root(91200) * *(float*)&v12;
 				}
 				else
 				{
-					velocity[2] += Square_Root(91200) * *(float*)&v12;
+					velocity[2] = Square_Root(91200) * *(float*)&v12;
 				}
 
 				if (stamina > 0)
@@ -206,9 +438,9 @@ namespace dirt
 		grab = 1;
 	}
 
-	void __thiscall debugger(void* x, float* y, float z, float w)
+	void __thiscall debugger(void* x)
 	{
-		(decltype(&debugger)(org))(x, y, z, w);
+		(decltype(&debugger)(org))(x);
 
 		if (grab == 1)
 		{
@@ -216,10 +448,9 @@ namespace dirt
 			movegrab[1] = *(float*)(*(DWORD*)((unsigned __int32)x + 4) + 68);
 			movegrab[2] = *(float*)(*(DWORD*)((unsigned __int32)x + 4) + 72);
 
-			origingrab[0] = *(float*)(*(DWORD*)((unsigned __int32)x + 8) + 668);
-			origingrab[1] = *(float*)(*(DWORD*)((unsigned __int32)x + 8) + 672);
-			origingrab[2] = *(float*)(*(DWORD*)((unsigned __int32)x + 8) + 676);
-
+			origingrab[0] = *(float*)(*(DWORD*)((unsigned __int32)x + 4) + 100);
+			origingrab[1] = *(float*)(*(DWORD*)((unsigned __int32)x + 4) + 104);
+			origingrab[2] = *(float*)(*(DWORD*)((unsigned __int32)x + 4) + 108);
 			grab = 0;
 		}
 	}
@@ -240,6 +471,6 @@ namespace dirt
 
 	void attach_Debbbuger()
 	{
-		Redirection_Manager::Redirect_Function(org, 2, (void*)0x240C96F0, 1, (void*)debugger);
+		Redirection_Manager::Redirect_Function(org, 0, (void*)0x240C97F0, 1, (void*)debugger);
 	}
 }
