@@ -16,6 +16,10 @@ namespace dirt
 
 	__int8 grab;
 
+	__int32 groundentity;
+
+	float m_surfaceFriction;
+
 	User_Command_Structure* ucmd;
 
 	Global_Variables_Structure* global;
@@ -30,6 +34,10 @@ namespace dirt
 		ucmd = aioresntoarsnita;
 
 		global = nariosetnr;
+
+		groundentity = *(__int32*)((unsigned __int32)player + 456);
+
+		m_surfaceFriction = *(float*)((unsigned __int32)player + 3936);
 
 		grab = 1;
 	}
@@ -100,21 +108,8 @@ namespace dirt
 		Ray_t ray;
 		using rayinit = void(__thiscall*)(Ray_t* ray, float* start, float* end, float* mins, float* maxs);
 		rayinit(0x24012BF0)(&ray, start, end, GetPlayerMins(), GetPlayerMaxs());
-		using UTIL_TraceRay = void(__cdecl*)(Ray_t* ray, __int32 Mask, void* handle, __int32 colgroup, trace_t* trace);
-		DWORD v8 = *(DWORD*)((unsigned __int32)player + 160);
-		int v9; // edx
-		void* v10; // ecx
-		if (v8 == -1
-			|| (v9 = 16 * (v8 & 0xFFF),
-				*(DWORD*)(*(char**)0x24392FDC + v9 + 8) != v8 >> 12))
-		{
-			v10 = 0;
-		}
-		else
-		{
-			v10 = *(void**)(*(char**)0x24392FDC + v9 + 4);
-		}
-		UTIL_TraceRay(0x240525E0)(&ray, fMask, v10, collisionGroup, pm);
+		using UTIL_TraceRay = void(__cdecl*)(Ray_t* ray, __int32 Mask, void* skip, __int32 colgroup, trace_t* trace);
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, player, collisionGroup, pm);
 	}
 
 	__int32 TryPlayerMove(float* pFirstDest, trace_t* pFirstTrace)
@@ -208,7 +203,7 @@ namespace dirt
 
 			++numplanes;
 			using ClipVelocity = __int32(__stdcall*)(float* in, float* normal, float* out, float overbounce);
-			if (numplanes == 1 && *(__int32*)((unsigned __int32)player + 456) == -1)
+			if (numplanes == 1 && groundentity == -1)
 			{
 				for (i = 0; i < numplanes; i++)
 				{
@@ -218,7 +213,7 @@ namespace dirt
 					}
 					else
 					{
-						ClipVelocity(0x240C8C90)(original_velocity, planes[i], new_velocity, 1.0 + *(float*)(*(unsigned __int32*)0x243E9550 + 40) * (1 - *(float*)((unsigned __int32)player + 3936)));
+						ClipVelocity(0x240C8C90)(original_velocity, planes[i], new_velocity, 1.0 + *(float*)(*(unsigned __int32*)0x243E9550 + 40) * (1 - m_surfaceFriction));
 					}
 				}
 
@@ -292,6 +287,150 @@ namespace dirt
 		return blocked;
 	}
 
+	void TracePlayerBBoxForGround(float* start, float* end, float* minsSrc, float* maxsSrc, void* player, unsigned int fMask, int collisionGroup, trace_t* pm)
+	{
+		Ray_t ray;
+		float mins[3], maxs[3];
+
+		float fraction = *(float*)((unsigned __int32)&pm + 0x2c);
+		float endpos[3] = { *(float*)((unsigned __int32)&pm + 0xc),*(float*)((unsigned __int32)&pm + 0xc+4),*(float*)((unsigned __int32)&pm + 0xc+8) };
+
+		__builtin_memcpy(mins, minsSrc, sizeof(mins));
+		maxs[0] = min(0, maxsSrc[0]);
+		maxs[1] = min(0, maxsSrc[1]);
+		maxs[2] = maxsSrc[2];
+
+		using rayinit = void(__thiscall*)(Ray_t* ray, float* start, float* end, float* mins, float* maxs);
+		rayinit(0x24012BF0)(&ray, start, end, mins, maxs);
+		using UTIL_TraceRay = void(__cdecl*)(Ray_t* ray, __int32 Mask, void* skip, __int32 colgroup, trace_t* trace);
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, player, collisionGroup, pm);
+		if (*(void**)((unsigned __int32)&pm + 0x37) && *(float*)((unsigned __int32)&pm + 0x20) >= 0.7)
+		{
+			*(float*)((unsigned __int32)&pm + 0x2c) = fraction;
+			*(float*)((unsigned __int32)&pm + 0xc) = endpos[0];
+			*(float*)((unsigned __int32)&pm + 0xc+4) = endpos[1];
+			*(float*)((unsigned __int32)&pm + 0xc+8) = endpos[2];
+			return;
+		}
+
+		mins[0] = max(0, minsSrc[0]);
+		mins[1] = max(0, minsSrc[1]);
+		mins[2] = minsSrc[2];
+		__builtin_memcpy(maxs, maxsSrc, sizeof(maxs));
+		rayinit(0x24012BF0)(&ray, start, end, mins, maxs);
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, player, collisionGroup, pm);
+		if (*(void**)((unsigned __int32)&pm + 0x37) && *(float*)((unsigned __int32)&pm + 0x20) >= 0.7)
+		{
+			*(float*)((unsigned __int32)&pm + 0x2c) = fraction;
+			*(float*)((unsigned __int32)&pm + 0xc) = endpos[0];
+			*(float*)((unsigned __int32)&pm + 0xc + 4) = endpos[1];
+			*(float*)((unsigned __int32)&pm + 0xc + 8) = endpos[2];
+			return;
+		}
+
+		mins[0] = minsSrc[0];
+		mins[1] = max(0, minsSrc[1]);
+		mins[2] = minsSrc[2];
+		maxs[0] = min(0, maxsSrc[0]);
+		maxs[1] = maxsSrc[1];
+		maxs[2] = maxsSrc[2];
+		rayinit(0x24012BF0)(&ray, start, end, mins, maxs);
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, player, collisionGroup, pm);
+		if (*(void**)((unsigned __int32)&pm + 0x37) && *(float*)((unsigned __int32)&pm + 0x20) >= 0.7)
+		{
+			*(float*)((unsigned __int32)&pm + 0x2c) = fraction;
+			*(float*)((unsigned __int32)&pm + 0xc) = endpos[0];
+			*(float*)((unsigned __int32)&pm + 0xc + 4) = endpos[1];
+			*(float*)((unsigned __int32)&pm + 0xc + 8) = endpos[2];
+			return;
+		}
+
+		mins[0] = max(0, minsSrc[0]);
+		mins[1] = minsSrc[1];
+		mins[2] = minsSrc[2];
+
+		maxs[0] = maxsSrc[0];
+		maxs[1] = min(0, maxsSrc[1]);
+		maxs[2] = maxsSrc[2];
+
+		rayinit(0x24012BF0)(&ray, start, end, mins, maxs);
+		UTIL_TraceRay(0x240525E0)(&ray, fMask, player, collisionGroup, pm);
+		if (*(void**)((unsigned __int32)&pm + 0x37) && *(float*)((unsigned __int32)&pm + 0x20) >= 0.7)
+		{
+			*(float*)((unsigned __int32)&pm + 0x2c) = fraction;
+			*(float*)((unsigned __int32)&pm + 0xc) = endpos[0];
+			*(float*)((unsigned __int32)&pm + 0xc + 4) = endpos[1];
+			*(float*)((unsigned __int32)&pm + 0xc + 8) = endpos[2];
+			return;
+		}
+
+		*(float*)((unsigned __int32)&pm + 0x2c) = fraction;
+		*(float*)((unsigned __int32)&pm + 0xc) = endpos[0];
+		*(float*)((unsigned __int32)&pm + 0xc + 4) = endpos[1];
+		*(float*)((unsigned __int32)&pm + 0xc + 8) = endpos[2];
+	}
+
+	void CategorizePosition()
+	{
+		float point[3];
+		trace_t pm;
+
+		m_surfaceFriction = 1.0f;
+
+		float flOffset = 2.0f;
+
+		point[0] = origin[0];
+		point[1] = origin[1];
+		point[2] = origin[2] - flOffset;
+
+		float bumpOrigin[3];
+		bumpOrigin[0] = origin[0];
+		bumpOrigin[1] = origin[1];
+		bumpOrigin[2] = origin[2];
+
+		float zvel = velocity[2];
+		bool bMovingUpRapidly = zvel > 140;
+		float flGroundEntityVelZ = 0.0f;
+		if (bMovingUpRapidly)
+		{
+			if (groundentity != -1)
+			{
+				flGroundEntityVelZ = 0;
+				bMovingUpRapidly = (zvel - flGroundEntityVelZ) > 140;
+			}
+		}
+
+		if (bMovingUpRapidly)
+		{
+			groundentity = -1;
+		}
+		else
+		{
+			TracePlayerBBox(bumpOrigin, point, 33636363, 8, &pm);
+			if (*(float*)((unsigned __int32)&pm + 0x20) < 0.7)
+			{
+				TracePlayerBBoxForGround(bumpOrigin, point, GetPlayerMins(), GetPlayerMaxs(), player, 33636363, 8, &pm);
+				if (*(float*)((unsigned __int32)&pm + 0x20) < 0.7)
+				{
+					groundentity = -1;
+
+					if (velocity[2] > 0.0f)
+					{
+						m_surfaceFriction = 0.25f;
+					}
+				}
+				else
+				{
+					groundentity = *(__int32*)((unsigned __int32)&pm + 0x37);
+				}
+			}
+			else
+			{
+				groundentity = *(__int32*)((unsigned __int32)&pm + 0x37);
+			}
+		}
+	}
+
 	void process()
 	{
 		*((float*)global + 3) = *(int*)((unsigned __int32)player + 3592) * *((float*)global + 7);
@@ -316,7 +455,7 @@ namespace dirt
 
 		CheckVelocity();
 
-		if (*(__int32*)((unsigned __int32)player + 456) == -1)
+		if (groundentity == -1)
 		{
 			airmove:
 			{
@@ -381,7 +520,7 @@ namespace dirt
 
 				if (addspeed > 0)
 				{
-					accelspeed = *(float*)((unsigned __int32)player + 3936) * *((float*)global + 4) * wishspeed * accel;
+					accelspeed = m_surfaceFriction * *((float*)global + 4) * wishspeed * accel;
 
 					if (accelspeed > addspeed)
 						accelspeed = addspeed;
@@ -435,6 +574,21 @@ namespace dirt
 			}
 		}
 
+		CategorizePosition();
+
+		CheckVelocity();
+
+		if (groundentity == -1)
+		{
+			velocity[2] -= (v2 * *(float*)(*(unsigned __int32*)0x243E90D0 + 40) * global->Frame_Time * 0.5);
+
+			CheckVelocity();
+		}
+		else
+		{
+			velocity[2] = 0;
+		}
+
 		grab = 1;
 	}
 
@@ -455,10 +609,17 @@ namespace dirt
 		}
 	}
 
-	void finalize()
+	void finalize(__int8 final)
 	{
 		if (grab == 0)
 		{
+			if (final == 1)
+			{
+				__builtin_memcpy(movegrab, (void*)((unsigned __int32)player + 224), sizeof(movegrab));
+
+				__builtin_memcpy(origingrab, (void*)((unsigned __int32)player + 668), sizeof(origingrab));
+			}
+
 			wprintf(L"%f %f %f ^ %f %f %f\n",
 				Absolute(velocity[0] - movegrab[0]),
 				Absolute(velocity[1] - movegrab[1]),
