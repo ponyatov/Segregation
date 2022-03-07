@@ -40,6 +40,8 @@
 
 #include "Converge_Angles.hpp"
 
+#include "Extrapolation.hpp" 
+
 #include "Copy_User_Command.hpp"
 
 #include "Send_Move.hpp"
@@ -259,7 +261,11 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Prediction\n");
 
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.95", nullptr);
+			Create_Console_Variable_Type(539130656)(&Console_Variable_Extrapolation, (char*)"Extrapolation", (char*)"0", nullptr);
+
+			wprintf(L"[ + ] Extrapolation %p\n", &Console_Variable_Extrapolation);
+
+			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.9", nullptr);
 
 			wprintf(L"[ + ] Aim_Height %p\n", &Console_Variable_Aim_Height);
 

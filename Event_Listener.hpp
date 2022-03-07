@@ -12,6 +12,8 @@ void __stdcall Event_Processor(void* Event)
 
 		if (Name[0] == 'r')
 		{
+			__builtin_memset(Players_History, 0, sizeof(Players_History));
+
 			Shot_Time = 0;
 		}
 		else

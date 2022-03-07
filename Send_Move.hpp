@@ -47,9 +47,7 @@ void Redirected_Send_Move()
 
 			static void* Client_Location = *(void**)540494868;
 
-			__int8 Write_Command_Return_Value = Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From, To, Is_New_Command);
-
-			Should_Send_Packet = Write_Command_Return_Value;
+			Should_Send_Packet = Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From, To, Is_New_Command);
 		}
 
 		From = To;

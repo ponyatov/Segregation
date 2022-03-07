@@ -47,6 +47,37 @@ struct Player_Data_Structure
 	__int32 Shots_Fired;
 };
 
+struct Player_History_Structure
+{
+	float Simulation_Time;
+
+	float Origin[3];
+};
+
+struct Trace_Structure
+{
+	__int8 Additional_Bytes_1[12];
+
+	float End[3];
+
+	float Plane[3];
+
+	__int8 Additional_Bytes_2[8];
+
+	float Fraction;
+
+	__int8 Additional_Bytes_3[28];
+
+	void* Entity;
+
+	__int8 Additional_Bytes_4[4];
+};
+
+struct Ray_Structure
+{
+	__int8 Additional_Bytes[50];
+};
+
 struct User_Command_Structure
 {
 	__int8 Additional_Bytes_1[4];

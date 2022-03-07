@@ -2,7 +2,7 @@
 
 void* Original_Interpolate_Caller_Location;
 
-__int8 __thiscall Redirected_Interpolate(void* Player, void* Unknown_Variable)
+__int8 __thiscall Redirected_Interpolate(void* Player, void* Unknown_Parameter)
 {
 	void* Local_Player = *(void**)607867332;
 
@@ -11,7 +11,7 @@ __int8 __thiscall Redirected_Interpolate(void* Player, void* Unknown_Variable)
 		*(__int8*)607715194 = 0;
 	}
 
-	__int8 Return_Value = (decltype(&Redirected_Interpolate)(Original_Interpolate_Caller_Location))(Player, Unknown_Variable);
+	__int8 Return_Value = (decltype(&Redirected_Interpolate)(Original_Interpolate_Caller_Location))(Player, Unknown_Parameter);
 
 	if (Player != Local_Player)
 	{

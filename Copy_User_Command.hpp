@@ -376,11 +376,24 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											}
 											else
 											{
-												using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
-
 												Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
 
+												float Extrapolation_Time;
+			
 												void* Renderable = (void*)((unsigned __int32)Optimal_Target + 4);
+
+												if (Console_Variable_Extrapolation.Integer == 0)
+												{
+													Extrapolation_Time = 0;
+												}
+												else
+												{
+													Extrapolation_Time = 0;
+
+													*(__int32*)((unsigned __int32)Renderable + 1172) = *(__int32*)607849040 - 1;
+												}
+
+												using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
 												float Bones[128][3][4];
 
@@ -402,30 +415,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 														{
 															auto Trace_Ray = [&](float* End) -> __int8
 															{
-																struct Trace_Structure
-																{
-																	__int8 Additional_Bytes_1[76];
-
-																	void* Entity;
-
-																	__int8 Additional_Bytes_2[4];
-																};
-
-																struct Ray_Structure
-																{
-																	__int8 Additional_Bytes[50];
-																};
-
-																struct Trace_Filter_Structure
-																{
-																	void* Trace_Filter;
-
-																	void* Skip;
-
-																	__int32 Group;
-																};
-
-																using Trace_Ray_Type = void(__thiscall*)(void* Engine_Trace, Ray_Structure* Ray, __int32 Mask, Trace_Filter_Structure* Trace_Filter, Trace_Structure* Trace);
+																using Trace_Ray_Type = void(__cdecl*)(Ray_Structure* Ray, __int32 Mask, void* Skip, __int32 Group, Trace_Structure* Trace);
 
 																using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);
 
@@ -433,17 +423,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																Initialize_Ray_Type(537380224)(&Ray, Local_Player_Origin, End);
 
-																Trace_Filter_Structure Trace_Filter;
-
-																Trace_Filter.Trace_Filter = (void*)607282692;
-
-																Trace_Filter.Skip = Local_Player;
-
-																Trace_Filter.Group = 0;
-
 																Trace_Structure Trace;
 
-																Trace_Ray_Type(537565888)((void*)540446304, &Ray, 1174421515, &Trace_Filter, &Trace);
+																Trace_Ray_Type(604317152)(&Ray, 1174421515, Local_Player, 0 , &Trace);
 
 																if (Trace.Entity == nullptr)
 																{
@@ -493,7 +475,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 															if (Trace_Ray(Optimal_Target_Origin) == 1)
 															{
-																Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
+																Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
 																__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
 
@@ -550,10 +532,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												User_Command->View_Angles[0] = Aim_Angles[0];
 
 												User_Command->View_Angles[1] = Aim_Angles[1];
-												
-												__int32 Optimal_Target_Number = *(__int32*)((unsigned __int32)Optimal_Target + 80) - 1;
 
-												Player_Data_Structure* Player_Data = &Players_Data[Optimal_Target_Number];
+												Player_Data_Structure* Player_Data = &Players_Data[*(__int32*)((unsigned __int32)Optimal_Target + 80) - 1];
 
 												if (Console_Variable_Bruteforce_Memory.Integer == 0)
 												{
