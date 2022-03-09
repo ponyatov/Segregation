@@ -379,14 +379,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
 												Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
-												{
-													void* server = *(void**)0x22562D8C;
-
-													wprintf(L"%f %f\n",
-														*(float*)((unsigned __int32)Optimal_Target + 668),
-														*(float*)((unsigned __int32)server + 796)
-													);
-												}
 
 												float Bones[128][3][4];
 
