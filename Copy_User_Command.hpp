@@ -400,6 +400,20 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 														{
 															auto Trace_Ray = [&](float* End) -> __int8
 															{
+																struct Ray_Structure
+																{
+																	__int8 Additional_Bytes[50];
+																};
+
+																struct Trace_Structure
+																{
+																	__int8 Additional_Bytes_1[76];
+
+																	void* Entity;
+
+																	__int8 Additional_Bytes_2[4];
+																};
+
 																using Trace_Ray_Type = void(__cdecl*)(Ray_Structure* Ray, __int32 Mask, void* Skip, __int32 Group, Trace_Structure* Trace);
 
 																using Initialize_Ray_Type = void(__thiscall*)(Ray_Structure* Ray, float* Start, float* End);

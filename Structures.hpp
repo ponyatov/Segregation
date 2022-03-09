@@ -47,20 +47,6 @@ struct Player_Data_Structure
 	__int32 Shots_Fired;
 };
 
-struct Trace_Structure
-{
-	__int8 Additional_Bytes_1[76];
-
-	void* Entity;
-
-	__int8 Additional_Bytes_2[4];
-};
-
-struct Ray_Structure
-{
-	__int8 Additional_Bytes[50];
-};
-
 struct User_Command_Structure
 {
 	__int8 Additional_Bytes_1[4];
