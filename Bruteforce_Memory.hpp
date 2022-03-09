@@ -1,5 +1,22 @@
 #pragma once
 
+constexpr float Bruteforce_Angles[7] =
+{
+	0,
+
+	-30,
+
+	30,
+
+	-60,
+
+	60,
+
+	-90,
+
+	90
+};
+
 void Bruteforce_Memory_Reset()
 {
 	__int32 Entity_Number = 0;
@@ -12,7 +29,7 @@ void Bruteforce_Memory_Reset()
 		{
 			Player_Data->Memorized = 0;
 
-			Player_Data->Shots_Fired = (Player_Data->Shots_Fired - 1) % 5;
+			Player_Data->Shots_Fired = (Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
 		}
 
 		Entity_Number += 1;

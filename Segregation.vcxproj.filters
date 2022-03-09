@@ -79,8 +79,5 @@
     <ClInclude Include="Write_Events.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
-    <ClInclude Include="Extrapolation.hpp">
-      <Filter>Header++</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

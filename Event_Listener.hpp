@@ -12,8 +12,6 @@ void __stdcall Event_Processor(void* Event)
 
 		if (Name[0] == 'r')
 		{
-			__builtin_memset(Players_History, 0, sizeof(Players_History));
-
 			Shot_Time = 0;
 		}
 		else
@@ -57,7 +55,7 @@ void __stdcall Event_Processor(void* Event)
 
 							Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
 
-							Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % 5];
+							Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float))];
 						}
 
 						if (Console_Variable_Commentator.Integer == 1)

@@ -376,30 +376,23 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											}
 											else
 											{
-												Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
-
-												float Extrapolation_Time;
-			
-												void* Renderable = (void*)((unsigned __int32)Optimal_Target + 4);
-
-												if (Console_Variable_Extrapolation.Integer == 0)
-												{
-													Extrapolation_Time = 0;
-												}
-												else
-												{
-													Extrapolation_Time = 0;
-
-													*(__int32*)((unsigned __int32)Renderable + 1172) = *(__int32*)607849040 - 1;
-												}
-
 												using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
+
+												Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
+												{
+													void* server = *(void**)0x22562D8C;
+
+													wprintf(L"%f %f\n",
+														*(float*)((unsigned __int32)Optimal_Target + 668),
+														*(float*)((unsigned __int32)server + 796)
+													);
+												}
 
 												float Bones[128][3][4];
 
-												if (Setup_Bones_Type(604209888)(Renderable, Bones, 128, 524032, Global_Variables->Current_Time) == 1)
+												if (Setup_Bones_Type(604209888)((void*)((unsigned __int32)Optimal_Target + 4), Bones, 128, 524032, Global_Variables->Current_Time) == 1)
 												{
-													void* Model = *(void**)((unsigned __int32)Renderable + 88);
+													void* Model = *(void**)((unsigned __int32)Optimal_Target + 92);
 
 													if (Model != nullptr)
 													{
@@ -421,11 +414,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																Ray_Structure Ray;
 
-																Initialize_Ray_Type(537380224)(&Ray, Local_Player_Origin, End);
+																Initialize_Ray_Type(537380224)(&Ray, Local_Player_Eye_Position, End);
 
 																Trace_Structure Trace;
 
-																Trace_Ray_Type(604317152)(&Ray, 1174421515, Local_Player, 0 , &Trace);
+																Trace_Ray_Type(604317152)(&Ray, 1174421515, Local_Player, 0, &Trace);
 
 																if (Trace.Entity == nullptr)
 																{
@@ -475,7 +468,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 															if (Trace_Ray(Optimal_Target_Origin) == 1)
 															{
-																Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time + Extrapolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
+																Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
 
 																__int32 Tick_Number_Difference = Global_Variables->Tick_Number + 1 + Total_Latency / Global_Variables->Interval_Per_Tick + 0.5f - Target_Tick_Number;
 
@@ -537,13 +530,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												if (Console_Variable_Bruteforce_Memory.Integer == 0)
 												{
-													Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
+													Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
 												}
 												else
 												{
 													if (Player_Data->Memorized == 0)
 													{
-														Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % 5;
+														Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
 													}
 													else
 													{

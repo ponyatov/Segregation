@@ -1,23 +1,10 @@
 #pragma once
 
-Player_History_Structure Players_History[64][90];
-
 float Shot_Time;
 
-constexpr float Bruteforce_Angles[5] =
-{
-	0,
-
-	-45,
-
-	45,
-
-	-90,
-
-	90
-};
-
 void* Original_Frame_Stage_Notify_Caller_Location;
+
+__int32 lastrecv;
 
 float Absolute(float X)
 {
@@ -36,7 +23,7 @@ float Uncompressed_Stamina[90];
 
 void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 Stage)
 {
-	if (Stage == 2)
+	if (Stage == 4)
 	{
 		__int32 Entity_Number = 1;
 
@@ -56,8 +43,6 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 				{
 					if (*(__int8*)((unsigned __int32)Entity + 135) != 0)
 					{
-						__builtin_memset(Players_History, 0, sizeof(Players_History));
-
 						Shot_Time = 0;
 					}
 				}
@@ -89,26 +74,6 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 								*(float*)((unsigned __int32)Animation_State - 112) = Player_Data->Y + Player_Data->Memorized_Y;
 							}
-						}
-					}
-
-					if (Local_Player != nullptr)
-					{
-						if (*(__int8*)((unsigned __int32)Entity + 135) == 0)
-						{
-							Player_History_Structure* Player_History = &Players_History[Normalized_Entity_Number][*(__int32*)((unsigned __int32)Local_Player + 3592) % 90];
-
-							float Simulation_Time = *(float*)((unsigned __int32)Entity + 104);
-
-							Player_History->Simulation_Time = Simulation_Time;
-
-							float* Origin = (float*)((unsigned __int32)Entity + 668);
-
-							Player_History->Origin[0] = Origin[0];
-
-							Player_History->Origin[1] = Origin[1];
-
-							Player_History->Origin[2] = Origin[2];
 						}
 					}
 				}
