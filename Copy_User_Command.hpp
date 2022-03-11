@@ -16,18 +16,18 @@ float Square_Root(float X)
 	return X;
 }
 
-void Vector_Normalize(float* Vector)
-{
-	using Vector_Normalize_Type = float(__thiscall*)(float* Vector);
-
-	Vector_Normalize_Type(606378096)(Vector);
-}
-
 void Angle_Vectors(float* Angles, float* Forward, float* Right, float* Up)
 {
 	using Angle_Vectors_Type = void(__cdecl*)(float* Angles, float* Forward, float* Right, float* Up);
 
 	Angle_Vectors_Type(606384752)(Angles, Forward, Right, Up);
+}
+
+void Vector_Normalize(float* Vector)
+{
+	using Vector_Normalize_Type = float(__thiscall*)(float* Vector);
+
+	Vector_Normalize_Type(606378096)(Vector);
 }
 
 void* Original_Copy_User_Command_Caller_Location;
