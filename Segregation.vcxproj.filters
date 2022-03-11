@@ -76,8 +76,5 @@
     <ClInclude Include="Bruteforce_Memory.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
-    <ClInclude Include="Write_Events.hpp">
-      <Filter>Header++</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
