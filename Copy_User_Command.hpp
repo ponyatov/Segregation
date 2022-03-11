@@ -591,9 +591,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											float Direction[3] =
 											{
-												Cosine_X * Cosine_Y + Random_X * Weapon_Spread * Sine_Y + Random_Y * Weapon_Spread * (Sine_X * Cosine_Y),
+												Cosine_X * Cosine_Y + Random_X * Weapon_Spread * Sine_Y + Random_Y * Weapon_Spread * Sine_X * Cosine_Y,
 
-												Cosine_X * Sine_Y + Random_X * Weapon_Spread * -Cosine_Y + Random_Y * Weapon_Spread * (Sine_X * Sine_Y),
+												Cosine_X * Sine_Y + Random_X * Weapon_Spread * -Cosine_Y + Random_Y * Weapon_Spread * Sine_X * Sine_Y,
 
 												-Sine_X + Random_Y * Weapon_Spread * Cosine_X
 											};
