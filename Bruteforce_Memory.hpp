@@ -1,16 +1,20 @@
 #pragma once
 
-constexpr float Bruteforce_Angles[7] =
+constexpr float Bruteforce_Angles[9] =
 {
 	0,
 
-	-30,
+	-22.5f,
 
-	30,
+	22.5f,
 
-	-60,
+	-45,
 
-	60,
+	45,
+
+	-67.5f,
+
+	67.5f,
 
 	-90,
 
