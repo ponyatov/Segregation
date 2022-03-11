@@ -16,9 +16,18 @@ float Square_Root(float X)
 	return X;
 }
 
-void Sine_Cosine(float& Sine, float& Cosine, float Value)
+void Vector_Normalize(float* Vector)
 {
-	asm("fsincos" : "=u"(Sine), "=t"(Cosine) : "1"(Value));
+	using Vector_Normalize_Type = float(__thiscall*)(float* Vector);
+
+	Vector_Normalize_Type(606378096)(Vector);
+}
+
+void Angle_Vectors(float* Angles, float* Forward, float* Right, float* Up)
+{
+	using Angle_Vectors_Type = void(__cdecl*)(float* Angles, float* Forward, float* Right, float* Up);
+
+	Angle_Vectors_Type(606384752)(Angles, Forward, Right, Up);
 }
 
 void* Original_Copy_User_Command_Caller_Location;
@@ -48,11 +57,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	*(__int32*)((unsigned __int32)Local_Player + 3592) -= 1;
 
-	float Move_Angles[2] =
+	float Move_Angles[3] =
 	{
 		User_Command->View_Angles[0],
 
-		User_Command->View_Angles[1]
+		User_Command->View_Angles[1],
+
+		0
 	};
 
 	static float Previous_Move_Angle_Y = Move_Angles[1];
@@ -551,17 +562,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												}
 											}
 
-											float Sine_X;
+											float Forward[3];
 
-											float Cosine_X;
+											float Right[3];
 
-											Sine_Cosine(Sine_X, Cosine_X, User_Command->View_Angles[0] * 3.1415927f / 180);
+											float Up[3];
 
-											float Sine_Y;
-
-											float Cosine_Y;
-
-											Sine_Cosine(Sine_Y, Cosine_Y, User_Command->View_Angles[1] * 3.1415927f / 180);
+											Angle_Vectors(User_Command->View_Angles, Forward, Right, Up);
 
 											constexpr __int32 Random_Seed = 32;
 
@@ -591,22 +598,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											float Direction[3] =
 											{
-												Cosine_X * Cosine_Y + Random_X * Weapon_Spread * Sine_Y + Random_Y * Weapon_Spread * Sine_X * Cosine_Y,
+												Forward[0] + Random_X * Weapon_Spread * Right[0] + Random_Y * Weapon_Spread * Up[1],
 
-												Cosine_X * Sine_Y + Random_X * Weapon_Spread * -Cosine_Y + Random_Y * Weapon_Spread * Sine_X * Sine_Y,
+												Forward[1] + Random_X * Weapon_Spread * Right[1] + Random_Y * Weapon_Spread * Up[1],
 
-												-Sine_X + Random_Y * Weapon_Spread * Cosine_X
+												Forward[2] + Random_X * Weapon_Spread * Right[2] + Random_Y * Weapon_Spread * Up[2],
 											};
 
+											Vector_Normalize(Direction);
+
 											Weapon_Spread = 0;
-
-											float Magnitude = 1 / (Square_Root(__builtin_powf(Direction[0], 2) + __builtin_powf(Direction[1], 2) + __builtin_powf(Direction[2], 2)) + FLT_EPSILON);
-
-											Direction[0] *= Magnitude;
-
-											Direction[1] *= Magnitude;
-
-											Direction[2] *= Magnitude;
 
 											float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
 
@@ -671,46 +672,19 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	*(__int8*)((unsigned __int32)__builtin_frame_address(0) + 24) = Send_Packet;
 
-	auto Angle_Vectors = [](float* Angles, float* Forward, float* Right) -> void
-	{
-		float Sine_X;
+	float Desired_Move_Forward[3];
 
-		float Cosine_X;
+	float Desired_Move_Right[3];
 
-		Sine_Cosine(Sine_X, Cosine_X, Angles[0] * 3.1415927f / 180);
+	Angle_Vectors(Move_Angles, Desired_Move_Forward, Desired_Move_Right, nullptr);
 
-		float Sine_Y;
+	Desired_Move_Forward[2] = 0;
 
-		float Cosine_Y;
+	Desired_Move_Right[2] = 0;
 
-		Sine_Cosine(Sine_Y, Cosine_Y, Angles[1] * 3.1415927f / 180);
+	Vector_Normalize(Desired_Move_Forward);
 
-		Forward[0] = Cosine_X * Cosine_Y;
-
-		Forward[1] = Cosine_X * Sine_Y;
-
-		Right[0] = Sine_Y;
-
-		Right[1] = -Cosine_Y;
-	};
-
-	float Desired_Move_Forward[2];
-
-	float Desired_Move_Right[2];
-
-	Angle_Vectors(Move_Angles, Desired_Move_Forward, Desired_Move_Right);
-
-	float Magnitude = 1 / (Square_Root(__builtin_powf(Desired_Move_Forward[0], 2) + __builtin_powf(Desired_Move_Forward[1], 2)) + FLT_EPSILON);
-
-	Desired_Move_Forward[0] *= Magnitude;
-
-	Desired_Move_Forward[1] *= Magnitude;
-
-	Magnitude = 1 / (Square_Root(__builtin_powf(Desired_Move_Right[0], 2) + __builtin_powf(Desired_Move_Right[1], 2)) + FLT_EPSILON);
-
-	Desired_Move_Right[0] *= Magnitude;
-
-	Desired_Move_Right[1] *= Magnitude;
+	Vector_Normalize(Desired_Move_Right);
 
 	float Desired_Move[2] =
 	{
@@ -719,25 +693,21 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		Desired_Move_Forward[1] * User_Command->Move[0] + Desired_Move_Right[1] * User_Command->Move[1]
 	};
 
-	float Move_Forward[2];
+	float Move_Forward[3];
 
-	float Move_Right[2];
+	float Move_Right[3];
 
-	Angle_Vectors(User_Command->View_Angles, Move_Forward, Move_Right);
+	Angle_Vectors(User_Command->View_Angles, Move_Forward, Move_Right, nullptr);
 
-	Magnitude = 1 / (Square_Root(__builtin_powf(Move_Forward[0], 2) + __builtin_powf(Move_Forward[1], 2)) + FLT_EPSILON);
+	Move_Forward[2] = 0;
 
-	Move_Forward[0] *= Magnitude;
+	Move_Right[2] = 0;
 
-	Move_Forward[1] *= Magnitude;
+	Vector_Normalize(Move_Forward);
 
-	Magnitude = 1 / (Square_Root(__builtin_powf(Move_Right[0], 2) + __builtin_powf(Move_Right[1], 2)) + FLT_EPSILON);
+	Vector_Normalize(Move_Right);
 
-	Move_Right[0] *= Magnitude;
-
-	Move_Right[1] *= Magnitude;
-
-	float Divider = (Move_Forward[0] * Move_Right[1] - Move_Right[0] * Move_Forward[1]);
+	float Divider = Move_Forward[0] * Move_Right[1] - Move_Right[0] * Move_Forward[1];
 
 	User_Command->Move[0] = (Desired_Move[0] * Move_Right[1] - Move_Right[0] * Desired_Move[1]) / Divider;
 
