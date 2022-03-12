@@ -6,32 +6,42 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, void* Unknown_
 {
 	if (Console_Variable_Bruteforce.Integer == 1)
 	{
-		__int32 Entity_Number = 0;
-
 		void* Local_Player = *(void**)607867332;
 
-		__int32 Local_Player_Number = *(__int32*)((unsigned __int32)Local_Player + 80) - 1;
-
-		Traverse_Player_Data_Label:
+		if (Animation_State != (void*)(*(unsigned __int32*)((unsigned __int32)Local_Player + 3968) - 148))
 		{
-			if (Entity_Number != Local_Player_Number)
-			{
-				Player_Data_Structure* Player_Data = &Players_Data[Entity_Number];
+			__int32 Entity_Number = 1;
 
-				if (Player_Data->Priority != -2)
+			static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+		
+			__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
+
+			Traverse_Entity_List_Label:
+			{
+				void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
+
+				if (Entity != nullptr)
 				{
-					if (Player_Data->Animation_State == Animation_State)
+					if (Entity != Local_Player)
 					{
-						Rate = 0;
+						Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
+
+						if (Player_Data->Priority != -2)
+						{
+							if (Player_Data->Animation_State == Animation_State)
+							{
+								Rate = 0;
+							}
+						}
 					}
 				}
-			}
 
-			Entity_Number += 1;
+				if (Entity_Number != Maximum_Clients)
+				{
+					Entity_Number += 1;
 
-			if (Entity_Number != sizeof(Players_Data) / sizeof(Player_Data_Structure))
-			{
-				goto Traverse_Player_Data_Label;
+					goto Traverse_Entity_List_Label;
+				}
 			}
 		}
 	}

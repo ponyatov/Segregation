@@ -25,34 +25,32 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 {
 	if (Stage == 4)
 	{
-		__int32 Entity_Number = 1;
-
-		static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
-		
-		__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
-
-		Traverse_Entity_List_Label:
+		if (Console_Variable_Bruteforce.Integer == 1)
 		{
-			void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
+			__int32 Entity_Number = 1;
 
-			if (Entity != nullptr)
+			void* Local_Player = *(void**)607867332;
+
+			static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+
+			__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
+
+			Traverse_Entity_List_Label:
 			{
-				void* Local_Player = *(void**)607867332;
+				void* Entity = *(void**)((unsigned __int32)607973860 + ((Entity_Number - 4097) << 4));
 
-				if (Entity == Local_Player)
+				if (Entity != nullptr)
 				{
-					if (*(__int8*)((unsigned __int32)Entity + 135) != 0)
+					if (Entity == Local_Player)
 					{
-						Shot_Time = 0;
+						if (*(__int8*)((unsigned __int32)Entity + 135) != 0)
+						{
+							Shot_Time = 0;
+						}
 					}
-				}
-				else
-				{
-					__int32 Normalized_Entity_Number = Entity_Number - 1;
-
-					if (Console_Variable_Bruteforce.Integer == 1)
+					else
 					{
-						Player_Data_Structure* Player_Data = &Players_Data[Normalized_Entity_Number];
+						Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
 
 						if (Player_Data->Priority != -2)
 						{
@@ -77,13 +75,13 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 						}
 					}
 				}
-			}
 
-			if (Entity_Number != Maximum_Clients)
-			{
-				Entity_Number += 1;
+				if (Entity_Number != Maximum_Clients)
+				{
+					Entity_Number += 1;
 
-				goto Traverse_Entity_List_Label;
+					goto Traverse_Entity_List_Label;
+				}
 			}
 		}
 	}
