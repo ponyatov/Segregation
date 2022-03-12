@@ -24,13 +24,16 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, void* Unknown_
 				{
 					if (Entity != Local_Player)
 					{
-						Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
-
-						if (Player_Data->Priority != -2)
+						if (*(__int8*)((unsigned __int32)Entity + 135) == 0)
 						{
-							if (Player_Data->Animation_State == Animation_State)
+							Player_Data_Structure* Player_Data = &Players_Data[Entity_Number - 1];
+
+							if (Player_Data->Priority != -2)
 							{
-								Rate = 0;
+								if (Player_Data->Animation_State == Animation_State)
+								{
+									Rate = 0;
+								}
 							}
 						}
 					}
