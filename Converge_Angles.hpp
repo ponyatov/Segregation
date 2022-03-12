@@ -2,7 +2,7 @@
 
 void* Original_Converge_Angles_Caller_Location;
 
-void __thiscall Redirected_Converge_Angles(void* Animation_State, void* Unknown_Parameter_1, float Rate, void* Unknown_Parameter_2, void* Unknown_Parameter_3, void* Unknown_Parameter_4)
+void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float Current)
 {
 	if (Console_Variable_Bruteforce.Integer == 1)
 	{
@@ -32,7 +32,22 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, void* Unknown_
 							{
 								if (Player_Data->Animation_State == Animation_State)
 								{
-									Rate = 0;
+									if (Console_Variable_Bruteforce_Memory.Integer == 0)
+									{
+										Bruteforce_Label:
+										{
+											Goal = Player_Data->Y + Bruteforce_Angles[Player_Data->Shots_Fired];
+										}
+									}
+									else
+									{
+										if (Player_Data->Memorized == 0)
+										{
+											goto Bruteforce_Label;
+										}
+
+										Goal = Player_Data->Y + Player_Data->Memorized_Y;
+									}
 								}
 							}
 						}
@@ -49,5 +64,12 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, void* Unknown_
 		}
 	}
 
-	(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Unknown_Parameter_1, Rate, Unknown_Parameter_2, Unknown_Parameter_3, Unknown_Parameter_4);
+	if (Current != Goal)
+	{
+		(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Goal, Unknown_Parameter_1, Unknown_Parameter_2, Unknown_Parameter_3, Current);
+
+		static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+
+		*(float*)((unsigned __int32)Animation_State + 52) = Global_Variables->Current_Time;
+	}
 }

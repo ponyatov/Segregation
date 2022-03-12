@@ -281,6 +281,10 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			Redirection_Manager::Redirect_Function(Original_Update_Animation_Caller_Location, 4,  (void*)605800256, 1, (void*)Redirected_Update_Animation);
 
+			Byte_Manager::Set_Bytes(1, (void*)604022867, 2, 144);
+
+			Byte_Manager::Set_Bytes(1, (void*)604022906, 12, 144);
+
 			Redirection_Manager::Redirect_Function(Original_Converge_Angles_Caller_Location, 3, (void*)604019936, 1, (void*)Redirected_Converge_Angles);
 
 			wprintf(L"[ + ] Animations\n");
