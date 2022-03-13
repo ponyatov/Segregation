@@ -547,7 +547,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												{
 													Bruteforce_Label:
 													{
-														if (Player_Data->Tolerance <= 0)
+														if (Player_Data->Tolerance == 0)
 														{
 															Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
 
