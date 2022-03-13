@@ -2,8 +2,10 @@
 
 void* Original_Converge_Angles_Caller_Location;
 
-void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float Current)
+void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, float Rate, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float* Current)
 {
+	__int8 Instant = 0;
+
 	if (Console_Variable_Bruteforce.Integer == 1)
 	{
 		void* Local_Player = *(void**)607867332;
@@ -48,25 +50,37 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, vo
 
 										Goal = Player_Data->Y + Player_Data->Memorized_Y;
 									}
+
+									Instant = 1;
 								}
 							}
 						}
 					}
 				}
 
-				if (Entity_Number != Maximum_Clients)
+				if (Instant == 0)
 				{
-					Entity_Number += 1;
+					if (Entity_Number != Maximum_Clients)
+					{
+						Entity_Number += 1;
 
-					goto Traverse_Entity_List_Label;
+						goto Traverse_Entity_List_Label;
+					}
 				}
 			}
 		}
 	}
 
-	if (Current != Goal)
+	if (*(float*)Current != Goal)
 	{
-		(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Goal, Unknown_Parameter_1, Unknown_Parameter_2, Unknown_Parameter_3, Current);
+		if (Instant == 0)
+		{
+			(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Goal, Rate, Unknown_Parameter_2, Unknown_Parameter_3, Current);
+		}
+		else
+		{
+			*(float*)Current = __builtin_remainderf(Goal, 360);
+		}
 
 		static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
 
