@@ -117,7 +117,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			FillConsoleOutputAttribute(Standard_Output_Handle, FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_RED, Console_Screen_Buffer_Information.dwSize.X * Console_Screen_Buffer_Information.dwSize.Y, Top_Left, &Characters_Written_Count);
 
-			wprintf(L"[ + ] Delimit Standard Interface\n");
+			wprintf(L"[ + ] Delimit Interface\n");
 			{
 				unsigned __int8 Cheat_Flag_Bytes[4] =
 				{
@@ -135,7 +135,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 				*(__int8*)542242676 = 1;
 			}
 
-			wprintf(L"[ + ] Implement Extended Interface\n");
+			wprintf(L"[ + ] Extend Interface\n");
 			{
 				Implement_Extended_Interface();
 			}

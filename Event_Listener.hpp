@@ -47,6 +47,8 @@ void __stdcall Event_Processor(void* Event)
 
 					Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
 
+					Player_Data->Tolerance = 0;
+
 					Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float))];
 				}
 
