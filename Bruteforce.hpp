@@ -13,7 +13,7 @@ constexpr float Bruteforce_Angles[5] =
 	90
 };
 
-void Bruteforce_Memory_Reset()
+void Bruteforce_Reset_Memory()
 {
 	__int32 Entity_Number = 0;
 
@@ -37,7 +37,7 @@ void Bruteforce_Memory_Reset()
 	}
 }
 
-void Bruteforce_Tolerance_Reset()
+void Bruteforce_Reset_Tolerance()
 {
 	__int32 Entity_Number = 0;
 

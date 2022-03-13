@@ -54,11 +54,11 @@ void Implement_Extended_Interface()
 
 	wprintf(L"[ + ] Set_Priority %p\n", &Console_Variable_Set_Priority);
 
-	Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr, nullptr, (void*)Bruteforce_Memory_Reset);
+	Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr, nullptr, (void*)Bruteforce_Reset_Memory);
 
 	wprintf(L"[ + ] Bruteforce_Memory %p\n", &Console_Variable_Bruteforce_Memory);
 
-	Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Tolerance, (char*)"Bruteforce_Tolerance", (char*)"0", nullptr, nullptr, (void*)Bruteforce_Tolerance_Reset);
+	Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Tolerance, (char*)"Bruteforce_Tolerance", (char*)"0", nullptr, nullptr, (void*)Bruteforce_Reset_Tolerance);
 
 	wprintf(L"[ + ] Bruteforce_Tolerance %p\n", &Console_Variable_Bruteforce_Tolerance);
 
