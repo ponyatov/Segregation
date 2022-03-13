@@ -2,7 +2,7 @@
 
 void* Original_Converge_Angles_Caller_Location;
 
-void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, float Rate, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float* Current)
+void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float* Current)
 {
 	__int8 Instant = 0;
 
@@ -75,7 +75,7 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, fl
 	{
 		if (Instant == 0)
 		{
-			(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Goal, Rate, Unknown_Parameter_2, Unknown_Parameter_3, Current);
+			(decltype(&Redirected_Converge_Angles)(Original_Converge_Angles_Caller_Location))(Animation_State, Goal, Unknown_Parameter_1, Unknown_Parameter_2, Unknown_Parameter_3, Current);
 		}
 		else
 		{
