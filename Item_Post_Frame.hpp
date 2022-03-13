@@ -1,5 +1,7 @@
 #pragma once
 
+__int32 Shot_Tick_Number;
+
 void* Original_Item_Post_Frame_Caller_Location;
 
 void __thiscall Redirected_Item_Post_Frame(void* Weapon)

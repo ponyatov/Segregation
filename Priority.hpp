@@ -35,7 +35,7 @@ void Get_Priorities()
 	}
 }
 
-void Set_Priority(Console_Variable_Structure* Console_Variable)
+void Set_Priority(Interface_Structure* Console_Variable)
 {
 	char* Query = *(char**)((unsigned __int32)Console_Variable + 32);
 

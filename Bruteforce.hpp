@@ -1,20 +1,12 @@
 #pragma once
 
-constexpr float Bruteforce_Angles[9] =
+constexpr float Bruteforce_Angles[5] =
 {
 	0,
-
-	-22.5f,
-
-	22.5f,
 
 	-45,
 
 	45,
-
-	-67.5f,
-
-	67.5f,
 
 	-90,
 
@@ -35,6 +27,23 @@ void Bruteforce_Memory_Reset()
 
 			Player_Data->Shots_Fired = (Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
 		}
+
+		Entity_Number += 1;
+
+		if (Entity_Number != sizeof(Players_Data) / sizeof(Player_Data_Structure))
+		{
+			goto Traverse_Players_Data_Label;
+		}
+	}
+}
+
+void Bruteforce_Tolerance_Reset()
+{
+	__int32 Entity_Number = 0;
+
+	Traverse_Players_Data_Label:
+	{
+		Players_Data[Entity_Number].Tolerance = Console_Variable_Bruteforce_Tolerance.Integer;
 
 		Entity_Number += 1;
 

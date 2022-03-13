@@ -1,6 +1,6 @@
 #pragma once
 
-struct Console_Variable_Structure
+struct Interface_Structure
 {
 	__int8 Additional_Bytes_1[32];
 
@@ -13,6 +13,23 @@ struct Console_Variable_Structure
 	__int32 Integer;
 
 	__int8 Additional_Bytes_3[24];
+};
+
+struct Player_Data_Structure
+{
+	__int8 Priority;
+
+	__int32 Memorized;
+
+	__int32 Shots_Fired;
+
+	__int32 Tolerance;
+
+	float Memorized_Y;
+
+	float Y;
+
+	void* Animation_State;
 };
 
 struct Global_Variables_Structure
@@ -30,21 +47,6 @@ struct Global_Variables_Structure
 	__int32 Tick_Number;
 
 	float Interval_Per_Tick;
-};
-
-struct Player_Data_Structure
-{
-	__int8 Priority;
-
-	float Y;
-
-	void* Animation_State;
-
-	__int32 Memorized;
-
-	float Memorized_Y;
-
-	__int32 Shots_Fired;
 };
 
 struct User_Command_Structure

@@ -1,40 +1,42 @@
-#include <d3d9.h>
-
-#include "Byte_Manager/Byte_Manager.hpp"
+#include <Windows.h>
 
 #include <cstdio>
 
-#include "Sounds.hpp"
-
-#include "Structures.hpp"
-
-#include "Console_Variables.hpp"
-
-#include "Draw_Crosshair.hpp"
+#include "Byte_Manager/Byte_Manager.hpp"
 
 #define Bits_32
 
 #include "Redirection_Manager/Redirection_Manager.hpp"
 
-#include "Is_Error_Material.hpp"
+#include "Structures.hpp"
 
-#include "Interpolate.hpp"
-
-#include "Priority.hpp"
-
-#include "Bruteforce_Memory.hpp"
+#include "Extended_Interface.hpp"
 
 #include "Angles_Y.hpp"
 
 #include "Frame_Stage_Notify.hpp"
 
-#include "Run_Prediction.hpp"
+#include "Write_Events.hpp"
 
-#include "Weapon_Spread.hpp"
+#pragma comment(lib, "WinMM.Lib")
+
+#include "Sounds.hpp"
+
+#include "Event_Listener.hpp"
+
+#include "Interpolate.hpp"
 
 #include "Update_Animation.hpp"
 
 #include "Converge_Angles.hpp"
+
+#include "Run_Prediction.hpp"
+
+#include "Run_Command.hpp"
+
+#include "Item_Post_Frame.hpp"
+
+#include "Weapon_Spread.hpp"
 
 #include <vector>
 
@@ -44,13 +46,9 @@
 
 #include "Send_Move.hpp"
 
-#include "Run_Command.hpp"
+#include "Draw_Crosshair.hpp"
 
-#include "Item_Post_Frame.hpp"
-
-#pragma comment(lib, "WinMM.Lib")
-
-#include "Event_Listener.hpp"
+#include "Is_Error_Material.hpp"
 
 #include "Shutdown.hpp"
 
@@ -121,6 +119,93 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Remote Thread Dispatch\n");
 
+			unsigned __int8 Cheat_Flag_Bytes[4] =
+			{
+				254,
+
+				65,
+
+				44,
+
+				195
+			};
+
+			Byte_Manager::Copy_Bytes(1, (void*)538391351, sizeof(Cheat_Flag_Bytes), Cheat_Flag_Bytes);
+
+			*(__int8*)542242676 = 1;
+
+			wprintf(L"[ + ] Delimit Standard Interface\n");
+
+			Implement_Extended_Interface();
+
+			wprintf(L"[ + ] Implement Extended Interface\n");
+
+			*(void**)608149676 = (void*)Redirected_Angles_Y;
+
+			Redirection_Manager::Redirect_Function(Original_Frame_Stage_Notify_Caller_Location, 1, (void*)604538592, 1, (void*)Redirected_Frame_Stage_Notify);
+
+			Byte_Manager::Set_Bytes(1, (void*)537149598, 6, 144);
+
+			wprintf(L"[ + ] Data Networking\n");
+
+			Redirection_Manager::Redirect_Function(Original_Write_Events_Caller_Location, 2, (void*)537582208, 1, (void*)Redirected_Write_Events);
+
+			Event_Listener_Structure* Event_Listener = (Event_Listener_Structure*)malloc(sizeof(void*));
+
+			void* Event_Listener_Table = malloc(sizeof(void*) * 2);
+
+			*(void**)Event_Listener_Table = nullptr;
+
+			*(void**)((unsigned __int32)Event_Listener_Table + 4) = (void*)Event_Processor;
+
+			Event_Listener->Table = Event_Listener_Table;
+
+			using Add_Listener_Type = __int8(__thiscall*)(void* Game_Event_Manager, void* Listener, char* Event, __int8 Unknown_Parameter);
+
+			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
+
+			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"bullet_impact", 0);
+
+			wprintf(L"[ + ] Event Listener\n");
+
+			Redirection_Manager::Redirect_Function(Original_Interpolate_Caller_Location, 0, (void*)604201536, 1, (void*)Redirected_Interpolate);
+
+			wprintf(L"[ + ] Interpolation\n");
+
+			Byte_Manager::Set_Bytes(1, (void*)605800287, 1, 235);
+
+			Redirection_Manager::Redirect_Function(Original_Update_Animation_Caller_Location, 4, (void*)605800256, 1, (void*)Redirected_Update_Animation);
+
+			Byte_Manager::Set_Bytes(1, (void*)604022867, 2, 144);
+
+			Byte_Manager::Set_Bytes(1, (void*)604022906, 12, 144);
+
+			Redirection_Manager::Redirect_Function(Original_Converge_Angles_Caller_Location, 3, (void*)604019936, 1, (void*)Redirected_Converge_Angles);
+
+			wprintf(L"[ + ] Animations\n");
+
+			Redirection_Manager::Redirect_Function(1, (void*)537158848, (void*)Redirected_Run_Prediction);
+
+			Byte_Manager::Set_Bytes(1, (void*)605209595, 1, 235);
+
+			Redirection_Manager::Redirect_Function(Original_Run_Command_Caller_Location, 0, (void*)605207600, 1, (void*)Redirected_Run_Command);
+
+			Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
+
+			Redirection_Manager::Redirect_Function(Original_Weapon_Spread_Caller_Location, 1, (void*)605949248, 1, (void*)Redirected_Weapon_Spread);
+
+			wprintf(L"[ + ] Prediction\n");
+
+			Byte_Manager::Set_Bytes(1, (void*)604993824, 3, 144);
+
+			Redirection_Manager::Redirect_Function(Original_Copy_User_Command_Caller_Location, 0, (void*)604850464, 1, (void*)Redirected_Copy_User_Command);
+
+			wprintf(L"[ + ] Commands Processing\n");
+
+			Redirection_Manager::Redirect_Function(1, (void*)537142224, (void*)Redirected_Send_Move);
+
+			wprintf(L"[ + ] Commands Networking\n");
+
 			unsigned __int8 Apply_View_Effects_Bytes[30] =
 			{
 				7,
@@ -188,16 +273,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] View Effects\n");
 
-			using Create_Console_Variable_Type = void(__thiscall*)(Console_Variable_Structure* Variable, char* Name, char* Value, void* Unknown_Parameter);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Uber_Alles_Scale, (char*)"Uber_Alles_Scale", (char*)"8", nullptr);
-
-			wprintf(L"[ + ] Uber_Alles_Scale %p\n", &Console_Variable_Uber_Alles_Scale);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Uber_Alles_Speed, (char*)"Uber_Alles_Speed", (char*)"192", nullptr);
-
-			wprintf(L"[ + ] Uber_Alles_Speed %p\n", &Console_Variable_Uber_Alles_Speed);
-
 			Redirection_Manager::Redirect_Function(1, (void*)605951488, (void*)Redirected_Draw_Crosshair);
 
 			wprintf(L"[ + ] Crosshair\n");
@@ -218,143 +293,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 			Byte_Manager::Copy_Bytes(1, (void*)605610608, sizeof(Smoke_Bytes), Smoke_Bytes);
 
 			wprintf(L"[ + ] Materials\n");
-
-			Redirection_Manager::Redirect_Function(Original_Interpolate_Caller_Location, 0, (void*)604201536, 1, (void*)Redirected_Interpolate);
-
-			wprintf(L"[ + ] Interpolation\n");
-
-			using Create_Console_Command_Type = void(__thiscall*)(Console_Variable_Structure* Variable, char* Name, void* Handler, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3);
-
-			Create_Console_Command_Type(606174864)(&Console_Variable_Get_Priorities, (char*)"Get_Priorities", (void*)Get_Priorities, nullptr, nullptr, nullptr);
-
-			wprintf(L"[ + ] Get_Priorities %p\n", &Console_Variable_Get_Priorities);
-
-			using Create_Handled_Console_Variable_Type = void(__thiscall*)(Console_Variable_Structure* Variable, char* Name, char* Value, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Handler);
-
-			Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Set_Priority, (char*)"Set_Priority", (char*)"1 0", nullptr, nullptr, (void*)Set_Priority);
-
-			wprintf(L"[ + ] Set_Priority %p\n", &Console_Variable_Set_Priority);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Bruteforce, (char*)"Bruteforce", (char*)"1", nullptr);
-
-			wprintf(L"[ + ] Bruteforce %p\n", &Console_Variable_Bruteforce);
-
-			Create_Handled_Console_Variable_Type(539131040)(&Console_Variable_Bruteforce_Memory, (char*)"Bruteforce_Memory", (char*)"1", nullptr, nullptr, (void*)Bruteforce_Memory_Reset);
-
-			wprintf(L"[ + ] Bruteforce_Memory %p\n", &Console_Variable_Bruteforce_Memory);
-
-			*(void**)608149676 = (void*)Redirected_Angles_Y;
-
-			Redirection_Manager::Redirect_Function(Original_Frame_Stage_Notify_Caller_Location, 1, (void*)604538592, 1, (void*)Redirected_Frame_Stage_Notify);
-
-			wprintf(L"[ + ] Variable Networking\n");
-
-			Redirection_Manager::Redirect_Function(1, (void*)537158848, (void*)Redirected_Run_Prediction);
-
-			Byte_Manager::Set_Bytes(1, (void*)605209595, 1, 235);
-
-			Byte_Manager::Set_Bytes(1, (void*)537149598, 6, 144);
-
-			wprintf(L"[ + ] Prediction\n");
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Aim_Height, (char*)"Aim_Height", (char*)"0.95", nullptr);
-
-			wprintf(L"[ + ] Aim_Height %p\n", &Console_Variable_Aim_Height);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Angle_X, (char*)"Angle_X", (char*)"91", nullptr);
-
-			wprintf(L"[ + ] Angle_X %p\n", &Console_Variable_Angle_X);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_First_Choked_Angle_Y, (char*)"First_Choked_Angle_Y", (char*)"46", nullptr);
-
-			wprintf(L"[ + ] First_Choked_Angle_Y %p\n", &Console_Variable_First_Choked_Angle_Y);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Second_Choked_Angle_Y, (char*)"Second_Choked_Angle_Y", (char*)"136", nullptr);
-
-			wprintf(L"[ + ] Second_Choked_Angle_Y %p\n", &Console_Variable_Second_Choked_Angle_Y);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Angle_Y, (char*)"Angle_Y", (char*)"-135", nullptr);
-
-			wprintf(L"[ + ] Angle_Y %p\n", &Console_Variable_Angle_Y);
-
-			Byte_Manager::Set_Bytes(1, (void*)605800287, 1, 235);
-
-			Redirection_Manager::Redirect_Function(Original_Update_Animation_Caller_Location, 4,  (void*)605800256, 1, (void*)Redirected_Update_Animation);
-
-			Byte_Manager::Set_Bytes(1, (void*)604022867, 2, 144);
-
-			Byte_Manager::Set_Bytes(1, (void*)604022906, 12, 144);
-
-			Redirection_Manager::Redirect_Function(Original_Converge_Angles_Caller_Location, 3, (void*)604019936, 1, (void*)Redirected_Converge_Angles);
-
-			wprintf(L"[ + ] Animations\n");
-
-			Redirection_Manager::Redirect_Function(Original_Weapon_Spread_Caller_Location, 1, (void*)605949248, 1, (void*)Redirected_Weapon_Spread);
-
-			wprintf(L"[ + ] Weapon Spread\n");
-
-			Byte_Manager::Set_Bytes(1, (void*)604993824, 3, 144);
-
-			Redirection_Manager::Redirect_Function(Original_Copy_User_Command_Caller_Location, 0, (void*)604850464, 1, (void*)Redirected_Copy_User_Command);
-
-			Redirection_Manager::Redirect_Function(Original_Run_Command_Caller_Location, 0, (void*)605207600, 1, (void*)Redirected_Run_Command);
-
-			Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
-
-			wprintf(L"[ + ] Command Processor\n");
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Minimum_Choked_Commands, (char*)"Minimum_Choked_Commands", (char*)"2", nullptr);
-
-			wprintf(L"[ + ] Minimum_Choked_Commands %p\n", &Console_Variable_Minimum_Choked_Commands);
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Maximum_Choked_Commands, (char*)"Maximum_Choked_Commands", (char*)"21", nullptr);
-
-			wprintf(L"[ + ] Maximum_Choked_Commands %p\n", &Console_Variable_Maximum_Choked_Commands);
-
-			Redirection_Manager::Redirect_Function(1, (void*)537142224, (void*)Redirected_Send_Move);
-
-			wprintf(L"[ + ] Command Networking\n");
-
-			unsigned __int8 Cheat_Flag_Bytes[4] =
-			{
-				254,
-
-				65,
-
-				44,
-
-				195
-			};
-
-			Byte_Manager::Copy_Bytes(1, (void*)538391351, sizeof(Cheat_Flag_Bytes), Cheat_Flag_Bytes);
-
-			*(__int8*)542242676 = 1;
-
-			wprintf(L"[ + ] Unlock Variables\n");
-
-			Create_Console_Variable_Type(539130656)(&Console_Variable_Commentator, (char*)"Commentator", (char*)"1", nullptr);
-
-			wprintf(L"[ + ] Commentator %p\n", &Console_Variable_Commentator);
-
-			Event_Listener_Structure* Event_Listener = (Event_Listener_Structure*)malloc(sizeof(void*));
-
-			void* Event_Listener_Table = malloc(sizeof(void*) * 2);
-
-			*(void**)Event_Listener_Table = nullptr;
-
-			*(void**)((unsigned __int32)Event_Listener_Table + 4) = (void*)Event_Processor;
-
-			Event_Listener->Table = Event_Listener_Table;
-
-			using Add_Listener_Type = __int8(__thiscall*)(void* Game_Event_Manager, void* Listener, char* Event, __int8 Unknown_Parameter);
-
-			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"round_start", 0);
-
-			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
-
-			Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"bullet_impact", 0);
-
-			wprintf(L"[ + ] Events\n");
 
 			Redirection_Manager::Redirect_Function(Original_Shutdown_Caller_Location, 0, (void*)537926128, 1, (void*)Redirected_Shutdown);
 

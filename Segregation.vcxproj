@@ -75,8 +75,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Angles_Y.hpp" />
-    <ClInclude Include="Bruteforce_Memory.hpp" />
-    <ClInclude Include="Console_Variables.hpp" />
+    <ClInclude Include="Bruteforce.hpp" />
+    <ClInclude Include="Extended_Interface.hpp" />
     <ClInclude Include="Converge_Angles.hpp" />
     <ClInclude Include="Draw_Crosshair.hpp" />
     <ClInclude Include="Event_Listener.hpp" />
@@ -94,6 +94,7 @@
     <ClInclude Include="Sounds.hpp" />
     <ClInclude Include="Structures.hpp" />
     <ClInclude Include="Weapon_Spread.hpp" />
+    <ClInclude Include="Write_Events.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

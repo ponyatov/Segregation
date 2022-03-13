@@ -1,7 +1,5 @@
 #pragma once
 
-__int32 Shot_Tick_Number;
-
 float Arc_Tangent_2(float X, float Y)
 {
 	asm("fpatan" : "+t"(X) : "u"(Y) : "st(1)");
@@ -547,18 +545,28 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												if (Console_Variable_Bruteforce_Memory.Integer == 0)
 												{
-													Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
+													Bruteforce_Label:
+													{
+														if (Player_Data->Tolerance <= 0)
+														{
+															Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
+
+															Player_Data->Tolerance = Console_Variable_Bruteforce_Tolerance.Integer;
+														}
+														else
+														{
+															Player_Data->Tolerance -= 1;
+														}
+													}
 												}
 												else
 												{
 													if (Player_Data->Memorized == 0)
 													{
-														Player_Data->Shots_Fired = (Player_Data->Shots_Fired + 1) % (sizeof(Bruteforce_Angles) / sizeof(float));
+														goto Bruteforce_Label;
 													}
-													else
-													{
-														Player_Data->Memorized -= 1;
-													}
+
+													Player_Data->Memorized -= 1;
 												}
 											}
 
