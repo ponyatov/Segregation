@@ -293,7 +293,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	__int8 In_Attack = 0;
 
-	if (Global_Variables->Current_Time - Shot_Time > 0.5f)
+	if (Absolute(Global_Variables->Current_Time - Shot_Time) > 0.5f)
 	{
 		if ((User_Command->Buttons_State & 2048) == 0)
 		{
