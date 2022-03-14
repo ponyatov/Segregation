@@ -38,6 +38,13 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	void* Local_Player = *(void**)607867332;
 
+	float Local_Player_Previous_Velocity[2] =
+	{
+		*(float*)((unsigned __int32)Local_Player + 224),
+
+		*(float*)((unsigned __int32)Local_Player + 228)
+	};
+
 	float Local_Player_Previous_Origin[3] =
 	{
 		*(float*)((unsigned __int32)Local_Player + 668),
@@ -79,11 +86,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Previous_Move_Angle_Y = User_Command->View_Angles[1];
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 236);
-
-		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(__builtin_powf(Velocity[0], 2) + __builtin_powf(Velocity[1], 2)), 30) * 180 / 3.1415927f)
+		if (Absolute(Difference) < Arc_Tangent_2(Square_Root(__builtin_powf(Local_Player_Previous_Velocity[0], 2) + __builtin_powf(Local_Player_Previous_Velocity[1], 2)), 30) * 180 / 3.1415927f)
 		{
-			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - Arc_Tangent_2(Velocity[0], Velocity[1]) * 180 / 3.1415927f, 360);
+			float Strafe_Angle = __builtin_remainderf(User_Command->View_Angles[1] - Arc_Tangent_2(Local_Player_Previous_Velocity[0], Local_Player_Previous_Velocity[1]) * 180 / 3.1415927f, 360);
 
 			if (__builtin_signbitf(Strafe_Angle) == 0)
 			{
@@ -288,7 +293,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	__int8 In_Attack = 0;
 
-	if (Global_Variables->Current_Time - Shot_Time > 0.2f)
+	if (Global_Variables->Current_Time - Shot_Time > 0.5f)
 	{
 		if ((User_Command->Buttons_State & 2048) == 0)
 		{
@@ -717,9 +722,9 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 	float Divider = Move_Forward[0] * Move_Right[1] - Move_Right[0] * Move_Forward[1];
 
-	User_Command->Move[0] = (Desired_Move[0] * Move_Right[1] - Move_Right[0] * Desired_Move[1]) / Divider;
+	User_Command->Move[0] = __builtin_roundf((Desired_Move[0] * Move_Right[1] - Move_Right[0] * Desired_Move[1]) / Divider);
 
-	User_Command->Move[1] = (Move_Forward[0] * Desired_Move[1] - Desired_Move[0] * Move_Forward[1]) / Divider;
+	User_Command->Move[1] = __builtin_roundf((Move_Forward[0] * Desired_Move[1] - Desired_Move[0] * Move_Forward[1]) / Divider);
 
 	(decltype(&Redirected_Copy_User_Command)(Original_Copy_User_Command_Caller_Location))(Unknown_Parameter, User_Command);
 }
