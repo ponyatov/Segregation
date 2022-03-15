@@ -4,6 +4,8 @@ void* Original_Converge_Angles_Caller_Location;
 
 void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3, float* Current)
 {
+	static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
+
 	__int8 Instant = 0;
 
 	if (Console_Variable_Bruteforce.Integer == 1)
@@ -14,8 +16,6 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, vo
 		{
 			__int32 Entity_Number = 1;
 
-			static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
-		
 			__int32 Maximum_Clients = Global_Variables->Maximum_Clients;
 
 			Traverse_Entity_List_Label:
@@ -81,8 +81,6 @@ void __thiscall Redirected_Converge_Angles(void* Animation_State, float Goal, vo
 		{
 			*(float*)Current = __builtin_remainderf(Goal, 360);
 		}
-
-		static Global_Variables_Structure* Global_Variables = *(Global_Variables_Structure**)607726732;
 
 		*(float*)((unsigned __int32)Animation_State + 52) = Global_Variables->Current_Time;
 	}

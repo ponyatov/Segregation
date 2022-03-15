@@ -54,7 +54,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			*(float*)((unsigned __int32)Local_Player + 676),
 		};
 
-		Shot_Tick_Number = -1;
+		Shot_Time *= -1;
 
 		using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
 
@@ -339,14 +339,14 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 											float Minimum_Interpolation_Ratio = *(float*)542242312;
 
-											float Maximum_Interpolation_Ratio = *(float*)542242072;
-
 											if (Interpolation_Ratio < Minimum_Interpolation_Ratio)
 											{
 												Interpolation_Ratio = Minimum_Interpolation_Ratio;
 											}
 											else
 											{
+												float Maximum_Interpolation_Ratio = *(float*)542242072;
+
 												if (Interpolation_Ratio > Maximum_Interpolation_Ratio)
 												{
 													Interpolation_Ratio = Maximum_Interpolation_Ratio;
@@ -354,8 +354,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											}
 
 											__int32 Update_Rate = *(__int32*)540495212;
-
-											__int32 Maximum_Update_Rate = *(__int32*)542221412;
 
 											__int32 Minimum_Update_Rate = *(__int32*)542221268;
 
@@ -365,6 +363,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											}
 											else
 											{
+												__int32 Maximum_Update_Rate = *(__int32*)542221412;
+
 												if (Update_Rate > Maximum_Update_Rate)
 												{
 													Update_Rate = Maximum_Update_Rate;
@@ -535,8 +535,6 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 											if ((User_Command->Buttons_State & 1) == 1)
 											{
 												Shot_Time = Global_Variables->Current_Time;
-
-												Shot_Tick_Number = *(__int32*)((unsigned __int32)Local_Player + 3592);
 
 												In_Attack = 1;
 											
