@@ -1,6 +1,6 @@
 #pragma once
 
-__int8 Forbid_Accuracy_Modification;
+__int8 First_Command_Predicted;
 
 __int8 __thiscall Redirected_Perform_Prediction(void* Prediction, __int8 Unknown_Parameter, void* Player, __int32 Acknowledged_Command_Number, __int32 Outgoing_Command_Number)
 {
@@ -40,12 +40,12 @@ __int8 __thiscall Redirected_Perform_Prediction(void* Prediction, __int8 Unknown
 				{
 					*(__int8*)((unsigned __int32)Prediction + 9) = 0;
 
-					Forbid_Accuracy_Modification = 1;
+					First_Command_Predicted = 1;
 				}
 
 				Run_Simulation_Type(605206096)(Prediction, Current_Acknowledged_Command_Number, Current_Time, User_Command, Player);
-
-				Forbid_Accuracy_Modification = 0;
+				
+				First_Command_Predicted = 0;
 
 				User_Command->Predicted = 1;
 
@@ -54,8 +54,6 @@ __int8 __thiscall Redirected_Perform_Prediction(void* Prediction, __int8 Unknown
 				Global_Variables->Frame_Time = Global_Variables->Interval_Per_Tick;
 
 				Tick_Base = (Tick_Base + 1) % 90;
-
-				Uncompressed_View_Offset[Tick_Base] = *(float*)((unsigned __int32)Player + 220);
 
 				float* Velocity = (float*)((unsigned __int32)Player + 224);
 

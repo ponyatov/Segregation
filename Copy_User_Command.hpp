@@ -583,11 +583,11 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Angle_Vectors(User_Command->View_Angles, Forward, Right, Up);
 
+												User_Command->Command_Number = -2076434770;
+
 												constexpr __int32 Random_Seed = 32;
 
 												User_Command->Random_Seed = Random_Seed;
-
-												User_Command->Command_Number = -2076434770;
 
 												using Random_Seed_Type = void(__cdecl*)(__int32 Seed);
 
@@ -595,7 +595,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												Random_Seed_Type((unsigned __int32)Random_Seed_Location)((Random_Seed & 255) + 1);
 
-												using Random_Float_Type = float(__cdecl*)(float Min, float Max);
+												using Random_Float_Type = float(__cdecl*)(float Minimum, float Maximum);
 
 												static void* Random_Float_Location = (void*)((unsigned __int32)GetModuleHandleW(L"vstdlib.dll") + 11872);
 
