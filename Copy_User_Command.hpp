@@ -62,7 +62,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Run_Command_Type(605207600)(Prediction, Local_Player, User_Command, (void*)607735532);
 
-		*(__int32*)((unsigned __int32)Local_Player + 3592) -= 1;
+		Shot_Time *= -1;
 
 		float Move_Angles[3] =
 		{

@@ -32,7 +32,7 @@
 
 #include "Run_Prediction.hpp"
 
-#include "Run_Command.hpp"
+#include "Perform_Prediction.hpp"
 
 #include "Item_Post_Frame.hpp"
 
@@ -194,7 +194,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 				Byte_Manager::Set_Bytes(1, (void*)605209595, 1, 235);
 
-				Redirection_Manager::Redirect_Function(Original_Run_Command_Caller_Location, 0, (void*)605207600, 1, (void*)Redirected_Run_Command);
+				Redirection_Manager::Redirect_Function(1, (void*)605209168, (void*)Redirected_Perform_Prediction);
 
 				Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
 

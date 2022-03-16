@@ -11,6 +11,8 @@ float Absolute(float X)
 	return X;
 }
 
+float Uncompressed_View_Offset[90];
+
 float Uncompressed_Velocity[90][3];
 
 float Uncompressed_Base_Velocity[90][3];
@@ -27,9 +29,14 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 	{
 		void* Local_Player = *(void**)607867332;
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
-
 		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
+
+		if (Absolute(*(float*)((unsigned __int32)Local_Player + 220) - Uncompressed_View_Offset[Tick_Base]) <= 0.25f)
+		{
+			*(float*)((unsigned __int32)Local_Player + 220) = Uncompressed_View_Offset[Tick_Base];
+		}
+
+		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
 
 		if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= 0.5f)
 		{

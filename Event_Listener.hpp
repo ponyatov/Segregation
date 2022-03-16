@@ -22,47 +22,50 @@ void __stdcall Event_Processor(void* Event)
 
 		if (Victim_Number != Killer_Number)
 		{
-			if (Victim_Number == Local_Player_Number)
+			if (Killer_Number != 0)
 			{
-				Player_Data_Structure* Player_Data = &Players_Data[Killer_Number - 1];
-
-				Player_Data->Memorized = 0;
-
-				if (Console_Variable_Commentator.Integer == 1)
+				if (Victim_Number == Local_Player_Number)
 				{
-					PlaySoundW((wchar_t*)Sounds_Laugh, nullptr, SND_ASYNC | SND_MEMORY);
-				}
-			}
-			else
-			{
-				if (Killer_Number == Local_Player_Number)
-				{
-					if (Console_Variable_Bruteforce.Integer == 1)
-					{
-						unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
+					Player_Data_Structure* Player_Data = &Players_Data[Killer_Number - 1];
 
-						void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
-
-						if (Weapon != nullptr)
-						{
-							Player_Data_Structure* Player_Data = &Players_Data[Victim_Number - 1];
-
-							if (Player_Data->Priority != -2)
-							{
-								using Get_Primary_Ammo_Capacity_Type = __int32(__thiscall**)(void* Weapon);
-
-								Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
-
-								Player_Data->Tolerance = 0;
-
-								Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float))];
-							}
-						}
-					}
+					Player_Data->Memorized = 0;
 
 					if (Console_Variable_Commentator.Integer == 1)
 					{
-						PlaySoundW((wchar_t*)Sounds_Exclamation, nullptr, SND_ASYNC | SND_MEMORY);
+						PlaySoundW((wchar_t*)Sounds_Laugh, nullptr, SND_ASYNC | SND_MEMORY);
+					}
+				}
+				else
+				{
+					if (Killer_Number == Local_Player_Number)
+					{
+						if (Console_Variable_Bruteforce.Integer == 1)
+						{
+							unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
+
+							void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
+
+							if (Weapon != nullptr)
+							{
+								Player_Data_Structure* Player_Data = &Players_Data[Victim_Number - 1];
+
+								if (Player_Data->Priority != -2)
+								{
+									using Get_Primary_Ammo_Capacity_Type = __int32(__thiscall**)(void* Weapon);
+
+									Player_Data->Memorized = (*Get_Primary_Ammo_Capacity_Type(*(unsigned __int32*)Weapon + 1000))(Weapon);
+
+									Player_Data->Tolerance = 0;
+
+									Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float))];
+								}
+							}
+						}
+
+						if (Console_Variable_Commentator.Integer == 1)
+						{
+							PlaySoundW((wchar_t*)Sounds_Exclamation, nullptr, SND_ASYNC | SND_MEMORY);
+						}
 					}
 				}
 			}

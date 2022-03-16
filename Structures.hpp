@@ -66,6 +66,10 @@ struct User_Command_Structure
 	__int8 Additional_Bytes_2[9];
 
 	__int32 Random_Seed;
+
+	__int8 Additional_Bytes_3[4];
+
+	__int8 Predicted;
 };
 
 struct Move_Message_Structure
