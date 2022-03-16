@@ -10,7 +10,7 @@ void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 
 		(decltype(&Redirected_Item_Post_Frame)(Original_Item_Post_Frame_Caller_Location))(Weapon);
 
-		using Get_Weapon_Data_Type = void* (__thiscall*)(void* Weapon);
+		using Get_Weapon_Data_Type = void*(__thiscall*)(void* Weapon);
 
 		void* Weapon_Data = Get_Weapon_Data_Type(604037872)(Weapon);
 
