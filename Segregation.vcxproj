@@ -88,7 +88,7 @@
     <ClInclude Include="Priority.hpp" />
     <ClInclude Include="Shutdown.hpp" />
     <ClInclude Include="Update_Animation.hpp" />
-    <ClInclude Include="Perform_Prediction.hpp" />
+    <ClInclude Include="Run_Simulation.hpp" />
     <ClInclude Include="Run_Prediction.hpp" />
     <ClInclude Include="Send_Move.hpp" />
     <ClInclude Include="Sounds.hpp" />

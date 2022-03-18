@@ -6,11 +6,7 @@ void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 {
 	if (__builtin_signbitf(Shot_Time) == 0)
 	{
-		float Accuracy = *(float*)((unsigned __int32)Weapon + 1888);
-
-		(decltype(&Redirected_Item_Post_Frame)(Original_Item_Post_Frame_Caller_Location))(Weapon);
-
-		using Get_Weapon_Data_Type = void*(__thiscall*)(void* Weapon);
+		using Get_Weapon_Data_Type = void* (__thiscall*)(void* Weapon);
 
 		void* Weapon_Data = Get_Weapon_Data_Type(604037872)(Weapon);
 
@@ -22,13 +18,15 @@ void __thiscall Redirected_Item_Post_Frame(void* Weapon)
 			{
 				*(float*)((unsigned __int32)Weapon + 1888) = 0.9f;
 			}
-			else
-			{
-				if (First_Command_Predicted == 1)
-				{
-					*(float*)((unsigned __int32)Weapon + 1888) = Accuracy;
-				}
-			}
+		}
+
+		float Accuracy = *(float*)((unsigned __int32)Weapon + 1888);
+
+		(decltype(&Redirected_Item_Post_Frame)(Original_Item_Post_Frame_Caller_Location))(Weapon);
+
+		if (Is_First_Command_Predicted == 1)
+		{
+			*(float*)((unsigned __int32)Weapon + 1888) = Accuracy;
 		}
 	}
 }

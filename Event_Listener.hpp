@@ -1,5 +1,7 @@
 #pragma once
 
+float Shot_Time;
+
 void __stdcall Event_Processor(void* Event)
 {
 	using Get_Name_Type = char*(__thiscall*)(void* Event);
@@ -41,9 +43,7 @@ void __stdcall Event_Processor(void* Event)
 					{
 						if (Console_Variable_Bruteforce.Integer == 1)
 						{
-							unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
-
-							void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
+							void* Weapon = *(void**)((unsigned __int32)607973860 + (((*(unsigned __int32*)((unsigned __int32)Local_Player + 2872) & 4095) - 4097) << 4));
 
 							if (Weapon != nullptr)
 							{

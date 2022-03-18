@@ -1,5 +1,12 @@
 #pragma once
 
+float Absolute(float X)
+{
+	asm("fabs" : "+t"(X));
+
+	return X;
+}
+
 float Arc_Tangent_2(float X, float Y)
 {
 	asm("fpatan" : "+t"(X) : "u"(Y) : "st(1)");
@@ -138,7 +145,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 			{
 				if (Predicted_Choked_Commands_Count < Console_Variable_Maximum_Choked_Commands.Integer)
 				{
-					goto Predict_Adaptive_Send_Packet_Label;
+					goto Predict_Dynamic_Send_Packet_Label;
 				}
 				else
 				{
@@ -180,7 +187,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 					Send_Packet = 1;
 				}
 
-				Predict_Adaptive_Send_Packet_Label:
+				Predict_Dynamic_Send_Packet_Label:
 				{
 					if (Predicted_Choked_Commands_Count == Console_Variable_Maximum_Choked_Commands.Integer)
 					{
@@ -305,9 +312,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 					{
 						if (*(float*)((unsigned __int32)Local_Player + 2544) <= Global_Variables->Current_Time)
 						{
-							unsigned __int32 Weapon_Index = *(unsigned __int32*)((unsigned __int32)Local_Player + 2872);
-
-							void* Weapon = *(void**)((unsigned __int32)607973860 + (((Weapon_Index & 4095) - 4097) << 4));
+							void* Weapon = *(void**)((unsigned __int32)607973860 + (((*(unsigned __int32*)((unsigned __int32)Local_Player + 2872) & 4095) - 4097) << 4));
 
 							if (Weapon != nullptr)
 							{
@@ -627,6 +632,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												User_Command->View_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Direction[0], 2) + __builtin_powf(Direction[1], 2)), -Direction[2]) * 180 / 3.1415927f - Recoil[0] * 2;
 
 												User_Command->View_Angles[1] = Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - Recoil[1] * 2;
+
+												User_Command->View_Angles[1] -= Recoil[2] * 2;
 											}
 										}
 									}

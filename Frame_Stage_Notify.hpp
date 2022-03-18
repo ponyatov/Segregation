@@ -1,23 +1,49 @@
 #pragma once
 
-float Shot_Time;
-
 void* Original_Frame_Stage_Notify_Caller_Location;
 
-float Absolute(float X)
+struct Field_Structure
 {
-	asm("fabs" : "+t"(X));
+	__int8 Additional_Bytes_1[8];
 
-	return X;
+	__int32 Offset[2];
+
+	__int8 Additional_Bytes_2[20];
+
+	__int32 Bytes;
+};
+
+struct Prediction_Copy_Structure
+{
+	__int8 Additional_Bytes_1[8];
+
+	void* Source;
+
+	__int8 Additional_Bytes_2[11];
+
+	Field_Structure* m_pCurrentField;
+
+	__int8 Additional_Bytes_3[32];
+
+	void Construct(void* Destination, void* Source, void* Handler)
+	{
+		using Construct_Type = void(__thiscall*)(void* Prediction_Copy, __int32 Unknown_Parameter_1, void* Destination, void* Unknown_Parameter_2, void* Source, __int8 Unknown_Parameter_3, __int8 Unknown_Parameter_4, void* Unknown_Parameter_5, void* Unknown_Parameter_6, __int8 Unknown_Parameter_7, void* Handler);
+
+		Construct_Type(605209952)(this, 2, Destination, nullptr, Source, 1, 1, nullptr, nullptr, 1, Handler);
+	}
+};
+
+Prediction_Copy_Structure Predicton_Copy;
+
+void Predicton_Copy_Compare(char* Class, void* Unknown_Parameter_1, void* Unknown_Parameter_2, void* Unknown_Parameter_3, void* Unknown_Parameter_4, void* Unknown_Parameter_5, __int8 Within_Tolerance, void* Unknown_Parameter_6)
+{
+	if (Within_Tolerance == 1)
+	{
+		Field_Structure* Field = Predicton_Copy.m_pCurrentField;
+
+		__builtin_memcpy((void*)(*(unsigned __int32*)607867332 + 2884 * (Class[1] == 'P') + Field->Offset[0]), (void*)((unsigned __int32)Predicton_Copy.Source + Field->Offset[1]), Field->Bytes);
+	}
 }
-
-float Uncompressed_Velocity[90][3];
-
-float Uncompressed_Base_Velocity[90][3];
-
-float Uncompressed_Recoil[90][2];
-
-float Uncompressed_Stamina[90];
 
 void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 Stage)
 {
@@ -27,47 +53,37 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 	{
 		void* Local_Player = *(void**)607867332;
 
-		float* Velocity = (float*)((unsigned __int32)Local_Player + 224);
-
-		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592) % 90;
-
-		if (Absolute(Velocity[0] - Uncompressed_Velocity[Tick_Base][0]) <= 0.5f)
+		if (*(__int8*)((unsigned __int32)Local_Player + 135) == 0)
 		{
-			if (Absolute(Velocity[1] - Uncompressed_Velocity[Tick_Base][1]) <= 0.5f)
+			__int32 Stored_Result_Number = 0;
+
+			__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
+
+			Traverse_Stored_Results_Label:
 			{
-				if (Absolute(Velocity[2] - Uncompressed_Velocity[Tick_Base][2]) <= 0.5f)
+				if (*(__int32*)(*(unsigned __int32*)((unsigned __int32)Local_Player + 700 + Stored_Result_Number * 4) + 761) == Tick_Base)
 				{
-					__builtin_memcpy((float*)((unsigned __int32)Local_Player + 224), Uncompressed_Velocity[Tick_Base], sizeof(Uncompressed_Velocity[Tick_Base]));
+					Tick_Base = -Stored_Result_Number;
+				}
+				else
+				{
+					Stored_Result_Number += 1;
+
+					if (Stored_Result_Number != 90)
+					{
+						goto Traverse_Stored_Results_Label;
+					}
 				}
 			}
-		}
 
-		float* Base_Velocity = (float*)((unsigned __int32)Local_Player + 276);
-
-		if (Absolute(Base_Velocity[0] - Uncompressed_Base_Velocity[Tick_Base][0]) <= 0.1f)
-		{
-			if (Absolute(Base_Velocity[1] - Uncompressed_Base_Velocity[Tick_Base][1]) <= 0.1f)
+			if (__builtin_signbitf(Tick_Base) == 1)
 			{
-				if (Absolute(Base_Velocity[2] - Uncompressed_Base_Velocity[Tick_Base][2]) <= 0.1f)
-				{
-					__builtin_memcpy((float*)((unsigned __int32)Local_Player + 276), Uncompressed_Base_Velocity[Tick_Base], sizeof(Uncompressed_Base_Velocity[Tick_Base]));
-				}
+				Predicton_Copy.Construct(Local_Player, *(void**)((unsigned __int32)Local_Player + 700 + -Tick_Base * 4), (void*)Predicton_Copy_Compare);
+
+				using Transfer_Data_Type = __int32(__thiscall*)(Prediction_Copy_Structure* Prediction_Copy, void* Unknown_Parameter, __int32 Entity_Number, void* Map);
+
+				Transfer_Data_Type(0x2412E860)(&Predicton_Copy, nullptr, *(__int32*)((unsigned __int32)Local_Player + 80), (void*)607768164);
 			}
-		}
-
-		float* Recoil = (float*)((unsigned __int32)Local_Player + 2992);
-
-		if (Absolute(Recoil[0] - Uncompressed_Recoil[Tick_Base][0]) <= 0.125f)
-		{
-			if (Absolute(Recoil[1] - Uncompressed_Recoil[Tick_Base][1]) <= 0.125f)
-			{
-				__builtin_memcpy((float*)((unsigned __int32)Local_Player + 2992), Uncompressed_Recoil[Tick_Base], sizeof(Uncompressed_Recoil[Tick_Base]));
-			}
-		}
-
-		if (Absolute(*(float*)((unsigned __int32)Local_Player + 4016) - Uncompressed_Stamina[Tick_Base]) <= 0.1f)
-		{
-			*(float*)((unsigned __int32)Local_Player + 4016) = Uncompressed_Stamina[Tick_Base];
 		}
 	}
 }

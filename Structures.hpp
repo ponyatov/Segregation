@@ -72,44 +72,6 @@ struct User_Command_Structure
 	__int8 Predicted;
 };
 
-struct Move_Message_Structure
-{
-	unsigned __int8 Move_Message[69];
-
-	void Construct(unsigned __int8* Data)
-	{
-		*(void**)this = (void*)539887964;
-
-		*(__int8*)((unsigned __int32)this + 4) = 0;
-
-		*(__int8*)((unsigned __int32)this + 8) = 0;
-
-		*(__int32*)((unsigned __int32)this + 28) = 0;
-
-		*(__int32*)((unsigned __int32)this + 32) = 0;
-
-		*(__int32*)((unsigned __int32)this + 36) = -1;
-
-		*(__int32*)((unsigned __int32)this + 40) = 0;
-
-		*(__int8*)((unsigned __int32)this + 44) = 0;
-
-		*(__int8*)((unsigned __int32)this + 45) = 1;
-
-		*(__int32*)((unsigned __int32)this + 48) = 0;
-
-		*(void**)((unsigned __int32)this + 52) = Data;
-
-		*(__int32*)((unsigned __int32)this + 56) = 4000;
-
-		*(__int32*)((unsigned __int32)this + 60) = 32000;
-
-		*(__int32*)((unsigned __int32)this + 64) = 0;
-
-		*(__int8*)((unsigned __int32)this + 68) = 0;
-	}
-};
-
 struct Event_Listener_Structure
 {
 	void* Table;

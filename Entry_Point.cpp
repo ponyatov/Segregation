@@ -16,13 +16,13 @@
 
 #include "Angles_Y.hpp"
 
-#include "Write_Events.hpp"
-
 #pragma comment(lib, "WinMM.Lib")
 
 #include "Sounds.hpp"
 
 #include "Event_Listener.hpp"
+
+#include "Write_Events.hpp"
 
 #include "Interpolate.hpp"
 
@@ -32,7 +32,7 @@
 
 #include "Run_Prediction.hpp"
 
-#include "Perform_Prediction.hpp"
+#include "Run_Simulation.hpp"
 
 #include "Item_Post_Frame.hpp"
 
@@ -151,8 +151,6 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Events\n");
 			{
-				Redirection_Manager::Redirect_Function(Original_Write_Events_Caller_Location, 2, (void*)537582208, 1, (void*)Redirected_Write_Events);
-
 				Event_Listener_Structure* Event_Listener = (Event_Listener_Structure*)malloc(sizeof(void*));
 
 				void* Event_Listener_Table = malloc(sizeof(void*) * 2);
@@ -168,6 +166,8 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 				Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"player_death", 0);
 
 				Add_Listener_Type(537586416)((void*)540812808, Event_Listener, (char*)"bullet_impact", 0);
+
+				Redirection_Manager::Redirect_Function(Original_Write_Events_Caller_Location, 2, (void*)537582208, 1, (void*)Redirected_Write_Events);
 			}
 
 			wprintf(L"[ + ] Interpolation\n");
@@ -194,7 +194,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 				Byte_Manager::Set_Bytes(1, (void*)605209595, 1, 235);
 
-				Redirection_Manager::Redirect_Function(1, (void*)605209168, (void*)Redirected_Perform_Prediction);
+				Redirection_Manager::Redirect_Function(Original_Run_Simulation_Caller_Location, 0, (void*)605206096, 1, (void*)Redirected_Run_Simulation);
 
 				Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
 
