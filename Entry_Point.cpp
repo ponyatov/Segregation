@@ -8,6 +8,8 @@
 
 #include "Redirection_Manager/Redirection_Manager.hpp"
 
+#include "Is_Flag_Set.hpp"
+
 #include "Structures.hpp"
 
 #include "Extended_Interface.hpp"
@@ -133,6 +135,8 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 				Byte_Manager::Copy_Bytes(1, (void*)538391351, sizeof(Cheat_Flag_Bytes), Cheat_Flag_Bytes);
 
 				*(__int8*)542242676 = 1;
+
+				Redirection_Manager::Redirect_Function(1, (void*)539128880, (void*)Redirected_Is_Flag_Set);
 			}
 
 			wprintf(L"[ + ] Extend Interface\n");
@@ -146,7 +150,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 				*(void**)608149676 = (void*)Redirected_Angles_Y;
 
-				Byte_Manager::Set_Bytes(1, (void*)537149598, 6, 144);
+				Byte_Manager::Set_Bytes(1, (void*)537149578, 1, 235);
 			}
 
 			wprintf(L"[ + ] Events\n");

@@ -2,17 +2,6 @@
 
 void* Original_Frame_Stage_Notify_Caller_Location;
 
-struct Field_Structure
-{
-	__int8 Additional_Bytes_1[8];
-
-	__int32 Offset[2];
-
-	__int8 Additional_Bytes_2[20];
-
-	__int32 Bytes;
-};
-
 struct Prediction_Copy_Structure
 {
 	__int8 Additional_Bytes_1[8];
@@ -21,7 +10,18 @@ struct Prediction_Copy_Structure
 
 	__int8 Additional_Bytes_2[11];
 
-	Field_Structure* m_pCurrentField;
+	struct Field_Structure
+	{
+		__int8 Additional_Bytes_1[8];
+
+		__int32 Offset[2];
+
+		__int8 Additional_Bytes_2[20];
+
+		__int32 Bytes;
+	};
+
+	Field_Structure* Field;
 
 	__int8 Additional_Bytes_3[32];
 
@@ -39,7 +39,7 @@ void Predicton_Copy_Compare(char* Class, void* Unknown_Parameter_1, void* Unknow
 {
 	if (Within_Tolerance == 1)
 	{
-		Field_Structure* Field = Predicton_Copy.m_pCurrentField;
+		Prediction_Copy_Structure::Field_Structure* Field = Predicton_Copy.Field;
 
 		__builtin_memcpy((void*)(*(unsigned __int32*)607867332 + 2884 * (Class[1] == 'P') + Field->Offset[0]), (void*)((unsigned __int32)Predicton_Copy.Source + Field->Offset[1]), Field->Bytes);
 	}
@@ -61,24 +61,36 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 			Traverse_Stored_Results_Label:
 			{
-				if (*(__int32*)(*(unsigned __int32*)((unsigned __int32)Local_Player + 700 + Stored_Result_Number * 4) + 761) == Tick_Base)
+				void* Stored_Result = *(void**)((unsigned __int32)Local_Player + 700 + Stored_Result_Number * 4);
+
+				if (Stored_Result == nullptr)
 				{
-					Tick_Base = -Stored_Result_Number;
+					Continue_Traversing_Stored_Results_Label:
+					{
+						Stored_Result_Number += 1;
+
+						if (Stored_Result_Number != 90)
+						{
+							goto Traverse_Stored_Results_Label;
+						}
+					}
 				}
 				else
 				{
-					Stored_Result_Number += 1;
-
-					if (Stored_Result_Number != 90)
+					if (*(__int32*)((unsigned __int32)Stored_Result + 761) == Tick_Base)
 					{
-						goto Traverse_Stored_Results_Label;
+						Tick_Base = -(700 + Stored_Result_Number * 4);
+					}
+					else
+					{
+						goto Continue_Traversing_Stored_Results_Label;
 					}
 				}
 			}
 
 			if (__builtin_signbitf(Tick_Base) == 1)
 			{
-				Predicton_Copy.Construct(Local_Player, *(void**)((unsigned __int32)Local_Player + 700 + -Tick_Base * 4), (void*)Predicton_Copy_Compare);
+				Predicton_Copy.Construct(Local_Player, *(void**)((unsigned __int32)Local_Player + -Tick_Base), (void*)Predicton_Copy_Compare);
 
 				using Transfer_Data_Type = __int32(__thiscall*)(Prediction_Copy_Structure* Prediction_Copy, void* Unknown_Parameter, __int32 Entity_Number, void* Map);
 
