@@ -53,49 +53,46 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 	{
 		void* Local_Player = *(void**)607867332;
 
-		if (*(__int8*)((unsigned __int32)Local_Player + 135) == 0)
+		__int32 Stored_Result_Number = 0;
+
+		__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
+
+		Traverse_Stored_Results_Label:
 		{
-			__int32 Stored_Result_Number = 0;
+			void* Stored_Result = *(void**)((unsigned __int32)Local_Player + 700 + Stored_Result_Number * 4);
 
-			__int32 Tick_Base = *(__int32*)((unsigned __int32)Local_Player + 3592);
-
-			Traverse_Stored_Results_Label:
+			if (Stored_Result == nullptr)
 			{
-				void* Stored_Result = *(void**)((unsigned __int32)Local_Player + 700 + Stored_Result_Number * 4);
-
-				if (Stored_Result == nullptr)
+				Continue_Traversing_Stored_Results_Label:
 				{
-					Continue_Traversing_Stored_Results_Label:
-					{
-						Stored_Result_Number += 1;
+					Stored_Result_Number += 1;
 
-						if (Stored_Result_Number != 90)
-						{
-							goto Traverse_Stored_Results_Label;
-						}
+					if (Stored_Result_Number != 90)
+					{
+						goto Traverse_Stored_Results_Label;
 					}
+				}
+			}
+			else
+			{
+				if (*(__int32*)((unsigned __int32)Stored_Result + 761) == Tick_Base)
+				{
+					Tick_Base = -(700 + Stored_Result_Number * 4);
 				}
 				else
 				{
-					if (*(__int32*)((unsigned __int32)Stored_Result + 761) == Tick_Base)
-					{
-						Tick_Base = -(700 + Stored_Result_Number * 4);
-					}
-					else
-					{
-						goto Continue_Traversing_Stored_Results_Label;
-					}
+					goto Continue_Traversing_Stored_Results_Label;
 				}
 			}
+		}
 
-			if (__builtin_signbitf(Tick_Base) == 1)
-			{
-				Predicton_Copy.Construct(Local_Player, *(void**)((unsigned __int32)Local_Player + -Tick_Base), (void*)Predicton_Copy_Compare);
+		if (__builtin_signbitf(Tick_Base) == 1)
+		{
+			Predicton_Copy.Construct(Local_Player, *(void**)((unsigned __int32)Local_Player + -Tick_Base), (void*)Predicton_Copy_Compare);
 
-				using Transfer_Data_Type = __int32(__thiscall*)(Prediction_Copy_Structure* Prediction_Copy, void* Unknown_Parameter, __int32 Entity_Number, void* Map);
+			using Transfer_Data_Type = __int32(__thiscall*)(Prediction_Copy_Structure* Prediction_Copy, void* Unknown_Parameter, __int32 Entity_Number, void* Map);
 
-				Transfer_Data_Type(0x2412E860)(&Predicton_Copy, nullptr, *(__int32*)((unsigned __int32)Local_Player + 80), (void*)607768164);
-			}
+			Transfer_Data_Type(0x2412E860)(&Predicton_Copy, nullptr, *(__int32*)((unsigned __int32)Local_Player + 80), (void*)607768164);
 		}
 	}
 }

@@ -10,11 +10,11 @@
 
 #include "Is_Flag_Set.hpp"
 
+#include "Frame_Stage_Notify.hpp"
+
 #include "Structures.hpp"
 
 #include "Extended_Interface.hpp"
-
-#include "Frame_Stage_Notify.hpp"
 
 #include "Angles_Y.hpp"
 
