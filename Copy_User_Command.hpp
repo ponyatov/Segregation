@@ -492,7 +492,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																	Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
 																};
-
+																
 																if (Trace_Ray(Optimal_Target_Origin) == 1)
 																{
 																	Target_Tick_Number = (*(float*)((unsigned __int32)Optimal_Target + 104) + Interpolation_Time) / Global_Variables->Interval_Per_Tick + 0.5f;
@@ -656,7 +656,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 				Update_Animation_Angle[0] = User_Command->View_Angles[0];
 
 				float* Optimal_Target_Origin = (float*)((unsigned __int32)Sorted_Target_List.at(0).Target + 668);
-
+				
 				float Origin_Difference[2] =
 				{
 					Optimal_Target_Origin[0] - Local_Player_Origin[0],

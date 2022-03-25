@@ -94,7 +94,7 @@ void __thiscall Redirected_Frame_Stage_Notify(void* Unknown_Parameter, __int32 S
 
 				using Transfer_Data_Type = __int32(__thiscall*)(Prediction_Copy_Structure* Prediction_Copy, void* Unknown_Parameter, __int32 Entity_Number, void* Map);
 
-				Transfer_Data_Type(0x2412E860)(&Predicton_Copy, nullptr, *(__int32*)((unsigned __int32)Local_Player + 80), (void*)607768164);
+				Transfer_Data_Type(605218912)(&Predicton_Copy, nullptr, *(__int32*)((unsigned __int32)Local_Player + 80), (void*)607768164);
 			}
 		}
 	}

@@ -87,6 +87,7 @@
     <ClInclude Include="Is_Flag_Set.hpp" />
     <ClInclude Include="Item_Post_Frame.hpp" />
     <ClInclude Include="Priority.hpp" />
+    <ClInclude Include="Setup_Move.hpp" />
     <ClInclude Include="Shutdown.hpp" />
     <ClInclude Include="Update_Animation.hpp" />
     <ClInclude Include="Run_Simulation.hpp" />

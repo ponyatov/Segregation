@@ -71,8 +71,3 @@ struct User_Command_Structure
 
 	__int8 Predicted;
 };
-
-struct Event_Listener_Structure
-{
-	void* Table;
-};

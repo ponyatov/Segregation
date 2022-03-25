@@ -36,6 +36,8 @@
 
 #include "Run_Simulation.hpp"
 
+#include "Setup_Move.hpp"
+
 #include "Item_Post_Frame.hpp"
 
 #include "Weapon_Spread.hpp"
@@ -155,7 +157,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 			wprintf(L"[ + ] Events\n");
 			{
-				Event_Listener_Structure* Event_Listener = (Event_Listener_Structure*)malloc(sizeof(void*));
+				void* Event_Listener = (void*)malloc(sizeof(void*));
 
 				void* Event_Listener_Table = malloc(sizeof(void*) * 2);
 
@@ -163,7 +165,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 				*(void**)((unsigned __int32)Event_Listener_Table + 4) = (void*)Event_Processor;
 
-				Event_Listener->Table = Event_Listener_Table;
+				*(void**)Event_Listener = Event_Listener_Table;
 
 				using Add_Listener_Type = __int8(__thiscall*)(void* Game_Event_Manager, void* Listener, char* Event, __int8 Unknown_Parameter);
 
@@ -199,6 +201,8 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 				Byte_Manager::Set_Bytes(1, (void*)605209595, 1, 235);
 
 				Redirection_Manager::Redirect_Function(Original_Run_Simulation_Caller_Location, 0, (void*)605206096, 1, (void*)Redirected_Run_Simulation);
+
+				Redirection_Manager::Redirect_Function(Original_Setup_Move_Caller_Location, 0, (void*)605206752, 1, (void*)Redirected_Setup_Move);
 
 				Redirection_Manager::Redirect_Function(Original_Item_Post_Frame_Caller_Location, 4, (void*)605953776, 1, (void*)Redirected_Item_Post_Frame);
 

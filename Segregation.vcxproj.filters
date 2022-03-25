@@ -82,5 +82,8 @@
     <ClInclude Include="Is_Flag_Set.hpp">
       <Filter>Header++</Filter>
     </ClInclude>
+    <ClInclude Include="Setup_Move.hpp">
+      <Filter>Header++</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

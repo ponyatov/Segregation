@@ -6,7 +6,7 @@ void Redirected_Send_Move()
 	{
 		unsigned __int8 Move_Message[69];
 
-		void Construct(unsigned __int8* Data)
+		void Construct(__int8* Data)
 		{
 			*(void**)this = (void*)539887964;
 
@@ -42,7 +42,7 @@ void Redirected_Send_Move()
 
 	Move_Message_Structure Move_Message;
 
-	unsigned __int8 Data[4000];
+	__int8 Data[4000];
 
 	Move_Message.Construct(Data);
 
@@ -60,34 +60,23 @@ void Redirected_Send_Move()
 
 	*(__int32*)((unsigned __int32)&Move_Message + 20) = Commands_Queue;
 
-	__int32 To = Next_Command_Number - (Commands_Queue + Backup_Commands) + 1;
+	__int32 To_Command_Number = Next_Command_Number - (Commands_Queue + Backup_Commands) + 1;
 
-	__int8 Is_New_Command;
-
-	__int32 From = -1;
+	__int32 From_Command_Number = -1;
 
 	Write_Command_Label:
 	{
-		if (To < Next_Command_Number - Commands_Queue + 1)
-		{
-			Is_New_Command = 0;
-		}
-		else
-		{
-			Is_New_Command = 1;
-		}
-
 		using Write_Command_Type = __int8(__thiscall*)(void* Client, void* Data, __int32 From, __int32 To, __int8 New);
 
 		static void* Client_Location = *(void**)540494868;
 
-		Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From, To, Is_New_Command);
+		Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From_Command_Number, To_Command_Number, To_Command_Number < Next_Command_Number - Commands_Queue + 1);
 
-		From = To;
+		From_Command_Number = To_Command_Number;
 
-		To += 1;
+		To_Command_Number += 1;
 
-		if (To <= Next_Command_Number)
+		if (To_Command_Number <= Next_Command_Number)
 		{
 			goto Write_Command_Label;
 		}
