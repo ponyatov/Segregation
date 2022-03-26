@@ -60,8 +60,10 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 			*(float*)((unsigned __int32)Local_Player + 676),
 		};
+		
+		__int32 Previous_Buttons_State = User_Command->Buttons_State;
 
-		Shot_Time *= -1;
+		User_Command->Buttons_State &= ~1;
 
 		using Run_Command_Type = void(__thiscall*)(void* Prediction, void* Local_Player, User_Command_Structure* User_Command, void* Move_Helper);
 
@@ -69,8 +71,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 		Run_Command_Type(605207600)(Prediction, Local_Player, User_Command, (void*)607735532);
 
-		Shot_Time *= -1;
-
+		User_Command->Buttons_State = Previous_Buttons_State;
+		
 		float Move_Angles[3] =
 		{
 			User_Command->View_Angles[0],
@@ -126,7 +128,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 		{
 			Previous_Move_Angle_Y = User_Command->View_Angles[1];
 		}
-
+		
 		__int32 Choked_Commands_Count = *(__int32*)540627872;
 
 		__int8 Send_Packet;
