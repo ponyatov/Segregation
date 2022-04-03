@@ -635,7 +635,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												User_Command->View_Angles[1] = Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - Recoil[1] * 2;
 
-												User_Command->View_Angles[1] -= Recoil[2] * 2;
+												User_Command->View_Angles[2] -= Recoil[2] * 2;
 											}
 										}
 									}

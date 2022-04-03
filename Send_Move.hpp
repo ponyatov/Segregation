@@ -70,7 +70,7 @@ void Redirected_Send_Move()
 
 		static void* Client_Location = *(void**)540494868;
 
-		Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From_Command_Number, To_Command_Number, To_Command_Number < Next_Command_Number - Commands_Queue + 1);
+		Write_Command_Type(604533440)(Client_Location, (void*)((unsigned __int32)&Move_Message + 52), From_Command_Number, To_Command_Number, To_Command_Number != Next_Command_Number - Commands_Queue + 1);
 
 		From_Command_Number = To_Command_Number;
 
