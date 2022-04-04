@@ -57,7 +57,9 @@ void __stdcall Event_Processor(void* Event)
 
 									Player_Data->Tolerance = 0;
 
-									Player_Data->Memorized_Y = Bruteforce_Angles[(Player_Data->Shots_Fired - 1) % (sizeof(Bruteforce_Angles) / sizeof(float))];
+									constexpr __int32 Bruteforce_Angles_Modulo = sizeof(Bruteforce_Angles) / sizeof(float);
+
+									Player_Data->Memorized_Y = Bruteforce_Angles[((Player_Data->Shots_Fired - 1) % Bruteforce_Angles_Modulo + Bruteforce_Angles_Modulo) % Bruteforce_Angles_Modulo];
 								}
 							}
 						}

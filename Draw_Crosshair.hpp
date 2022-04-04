@@ -14,14 +14,7 @@ void __thiscall Redirected_Draw_Crosshair(void* Unknown_Parameter)
 
 		static void* Surface_Set_Color_Location = *(void**)(*(unsigned __int32*)Surface + 44);
 
-		if (Red == 0)
-		{
-			Surface_Set_Color((unsigned __int32)Surface_Set_Color_Location)(Surface, 0, 0, 0, 255);
-		}
-		else
-		{
-			Surface_Set_Color((unsigned __int32)Surface_Set_Color_Location)(Surface, 255, 0, 0, 255);
-		}
+		Surface_Set_Color((unsigned __int32)Surface_Set_Color_Location)(Surface, Red * 255, 0, 0, 255);
 
 		float Uber_Alles = 2 * Console_Variable_Uber_Alles_Scale.Integer;
 
