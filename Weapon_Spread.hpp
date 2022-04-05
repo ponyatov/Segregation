@@ -13,7 +13,7 @@ void* __thiscall Redirected_Weapon_Spread(void* Weapon)
 		return (decltype(&Redirected_Weapon_Spread)(Original_Weapon_Spread_Caller_Location))(Weapon);
 	}
 
-	Weapon_Spread = -*(float*)((unsigned __int32)__builtin_frame_address(0) + 72);
+	Weapon_Spread = *(float*)((unsigned __int32)__builtin_frame_address(0) + 72);
 
 	return nullptr;
 }
