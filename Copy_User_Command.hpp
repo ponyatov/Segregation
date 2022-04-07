@@ -511,7 +511,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																				Optimal_Target_Origin[1] - Local_Player_Eye_Position[1],
 
-																				Optimal_Target_Origin[2] - Local_Player_Eye_Position[2],
+																				Optimal_Target_Origin[2] - Local_Player_Eye_Position[2]
 																			};
 
 																			Aim_Angles[0] = Arc_Tangent_2(Square_Root(__builtin_powf(Origin_Difference[0], 2) + __builtin_powf(Origin_Difference[1], 2)), -Origin_Difference[2]) * 180 / 3.1415927f;
@@ -622,7 +622,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 													Forward[1] + Random_X * Weapon_Spread * Right[1] + Random_Y * Weapon_Spread * Up[1],
 
-													Forward[2] + Random_X * Weapon_Spread * Right[2] + Random_Y * Weapon_Spread * Up[2],
+													Forward[2] + Random_X * Weapon_Spread * Right[2] + Random_Y * Weapon_Spread * Up[2]
 												};
 
 												Weapon_Spread = 0;

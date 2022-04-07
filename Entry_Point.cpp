@@ -8,8 +8,6 @@
 
 #include "Redirection_Manager/Redirection_Manager.hpp"
 
-#include "Is_Flag_Set.hpp"
-
 #include "Frame_Stage_Notify.hpp"
 
 #include "Structures.hpp"
@@ -138,7 +136,7 @@ __int32 __stdcall DllMain(void* This_Module_Location, unsigned __int32 Call_Reas
 
 				*(__int8*)542242676 = 1;
 
-				Redirection_Manager::Redirect_Function(1, (void*)539128880, (void*)Redirected_Is_Flag_Set);
+				Byte_Manager::Set_Bytes(1, (void*)537349277, 1, 235);
 			}
 
 			wprintf(L"[ + ] Extend Interface\n");
