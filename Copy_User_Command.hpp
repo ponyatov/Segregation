@@ -492,7 +492,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 																	(Hitbox_Minimum[1] + Hitbox_Maximum[1]) / 2,
 
-																	Hitbox_Maximum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * (Console_Variable_Aim_Height.Floating_Point - 1)
+																	Hitbox_Minimum[2] + (Hitbox_Maximum[2] - Hitbox_Minimum[2]) * Console_Variable_Aim_Height.Floating_Point
 																};
 																
 																if (Trace_Ray(Optimal_Target_Origin) == 1)
@@ -646,7 +646,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 												User_Command->View_Angles[1] += Arc_Tangent_2(Forward[0], Forward[1]) * 180 / 3.1415927f - Recoil[1] * 2;
 
-												User_Command->View_Angles[2] += Arc_Tangent_2(Forward[0] * (Forward[0] * Up[2] - Forward[2] * Up[0]) - Forward[1] * (Forward[2] * Up[1] - Forward[1] * Up[2]), Up[0] * Forward[1] - Up[1] * Forward[0]) * 180 / 3.1415927f - Recoil[2] * 2;
+												User_Command->View_Angles[2] += Arc_Tangent_2(Forward[0] * (Forward[0] * Up[2] - Forward[2] * Up[0]) - Forward[1] * (Forward[2] * Up[1] - Forward[1] * Up[2]), Forward[1] * Up[0] - Forward[0] * Up[1]) * 180 / 3.1415927f - Recoil[2] * 2;
 											}
 										}
 									}
