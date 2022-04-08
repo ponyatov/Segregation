@@ -582,6 +582,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 													}
 												}
 
+												User_Command->View_Angles[2] = 0;
+
 												float Forward[3];
 
 												float Right[3];
@@ -626,16 +628,16 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												};
 
 												Weapon_Spread = 0;
-												
+
 												float Spread_Angles[3] =
 												{
 													Arc_Tangent_2(Square_Root(__builtin_powf(Direction[0], 2) + __builtin_powf(Direction[1], 2)), -Direction[2]) * 180 / 3.1415927f - User_Command->View_Angles[0],
 
 													Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - User_Command->View_Angles[1],
-													
+
 													-User_Command->View_Angles[2]
 												};
-												
+
 												using Angle_Vectors_Transpose_Type = void(__cdecl*)(float* Angles, float* Forward, float* Right, float* Up);
 
 												Angle_Vectors_Transpose_Type(574033968)(Spread_Angles, Forward, nullptr, Up);
