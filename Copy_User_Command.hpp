@@ -635,7 +635,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 
 													Arc_Tangent_2(Direction[0], Direction[1]) * 180 / 3.1415927f - User_Command->View_Angles[1],
 
-													-User_Command->View_Angles[2]
+													0
 												};
 
 												using Angle_Vectors_Transpose_Type = void(__cdecl*)(float* Angles, float* Forward, float* Right, float* Up);
