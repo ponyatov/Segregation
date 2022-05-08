@@ -362,7 +362,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												{
 													Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
 
-													if ((__int32)(Absolute(Global_Variables->Current_Time - *(float*)((unsigned __int32)Optimal_Target + 104) - Total_Latency) / Global_Variables->Interval_Per_Tick + 0.5f) <= max(0, Console_Variable_Flow_Synchronization_Tolerance.Integer))
+													if ((__int32)(Absolute(Global_Variables->Current_Time - *(float*)((unsigned __int32)Optimal_Target + 104) - Total_Latency) / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Flow_Synchronization_Tolerance.Integer)
 													{
 														using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
