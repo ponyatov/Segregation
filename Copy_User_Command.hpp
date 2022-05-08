@@ -361,8 +361,8 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												else
 												{
 													Optimal_Target = Sorted_Target_List.at(Target_Number).Target;
-
-													if ((__int32)(Absolute(Global_Variables->Current_Time - *(float*)((unsigned __int32)Optimal_Target + 104) - Total_Latency) / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Flow_Synchronization_Tolerance.Integer)
+													
+													if (Console_Variable_Flow_Synchronization.Integer == 0 ? 1 : (__int32)(Absolute(Global_Variables->Current_Time - *(float*)((unsigned __int32)Optimal_Target + 104) - Total_Latency) / Global_Variables->Interval_Per_Tick + 0.5f) <= Console_Variable_Flow_Synchronization_Tolerance.Integer)
 													{
 														using Setup_Bones_Type = __int8(__thiscall*)(void* Entity, void* Bones, __int32 Maximum_Bones, __int32 Mask, float Current_Time);
 
@@ -611,7 +611,7 @@ void __thiscall Redirected_Copy_User_Command(void* Unknown_Parameter, User_Comma
 												User_Command->View_Angles[0] += Arc_Tangent_2(Square_Root(__builtin_powf(Forward[0], 2) + __builtin_powf(Forward[1], 2)), -Forward[2]) * 180 / 3.1415927f - Recoil[0] * 2;
 
 												User_Command->View_Angles[1] += Arc_Tangent_2(Forward[0], Forward[1]) * 180 / 3.1415927f - Recoil[1] * 2;
-
+												
 												User_Command->View_Angles[2] += Arc_Tangent_2(Forward[0] * (Forward[0] * Up[2] - Forward[2] * Up[0]) - Forward[1] * (Forward[2] * Up[1] - Forward[1] * Up[2]), Forward[1] * Up[0] - Forward[0] * Up[1]) * 180 / 3.1415927f - Recoil[2] * 2;
 											}
 										}

@@ -20,6 +20,8 @@ Interface_Structure Console_Variable_Minimum_Choked_Commands;
 
 Interface_Structure Console_Variable_Maximum_Choked_Commands;
 
+Interface_Structure Console_Variable_Flow_Synchronization;
+
 Interface_Structure Console_Variable_Flow_Synchronization_Tolerance;
 
 Interface_Structure Console_Variable_Aim_Height;
@@ -76,7 +78,11 @@ void Implement_Extended_Interface()
 
 	wprintf(L"[ + ] Maximum_Choked_Commands %p\n", &Console_Variable_Maximum_Choked_Commands);
 
-	Create_Console_Variable_Type(539130656)(&Console_Variable_Flow_Synchronization_Tolerance, (char*)"Flow_Synchronization_Tolerance", (char*)"1", nullptr);
+	Create_Console_Variable_Type(539130656)(&Console_Variable_Flow_Synchronization, (char*)"Flow_Synchronization", (char*)"0", nullptr);
+
+	wprintf(L"[ + ] Flow_Synchronization %p\n", &Console_Variable_Flow_Synchronization);
+
+	Create_Console_Variable_Type(539130656)(&Console_Variable_Flow_Synchronization_Tolerance, (char*)"Flow_Synchronization_Tolerance", (char*)"0", nullptr);
 
 	wprintf(L"[ + ] Flow_Synchronization_Tolerance %p\n", &Console_Variable_Flow_Synchronization_Tolerance);
 
