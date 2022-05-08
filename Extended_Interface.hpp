@@ -76,7 +76,7 @@ void Implement_Extended_Interface()
 
 	wprintf(L"[ + ] Maximum_Choked_Commands %p\n", &Console_Variable_Maximum_Choked_Commands);
 
-	Create_Console_Variable_Type(539130656)(&Console_Variable_Flow_Synchronization_Tolerance, (char*)"Flow_Synchronization_Tolerance", (char*)"0", nullptr);
+	Create_Console_Variable_Type(539130656)(&Console_Variable_Flow_Synchronization_Tolerance, (char*)"Flow_Synchronization_Tolerance", (char*)"1", nullptr);
 
 	wprintf(L"[ + ] Flow_Synchronization_Tolerance %p\n", &Console_Variable_Flow_Synchronization_Tolerance);
 
