@@ -1,0 +1,37 @@
+{
+    "multiCommand.commands": [
+        {
+            "command": "multiCommand.f11",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                {"command": "workbench.action.terminal.sendSequence",
+                    "args": {"text": "\u000D clear ; LANG=C make gen format \u000D"}}]
+        },
+        {
+            "command": "multiCommand.f12",
+            "sequence": [
+                "workbench.action.files.saveAll",
+                {"command": "workbench.action.terminal.sendSequence",
+                    "args": {"text": "\u000D clear ; LANG=C make all \u000D"}}]
+        },
+    ],
+
+    // files
+    "files.exclude": {
+        "**/docs/**":true,
+        "**/Segregation/**":true,
+        "**/.vscode/*.log":true,
+    },
+    "files.watcherExclude": {
+        "**/docs/**":true,
+    },
+    "files.associations": {
+        "metaL.gen":"python", "rc":"python",
+    },
+
+    // editor
+    "editor.tabSize": 4,
+    "editor.rulers": [80],
+    "workbench.tree.indent": 32,
+    "git.ignoreLimitWarning": true,
+}
