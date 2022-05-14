@@ -6,6 +6,7 @@ NOW    = $(shell date +%d%m%y)
 REL    = $(shell git rev-parse --short=4 HEAD)
 BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 PEPS   = E26,E302,E305,E401,E402,E701,E702
+TARGET = i686-w64-mingw32
 
 # tool
 CURL   = curl -L -o
@@ -13,14 +14,27 @@ CF     = clang-format
 PY     = $(shell which python3)
 PIP    = $(shell which pip3)
 PEP    = $(shell which autopep8)
+# cpp
+CXX    = g++
+LD     = ld
+# mingw
+XCXX   = $(TARGET)-g++
+XLD    = $(TARGET)-ld
+WINE   = wine
 
 # src
 P += metaL.gen rc
 S += $(P)
+C += src/$(MODULE).cpp
+S += $(C)
+
+# cfg
+CFLAGS += -pipe -O0 -g2 
 
 # all
 .PHONY: all
-all:
+all: bin/$(MODULE).exe
+	$(WINE) $^
 
 GEN = cpp mingw dll
 .PHONY: gen
@@ -34,6 +48,10 @@ format: tmp/format_py
 tmp/format_py: $(P)
 	$(PEP) --ignore=$(PEPS) -i $? && touch $@
 
+# rule
+bin/$(MODULE).exe: $(C) $(H) Makefile
+	$(XCXX) $(CFLAGS) -o $@ $(C) $(L)
+
 # doc
 
 .PHONY: doxy
@@ -43,7 +61,7 @@ doxy: doxy.gen
 .PHONY: doc
 doc:
 	rsync -vss ~/mdoc/Segregation/README.md README.md
-	rsync -vss ~/mdoc/Segregation/* doc
+	rsync -vss ~/mdoc/Segregation/* doc/Segregation/
 
 # install
 install: $(OS)_install doc gz
