@@ -1,2 +1,4 @@
 code meld doxygen
 build-essential g++
+mingw-w64-i686-dev
+wine32

@@ -22,7 +22,7 @@ S += $(P)
 .PHONY: all
 all:
 
-GEN = cpp dll
+GEN = cpp mingw dll
 .PHONY: gen
 gen:
 	./metaL.gen $(GEN) && $(MAKE) format
