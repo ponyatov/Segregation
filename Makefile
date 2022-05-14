@@ -43,6 +43,7 @@ CFLAGS += -pipe -O0 -g2 -Iinc -Itmp
 .PHONY: all
 all: bin/$(MODULE).exe
 	$(WINE) $<
+	$(MAKE) format
 
 GEN = cpp mingw dll
 .PHONY: gen
