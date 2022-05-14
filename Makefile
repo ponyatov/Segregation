@@ -22,7 +22,7 @@ S += $(P)
 .PHONY: all
 all:
 
-GEN =
+GEN = cpp dll
 .PHONY: gen
 gen:
 	./metaL.gen $(GEN) && $(MAKE) format
@@ -35,10 +35,15 @@ tmp/format_py: $(P)
 	$(PEP) --ignore=$(PEPS) -i $? && touch $@
 
 # doc
+
+.PHONY: doxy
 doxy: doxy.gen
 	rm -rf docs ; doxygen $< 1>/dev/null
 
+.PHONY: doc
 doc:
+	rsync -vss ~/mdoc/Segregation/README.md README.md
+	rsync -vss ~/mdoc/Segregation/* doc
 
 # install
 install: $(OS)_install doc gz
@@ -53,9 +58,8 @@ GNU_Linux_update:
 gz:
 
 # merge
-MERGE  = Makefile README.md .clang-format doxy.gen $(S)
-MERGE += apt.dev apt.txt requirements.txt
-MERGE += .vscode bin doc lib src tmp
+MERGE  = Makefile README.md .clang-format doxy.gen apt.dev apt.txt $(S)
+MERGE += .vscode bin doc lib src tmp inc
 MERGE += static templates
 
 dev:
