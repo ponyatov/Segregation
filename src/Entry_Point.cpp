@@ -1,3 +1,5 @@
-#include <Entry_Point.hpp>
+// #include <Entry_Point.hpp>
 
-public void dll_hello() {}
+#include <stdio.h>
+
+__declspec(dllexport) __cdecl void dll_hello() { printf("Hello dll\n"); }

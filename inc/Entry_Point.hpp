@@ -1,3 +1,3 @@
 #pragma once
 
-extern void dll_hello();
+__declspec(dllimport) void dll_hello();

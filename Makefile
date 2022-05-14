@@ -29,18 +29,19 @@ C += src/$(MODULE).cpp
 H += inc/$(MODULE).hpp
 S += $(C) $(H)
 
+DLL += bin/libgcc_s_dw2-1.dll
+DLL += bin/$(MODULE).dll
+
 DC = $(shell find src -type f -regex '.+cpp$$' | grep -v $(C))
+L += -Lbin -l$(MODULE)
 
 # cfg
 CFLAGS += -pipe -O0 -g2 -Iinc -Itmp
 
 # all
 .PHONY: all
-all: bin/$(MODULE).exe bin/$(MODULE).dll
+all: bin/$(MODULE).exe
 	$(WINE) $<
-
-bin/$(MODULE).dll: $(DC) Makefile
-	$(XCXX) -o $@ -s -shared $(DC) -Wl,--subsystem,windows
 
 GEN = cpp mingw dll
 .PHONY: gen
@@ -49,20 +50,25 @@ gen:
 
 # format
 .PHONY: format
-format: tmp/format_py
+format: tmp/format_py tmp/format_cpp
 
 tmp/format_py: $(P)
 	$(PEP) --ignore=$(PEPS) -i $? && touch $@
 
+tmp/format_cpp: $(C) $(H) $(DC)
+	$(CF) -style=file -i $? && touch $@
+
 # rule
-bin/$(MODULE).exe: $(C) $(H) Makefile
+bin/$(MODULE).exe: $(C) $(H) Makefile $(DLL)
 	$(XCXX) $(CFLAGS) -o $@ $(C) $(L)
+
+bin/$(MODULE).dll: $(DC) Makefile
+	$(XCXX) $(CFLAGS) -o $@ -s -shared $(DC) -Wl,--subsystem,windows
 
 GCCDLL = $(shell $(XCXX) -print-prog-name=cc1 | sed 's/.cc1$$//')
 bin/%.dll: $(GCCDLL)/%.dll
 	cp $< $@
 
-DLL += bin/libgcc_s_dw2-1.dll
 bin/$(MODULE).exe: $(DLL)
 
 # doc
