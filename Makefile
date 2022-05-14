@@ -26,10 +26,11 @@ WINE   = wine
 P += metaL.gen rc
 S += $(P)
 C += src/$(MODULE).cpp
-S += $(C)
+H += inc/$(MODULE).hpp
+S += $(C) $(H)
 
 # cfg
-CFLAGS += -pipe -O0 -g2 
+CFLAGS += -pipe -O0 -g2 -Iinc -Itmp
 
 # all
 .PHONY: all
@@ -52,6 +53,13 @@ tmp/format_py: $(P)
 bin/$(MODULE).exe: $(C) $(H) Makefile
 	$(XCXX) $(CFLAGS) -o $@ $(C) $(L)
 
+GCCDLL = $(shell $(XCXX) -print-prog-name=cc1 | sed 's/.cc1$$//')
+bin/%.dll: $(GCCDLL)/%.dll
+	cp $< $@
+
+DLL += bin/libgcc_s_dw2-1.dll
+bin/$(MODULE).exe: $(DLL)
+
 # doc
 
 .PHONY: doxy
@@ -61,7 +69,8 @@ doxy: doxy.gen
 .PHONY: doc
 doc:
 	rsync -vss ~/mdoc/Segregation/README.md README.md
-	rsync -vss ~/mdoc/Segregation/* doc/Segregation/
+	rsync -vss ~/mdoc/Segregation/*         doc/Segregation/
+	rsync -vss ~/mdoc/MinGW/*               doc/MinGW/
 
 # install
 install: $(OS)_install doc gz

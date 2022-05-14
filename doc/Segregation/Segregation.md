@@ -4,4 +4,4 @@
 
 ## uses [[VSES/SourceEngine2007]]
 
-## [[Segregation/LinuxCrossCompile]]
+## [[Segregation/LinuxCrossCompile]] with [[MinGW]]
