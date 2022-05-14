@@ -29,13 +29,18 @@ C += src/$(MODULE).cpp
 H += inc/$(MODULE).hpp
 S += $(C) $(H)
 
+DC = $(shell find src -type f -regex '.+cpp$$' | grep -v $(C))
+
 # cfg
 CFLAGS += -pipe -O0 -g2 -Iinc -Itmp
 
 # all
 .PHONY: all
-all: bin/$(MODULE).exe
-	$(WINE) $^
+all: bin/$(MODULE).exe bin/$(MODULE).dll
+	$(WINE) $<
+
+bin/$(MODULE).dll: $(DC) Makefile
+	$(XCXX) -o $@ -s -shared $(DC) -Wl,--subsystem,windows
 
 GEN = cpp mingw dll
 .PHONY: gen
