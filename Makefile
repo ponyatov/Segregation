@@ -33,6 +33,7 @@ DLL += bin/libgcc_s_dw2-1.dll
 DLL += bin/$(MODULE).dll
 
 DC = $(shell find src -type f -regex '.+cpp$$' | grep -v $(C))
+DH = $(shell find inc -type f -regex '.+hpp$$' | grep -v $(H))
 L += -Lbin -l$(MODULE)
 
 # cfg
@@ -55,7 +56,7 @@ format: tmp/format_py tmp/format_cpp
 tmp/format_py: $(P)
 	$(PEP) --ignore=$(PEPS) -i $? && touch $@
 
-tmp/format_cpp: $(C) $(H) $(DC)
+tmp/format_cpp: $(C) $(H) $(DC) $(DH)
 	$(CF) -style=file -i $? && touch $@
 
 # rule
